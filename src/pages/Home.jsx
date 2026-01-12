@@ -1,4 +1,5 @@
 import "../styles/main.css";
+import MobileCard from "../components/MobileCard";
 
 function Home() {
   return (
@@ -7,7 +8,6 @@ function Home() {
       <section className="hero">
         <h1>Welcome to Mobile Shop</h1>
         <p>Your one-stop shop for mobiles, accessories & repair services</p>
-
         <div className="hero-buttons">
           <a href="tel:9876543210" className="btn call">
             📞 Call Now
@@ -29,6 +29,28 @@ function Home() {
             <div className="service-card">📱 Screen Replacement</div>
             <div className="service-card">⚙️ Software Update</div>
             <div className="service-card">🛡️ Warranty Support</div>
+          </div>
+        </section>
+
+        <section className="mobiles">
+          <h2>Featured Mobiles</h2>
+
+          <div className="mobile-list">
+            <MobileCard
+              name="Samsung Galaxy S21"
+              price="49999"
+              image="/images/mobiles/samsung.jpg"
+            />
+            <MobileCard
+              name="iPhone 13"
+              price="69999"
+              image="/images/mobiles/iphone.jpg"
+            />
+            <MobileCard
+              name="Redmi Note 12"
+              price="17999"
+              image="/images/mobiles/redmi.jpg"
+            />
           </div>
         </section>
       </section>
