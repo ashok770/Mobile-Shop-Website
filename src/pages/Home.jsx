@@ -20,6 +20,17 @@ function Home() {
             💬 WhatsApp
           </a>
         </div>
+        {/* Services Section */}
+        <section className="services">
+          <h2>Our Services</h2>
+
+          <div className="service-list">
+            <div className="service-card">🔧 Mobile Repair</div>
+            <div className="service-card">📱 Screen Replacement</div>
+            <div className="service-card">⚙️ Software Update</div>
+            <div className="service-card">🛡️ Warranty Support</div>
+          </div>
+        </section>
       </section>
     </div>
   );

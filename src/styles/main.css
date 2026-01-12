@@ -42,3 +42,29 @@
 .whatsapp {
   background-color: #25d366;
 }
+/* Services Section */
+.services {
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.services h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+}
+
+.service-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.service-card {
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 18px;
+  background: #f8f9fa;
+}
