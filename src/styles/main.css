@@ -156,3 +156,13 @@
 .filters button:hover {
   background: #084298;
 }
+/* Search Bar */
+.search-input {
+  padding: 12px;
+  width: 260px;
+  max-width: 90%;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin: 20px auto;
+  display: block;
+}

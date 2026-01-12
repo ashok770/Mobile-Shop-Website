@@ -31,17 +31,35 @@ const mobileData = [
     image: "/images/mobiles/samsung.jpg",
   },
 ];
+
 function Mobiles() {
   const [brand, setBrand] = useState("All");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredMobiles =
-    brand === "All" ? mobileData : mobileData.filter((m) => m.brand === brand);
+  // ✅ Combined filter: Brand + Search
+  const filteredMobiles = mobileData.filter((mobile) => {
+    const matchesBrand = brand === "All" || mobile.brand === brand;
+    const matchesSearch = mobile.name
+      .toLowerCase()
+      .includes(searchTerm.toLowerCase());
+
+    return matchesBrand && matchesSearch;
+  });
 
   return (
     <div className="mobiles">
       <h2>All Mobiles</h2>
 
-      {/* Filter Buttons */}
+      {/* 🔍 Search Bar */}
+      <input
+        type="text"
+        placeholder="Search mobiles..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className="search-input"
+      />
+
+      {/* 🔘 Filter Buttons */}
       <div className="filters">
         <button onClick={() => setBrand("All")}>All</button>
         <button onClick={() => setBrand("Samsung")}>Samsung</button>
@@ -49,16 +67,22 @@ function Mobiles() {
         <button onClick={() => setBrand("Redmi")}>Redmi</button>
       </div>
 
-      {/* Mobile List */}
+      {/* 📱 Mobile List */}
       <div className="mobile-list">
-        {filteredMobiles.map((mobile) => (
-          <MobileCard
-            key={mobile.id}
-            name={mobile.name}
-            price={mobile.price}
-            image={mobile.image}
-          />
-        ))}
+        {filteredMobiles.length > 0 ? (
+          filteredMobiles.map((mobile) => (
+            <MobileCard
+              key={mobile.id}
+              name={mobile.name}
+              price={mobile.price}
+              image={mobile.image}
+            />
+          ))
+        ) : (
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            No mobiles found
+          </p>
+        )}
       </div>
     </div>
   );
