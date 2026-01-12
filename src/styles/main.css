@@ -63,8 +63,14 @@
 
 .service-card {
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  border-radius: 10px;
   font-size: 18px;
-  background: #f8f9fa;
+  background: #ffffff;
+  color: #333;
+  font-weight: 500;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.service-card:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
 }
