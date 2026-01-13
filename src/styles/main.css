@@ -220,3 +220,30 @@
   margin-top: 10px;
   font-size: 14px;
 }
+/* Contact Page */
+.contact-page {
+  padding: 40px 20px;
+  min-height: calc(100vh - 160px);
+  text-align: center;
+}
+
+.contact-card {
+  max-width: 500px;
+  margin: auto;
+  padding: 25px;
+  background: #ffffff;
+  border-radius: 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  text-align: left;
+}
+
+.contact-card p {
+  margin-bottom: 10px;
+  font-size: 15px;
+}
+
+.contact-card a {
+  color: #0d6efd;
+  text-decoration: none;
+  font-weight: 500;
+}
