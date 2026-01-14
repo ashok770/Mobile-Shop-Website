@@ -1,0 +1,35 @@
+✅ PHASE 1 (DONE)
+
+Frontend customer website ✔️
+
+🟡 PHASE 2 (NEXT – Backend Core) → 5–6 days
+
+Express server setup
+
+MongoDB connection
+
+Admin model
+
+Login API (JWT)
+
+Protected admin routes
+
+🟡 PHASE 3 (Admin Panel APIs) → 3–4 days
+
+Mobiles CRUD
+
+Accessories CRUD
+
+Orders CRUD
+
+Order status update
+
+🟢 PHASE 4 (Integration + Testing) → 2–3 days
+
+Connect frontend ↔ backend
+
+Replace dummy data
+
+Final testing
+
+⏱️ YES — this is 100% doable in time
