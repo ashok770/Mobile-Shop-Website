@@ -1,18 +1,48 @@
 import { useState } from "react";
+import { createOrder } from "../api/api";
 
 function Order() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  const productName = "Selected Product"; // later we’ll make this dynamic
+  // 🔹 Later we’ll pass real product via route/state
+  const productName = "Selected Product";
+  const productPrice = 0;
 
-  const handleOrder = () => {
+  const handleOrder = async () => {
     if (!name || !phone || !address) {
       alert("Please fill all details");
       return;
     }
 
+    /* ===============================
+       1️⃣ SAVE ORDER TO BACKEND
+       =============================== */
+    const orderData = {
+      customerName: name,
+      phone,
+      address,
+      items: [
+        {
+          name: productName,
+          price: productPrice,
+          quantity: 1,
+        },
+      ],
+      paymentMethod: "COD",
+    };
+
+    try {
+      await createOrder(orderData);
+    } catch (error) {
+      alert("Failed to place order. Try again.");
+      return;
+    }
+
+    /* ===============================
+       2️⃣ SEND WHATSAPP MESSAGE
+       =============================== */
     const message = `
 New Order 🛒
 Name: ${name}
@@ -27,6 +57,13 @@ Payment: Cash on Delivery
     )}`;
 
     window.open(whatsappUrl, "_blank");
+
+    /* ===============================
+       3️⃣ RESET FORM (OPTIONAL)
+       =============================== */
+    setName("");
+    setPhone("");
+    setAddress("");
   };
 
   return (
@@ -59,7 +96,7 @@ Payment: Cash on Delivery
         </p>
 
         <button onClick={handleOrder} className="btn order-btn">
-          Confirm Order on WhatsApp
+          Confirm Order
         </button>
       </div>
     </div>
