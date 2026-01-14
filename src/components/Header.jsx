@@ -1,36 +1,23 @@
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 function Header() {
   return (
-    <header style={{ padding: "15px", background: "#0d6efd", color: "#fff" }}>
-      <h2>📱 Mobile Shop</h2>
+    <header className="site-header">
+      <div className="container header-content">
+        <h1 className="logo">Mobile Shop</h1>
 
-      <nav style={{ marginTop: "10px" }}>
-        <Link style={linkStyle} to="/">
-          Home
-        </Link>
-        <Link style={linkStyle} to="/mobiles">
-          Mobiles
-        </Link>
-        <Link style={linkStyle} to="/accessories">
-          Accessories
-        </Link>
-        <Link style={linkStyle} to="/services">
-          Services
-        </Link>
-        <Link style={linkStyle} to="/contact">
-          Contact
-        </Link>
-      </nav>
+        <nav className="nav">
+          <NavLink to="/" end>
+            Home
+          </NavLink>
+          <NavLink to="/mobiles">Mobiles</NavLink>
+          <NavLink to="/accessories">Accessories</NavLink>
+          <NavLink to="/services">Services</NavLink>
+          <NavLink to="/contact">Contact</NavLink>
+        </nav>
+      </div>
     </header>
   );
 }
-
-const linkStyle = {
-  marginRight: "15px",
-  color: "#fff",
-  textDecoration: "none",
-  fontWeight: "bold",
-};
 
 export default Header;

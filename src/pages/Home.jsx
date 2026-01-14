@@ -39,17 +39,17 @@ function Home() {
             <MobileCard
               name="Samsung Galaxy S21"
               price="49999"
-              image="/images/mobiles/samsung.jpg"
+              image="/image/mobiles/Samsung.jpg"
             />
             <MobileCard
               name="iPhone 13"
               price="69999"
-              image="/images/mobiles/iphone.jpg"
+              image="/image/mobiles/iphone.jpg"
             />
             <MobileCard
               name="Redmi Note 12"
               price="17999"
-              image="/images/mobiles/redmi.jpg"
+              image="/image/mobiles/redmi.jpg"
             />
           </div>
         </section>
