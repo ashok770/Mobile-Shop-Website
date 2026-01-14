@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 
-function AdminLogin({ setToken }) {
+function AdminLogin() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async () => {
     const res = await fetch(`${API}/api/admin/login`, {
@@ -17,7 +19,7 @@ function AdminLogin({ setToken }) {
 
     if (data.token) {
       localStorage.setItem("adminToken", data.token);
-      setToken(data.token);
+      navigate("/admin/dashboard");
     } else {
       alert("Invalid credentials");
     }
