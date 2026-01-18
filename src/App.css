@@ -441,3 +441,17 @@ body {
   background: #dc2626;
   color: white;
 }
+.order-product {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.order-product img {
+  width: 180px;
+  margin-bottom: 10px;
+}
+
+.order-success {
+  text-align: center;
+  padding: 60px 20px;
+}
