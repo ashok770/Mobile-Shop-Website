@@ -1,54 +1,48 @@
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-
 import { createOrder } from "../api/api";
+import { useLocation } from "react-router-dom";
 
 function Order() {
   const location = useLocation();
-  const navigate = useNavigate();
-  
+  const product = location.state?.product;
+
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
 
-  // 👇 SAFE access
-  const product = location.state;
-
-  // If user opens /order directly
   if (!product) {
-    return (
-      <div className="order-page">
-        <h2>No product selected</h2>
-        <p>Please select a product first.</p>
-
-        <button className="btn" onClick={() => navigate("/mobiles")}>
-          Go to Mobiles
-        </button>
-      </div>
-    );
+    return <p style={{ textAlign: "center" }}>No product selected.</p>;
   }
 
-  const productName = product.name;
-  const productPrice = product.price;
-
   const handleOrder = async () => {
-    if (!name || !phone || !address) {
-      alert("Please fill all details");
+    // 🔒 Validation
+    if (!name.trim()) {
+      alert("Please enter your name");
       return;
     }
 
-    /* ===============================
-       1️⃣ SAVE ORDER TO BACKEND
-       =============================== */
+    if (!/^[0-9]{10}$/.test(phone)) {
+      alert("Enter a valid 10-digit phone number");
+      return;
+    }
+
+    if (!address.trim()) {
+      alert("Please enter delivery address");
+      return;
+    }
+
+    setLoading(true);
+
     const orderData = {
       customerName: name,
       phone,
       address,
       items: [
         {
-          productId: product.id,
-          name: productName,
-          price: productPrice,
+          name: product.name,
+          price: product.price,
           quantity: 1,
         },
       ],
@@ -58,19 +52,19 @@ function Order() {
     try {
       await createOrder(orderData);
     } catch (error) {
-      alert("Failed to place order. Try again.");
+      alert("Failed to place order");
+      setLoading(false);
       return;
     }
 
-    /* ===============================
-       2️⃣ SEND WHATSAPP MESSAGE
-       =============================== */
+    // 📲 WhatsApp message
     const message = `
-New Order 🛒
+🛒 New Order
+Product: ${product.name}
+Price: ₹${product.price}
 Name: ${name}
 Phone: ${phone}
 Address: ${address}
-Product: ${productName}
 Payment: Cash on Delivery
     `;
 
@@ -80,54 +74,62 @@ Payment: Cash on Delivery
 
     window.open(whatsappUrl, "_blank");
 
-    /* ===============================
-       3️⃣ RESET FORM (OPTIONAL)
-       =============================== */
-    setName("");
-    setPhone("");
-    setAddress("");
+    setSuccess(true);
+    setLoading(false);
   };
 
   return (
     <div className="order-page">
       <h2>Place Your Order</h2>
 
-      {/* Product Info */}
-      <div className="product-info">
-        <img src={product.image} alt={product.name} style={{ width: "180px" }} />
-        <h3>{product.name}</h3>
-        <p style={{ fontWeight: "bold" }}>₹{product.price}</p>
-      </div>
+      <img
+        src={product.image}
+        alt={product.name}
+        style={{ width: "220px", margin: "20px auto", display: "block" }}
+      />
 
-      <div className="order-form">
-        <input
-          type="text"
-          placeholder="Your Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+      <h3>{product.name}</h3>
+      <p style={{ fontWeight: "bold" }}>₹{product.price}</p>
 
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-
-        <textarea
-          placeholder="Delivery Address"
-          value={address}
-          onChange={(e) => setAddress(e.target.value)}
-        ></textarea>
-
-        <p className="payment">
-          Payment Method: <b>Cash on Delivery</b>
+      {success ? (
+        <p style={{ color: "green", marginTop: "20px" }}>
+          ✅ Order placed successfully! We will contact you soon.
         </p>
+      ) : (
+        <div className="order-form">
+          <input
+            type="text"
+            placeholder="Your Name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
 
-        <button onClick={handleOrder} className="btn order-btn">
-          Confirm Order
-        </button>
-      </div>
+          <input
+            type="tel"
+            placeholder="Phone Number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
+
+          <textarea
+            placeholder="Delivery Address"
+            value={address}
+            onChange={(e) => setAddress(e.target.value)}
+          ></textarea>
+
+          <p className="payment">
+            Payment Method: <b>Cash on Delivery</b>
+          </p>
+
+          <button
+            onClick={handleOrder}
+            className="btn order-btn"
+            disabled={loading}
+          >
+            {loading ? "Placing Order..." : "Confirm Order"}
+          </button>
+        </div>
+      )}
     </div>
   );
 }
