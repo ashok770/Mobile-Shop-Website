@@ -6,41 +6,68 @@ function ManageOrders() {
   const [orders, setOrders] = useState([]);
   const token = localStorage.getItem("adminToken");
 
-  useEffect(() => {
-    fetch(`${API}/api/orders`, {
+  const fetchOrders = async () => {
+    const res = await fetch(`${API}/api/orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
-    })
-      .then((res) => res.json())
-      .then(setOrders);
+    });
+    const data = await res.json();
+    setOrders(data);
+  };
+
+  useEffect(() => {
+    fetchOrders();
   }, []);
 
-  const markDelivered = async (id) => {
+  const updateOrderStatus = async (id, orderStatus) => {
     await fetch(`${API}/api/orders/${id}`, {
       method: "PUT",
       headers: {
-        Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ orderStatus: "Delivered" }),
+      body: JSON.stringify({ orderStatus }),
     });
 
-    setOrders(
-      orders.map((o) => (o._id === id ? { ...o, orderStatus: "Delivered" } : o))
-    );
+    fetchOrders();
   };
 
   return (
     <div>
       <h3>Orders</h3>
 
-      {orders.map((o) => (
-        <div key={o._id} style={{ marginBottom: "10px" }}>
-          <b>{o.customerName}</b> — {o.orderStatus}
-          {o.orderStatus === "Pending" && (
-            <button onClick={() => markDelivered(o._id)}>Mark Delivered</button>
-          )}
+      {orders.map((order) => (
+        <div key={order._id} className="card">
+          <h4>{order.customerName}</h4>
+          <p>📞 {order.phone}</p>
+          <p>📍 {order.address}</p>
+
+          <p>
+            <b>Payment:</b> {order.paymentMethod} ({order.paymentStatus})
+          </p>
+
+          <div>
+            <b>Items:</b>
+            {order.items.map((item, i) => (
+              <p key={i}>
+                {item.name} × {item.quantity} — ₹{item.price}
+              </p>
+            ))}
+          </div>
+
+          <p>
+            <b>Order Status:</b> {order.orderStatus}
+          </p>
+
+          <select
+            value={order.orderStatus}
+            onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+          >
+            <option value="Pending">Pending</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
         </div>
       ))}
     </div>
