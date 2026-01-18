@@ -6,6 +6,8 @@ function ManageProducts() {
   const [products, setProducts] = useState([]);
 
   const [name, setName] = useState("");
+  const [editingProduct, setEditingProduct] = useState(null);
+
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("mobile");
@@ -58,6 +60,7 @@ function ManageProducts() {
       setPrice("");
       setCategory("mobile");
       setImage(null);
+      document.querySelector('input[type="file"]').value = "";
       fetchProducts();
     } else {
       alert("Failed to add product");
@@ -122,6 +125,94 @@ function ManageProducts() {
       {/* Product list */}
       <h4>All Products</h4>
 
+      {/* Edit form - moved outside the map */}
+      {editingProduct && (
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append("name", editingProduct.name);
+            formData.append("price", editingProduct.price);
+            formData.append("brand", editingProduct.brand);
+            formData.append("category", editingProduct.category);
+
+            if (image) formData.append("image", image);
+
+            await fetch(`${API}/api/products/${editingProduct._id}`, {
+              method: "PUT",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+              body: formData,
+            });
+
+            setEditingProduct(null);
+            setImage(null);
+            fetchProducts();
+          }}
+          className="card"
+        >
+          <h4>Edit Product</h4>
+
+          <input
+            value={editingProduct.name}
+            onChange={(e) =>
+              setEditingProduct({ ...editingProduct, name: e.target.value })
+            }
+          />
+
+          <input
+            type="number"
+            value={editingProduct.price}
+            onChange={(e) =>
+              setEditingProduct({
+                ...editingProduct,
+                price: e.target.value,
+              })
+            }
+          />
+
+          <input
+            value={editingProduct.brand}
+            onChange={(e) =>
+              setEditingProduct({
+                ...editingProduct,
+                brand: e.target.value,
+              })
+            }
+          />
+
+          <select
+            value={editingProduct.category}
+            onChange={(e) =>
+              setEditingProduct({
+                ...editingProduct,
+                category: e.target.value,
+              })
+            }
+          >
+            <option value="mobile">Mobile</option>
+            <option value="accessory">Accessory</option>
+          </select>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImage(e.target.files[0])}
+          />
+
+          <button className="btn primary">Update</button>
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setEditingProduct(null)}
+          >
+            Cancel
+          </button>
+        </form>
+      )}
+
       {products.map((p) => (
         <div key={p._id} className="card">
           <strong>{p.name}</strong> — ₹{p.price}
@@ -141,6 +232,9 @@ function ManageProducts() {
             style={{ marginTop: "10px" }}
           >
             Delete
+          </button>
+          <button className="btn" onClick={() => setEditingProduct(p)}>
+            Edit
           </button>
         </div>
       ))}
