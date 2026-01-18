@@ -46,6 +46,7 @@ function Order() {
       address,
       items: [
         {
+          productId: product.id,
           name: productName,
           price: productPrice,
           quantity: 1,
@@ -90,6 +91,13 @@ Payment: Cash on Delivery
   return (
     <div className="order-page">
       <h2>Place Your Order</h2>
+
+      {/* Product Info */}
+      <div className="product-info">
+        <img src={product.image} alt={product.name} style={{ width: "180px" }} />
+        <h3>{product.name}</h3>
+        <p style={{ fontWeight: "bold" }}>₹{product.price}</p>
+      </div>
 
       <div className="order-form">
         <input

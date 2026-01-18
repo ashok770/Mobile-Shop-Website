@@ -7,14 +7,18 @@ function MobileCard({ id, name, price, image }) {
     <div className="mobile-card">
       <img src={image} alt={name} />
 
-      <h4>{name}</h4>
+      <h3>{name}</h3>
       <p className="price">₹{price}</p>
 
       <button
-        className="btn primary"
-        onClick={() => navigate(`/product/${id}`)}
+        className="btn order-btn"
+        onClick={() =>
+          navigate("/order", {
+            state: { id, name, price, image },
+          })
+        }
       >
-        View Details
+        Order Now
       </button>
     </div>
   );
