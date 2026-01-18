@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
-import ProductDetails from "./pages/ProductDetails";
+
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 
 // Public pages
 import Home from "./pages/Home";
 import Mobiles from "./pages/Mobiles";
+import ProductDetails from "./pages/ProductDetails";
 import Accessories from "./pages/Accessories";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
@@ -33,10 +34,10 @@ function Layout() {
         {/* Public */}
         <Route path="/" element={<Home />} />
         <Route path="/mobiles" element={<Mobiles />} />
+        <Route path="/mobiles/:id" element={<ProductDetails />} />
         <Route path="/accessories" element={<Accessories />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
-        <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/order" element={<Order />} />
 
         {/* Admin (hidden) */}

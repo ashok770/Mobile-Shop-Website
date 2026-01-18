@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 
 function Order() {
   const location = useLocation();
-  const product = location.state?.product;
+  const product = location.state; // ProductDetails passes product directly
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
