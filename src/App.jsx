@@ -18,6 +18,7 @@ import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
 import ManageProducts from "./admin/ManageProducts";
 import ManageOrders from "./admin/ManageOrders";
+import OrdersPage from "./admin/OrdersPage";
 
 function Layout() {
   const location = useLocation();
@@ -44,7 +45,7 @@ function Layout() {
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/products" element={<ManageProducts />} />
-        <Route path="/admin/orders" element={<ManageOrders />} />
+        <Route path="/admin/orders" element={<OrdersPage />} />
       </Routes>
 
       {/* Footer only for public pages */}

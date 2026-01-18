@@ -1,75 +1,62 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 
 function ManageOrders() {
-  const [orders, setOrders] = useState([]);
+  const [stats, setStats] = useState(null);
+  const navigate = useNavigate();
   const token = localStorage.getItem("adminToken");
 
-  const fetchOrders = async () => {
-    const res = await fetch(`${API}/api/orders`, {
+  const fetchStats = async () => {
+    const res = await fetch(`${API}/api/orders/stats/admin`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     const data = await res.json();
-    setOrders(data);
+    setStats(data);
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchStats();
   }, []);
-
-  const updateOrderStatus = async (id, orderStatus) => {
-    await fetch(`${API}/api/orders/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ orderStatus }),
-    });
-
-    fetchOrders();
-  };
 
   return (
     <div>
-      <h3>Orders</h3>
+      <h3>Orders Management</h3>
 
-      {orders.map((order) => (
-        <div key={order._id} className="card">
-          <h4>{order.customerName}</h4>
-          <p>📞 {order.phone}</p>
-          <p>📍 {order.address}</p>
-
-          <p>
-            <b>Payment:</b> {order.paymentMethod} ({order.paymentStatus})
-          </p>
-
-          <div>
-            <b>Items:</b>
-            {order.items.map((item, i) => (
-              <p key={i}>
-                {item.name} × {item.quantity} — ₹{item.price}
-              </p>
-            ))}
+      {/* Stats Summary */}
+      {stats && (
+        <div className="admin-stats">
+          <div className="stat-card">
+            <h4>Total Orders</h4>
+            <p>{stats.totalOrders}</p>
           </div>
-
-          <p>
-            <b>Order Status:</b> {order.orderStatus}
-          </p>
-
-          <select
-            value={order.orderStatus}
-            onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-          >
-            <option value="Pending">Pending</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-          </select>
+          <div className="stat-card">
+            <h4>Pending Orders</h4>
+            <p>{stats.pendingOrders}</p>
+          </div>
+          <div className="stat-card">
+            <h4>Delivered Orders</h4>
+            <p>{stats.deliveredOrders}</p>
+          </div>
+          <div className="stat-card">
+            <h4>Total Revenue</h4>
+            <p>₹{stats.totalRevenue}</p>
+          </div>
         </div>
-      ))}
+      )}
+
+      {/* View Orders Button */}
+      <div style={{ textAlign: "center", marginTop: "30px" }}>
+        <button 
+          className="btn primary"
+          onClick={() => navigate("/admin/orders")}
+        >
+          View All Orders
+        </button>
+      </div>
     </div>
   );
 }

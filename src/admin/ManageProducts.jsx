@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 
 function ManageProducts() {
+  const navigate = useNavigate();
   const [products, setProducts] = useState([]);
 
   // Add product states
@@ -112,7 +114,15 @@ function ManageProducts() {
 
   return (
     <div className="admin-products">
-      <h3 className="section-title">Manage Products</h3>
+      <div className="section-header">
+        <h3 className="section-title">Manage Products</h3>
+        <button 
+          className="btn primary view-orders-btn"
+          onClick={() => navigate("/admin/orders")}
+        >
+          View Orders
+        </button>
+      </div>
 
       {/* Add product */}
       <div className="card form-card">
