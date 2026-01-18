@@ -1,14 +1,35 @@
 import { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+
 import { createOrder } from "../api/api";
 
 function Order() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
 
-  // 🔹 Later we’ll pass real product via route/state
-  const productName = "Selected Product";
-  const productPrice = 0;
+  // 👇 SAFE access
+  const product = location.state;
+
+  // If user opens /order directly
+  if (!product) {
+    return (
+      <div className="order-page">
+        <h2>No product selected</h2>
+        <p>Please select a product first.</p>
+
+        <button className="btn" onClick={() => navigate("/mobiles")}>
+          Go to Mobiles
+        </button>
+      </div>
+    );
+  }
+
+  const productName = product.name;
+  const productPrice = product.price;
 
   const handleOrder = async () => {
     if (!name || !phone || !address) {
@@ -53,7 +74,7 @@ Payment: Cash on Delivery
     `;
 
     const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(
-      message
+      message,
     )}`;
 
     window.open(whatsappUrl, "_blank");

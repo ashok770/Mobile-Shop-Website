@@ -25,7 +25,7 @@ function Accessories() {
       <div className="mobile-list">
         {accessories.map((item) => (
           <MobileCard
-            key={item._id}
+            id={item._id}
             name={item.name}
             price={item.price}
             image={item.image}

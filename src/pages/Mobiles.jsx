@@ -77,6 +77,7 @@ function Mobiles() {
           filteredMobiles.map((mobile) => (
             <MobileCard
               key={mobile._id}
+              id={mobile._id}
               name={mobile.name}
               price={mobile.price}
               image={mobile.image}

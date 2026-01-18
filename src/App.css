@@ -115,10 +115,10 @@ body {
   gap: 30px;
   margin-top: 10px;
 }
-/* Header */
+/* Header - Updated to work with existing styles */
 .site-header {
-  background: #2563eb;
-  color: white;
+  background: #2563eb !important;
+  color: white !important;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -136,12 +136,13 @@ body {
 }
 
 .logo {
-  font-size: 22px;
+  font-size: 22px !important;
   font-weight: 700;
   margin: 0;
   padding: 0;
   height: auto;
   filter: none;
+  color: white !important;
 }
 
 /* Navigation */
@@ -153,7 +154,7 @@ body {
 }
 
 .nav a {
-  color: white;
+  color: white !important;
   text-decoration: none;
   font-size: 15px;
   padding: 8px 12px;
@@ -169,8 +170,9 @@ body {
 
 /* Active link */
 .nav a.active {
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid white !important;
   font-weight: 600;
+  color: white !important;
 }
 .admin-section {
   margin-bottom: 40px;

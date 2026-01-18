@@ -1,16 +1,21 @@
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
-function MobileCard({ name, price, image }) {
+function MobileCard({ id, name, price, image }) {
+  const navigate = useNavigate();
+
   return (
-    <div className="card">
-      <img src={image} alt={name} className="card-img" />
+    <div className="mobile-card">
+      <img src={image} alt={name} />
 
-      <h3>{name}</h3>
+      <h4>{name}</h4>
       <p className="price">₹{price}</p>
 
-      <Link to="/order" className="btn primary">
-        Order Now
-      </Link>
+      <button
+        className="btn primary"
+        onClick={() => navigate(`/product/${id}`)}
+      >
+        View Details
+      </button>
     </div>
   );
 }
