@@ -5,18 +5,17 @@ const API = import.meta.env.VITE_API_URL;
 function ManageProducts() {
   const [products, setProducts] = useState([]);
 
-  // Form state
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("mobile");
-  const [description, setDescription] = useState("");
+  const [image, setImage] = useState(null);
 
   const token = localStorage.getItem("adminToken");
 
-  /* =========================
-     FETCH PRODUCTS
-  ========================== */
+  // ==========================
+  // Fetch products
+  // ==========================
   const fetchProducts = async () => {
     const res = await fetch(`${API}/api/products`);
     const data = await res.json();
@@ -27,51 +26,48 @@ function ManageProducts() {
     fetchProducts();
   }, []);
 
-  /* =========================
-     ADD PRODUCT
-  ========================== */
-  const handleAddProduct = async (e) => {
+  // ==========================
+  // Add product
+  // ==========================
+  const addProduct = async (e) => {
     e.preventDefault();
 
-    if (!name || !brand || !price) {
+    if (!name || !price || !category) {
       alert("Please fill required fields");
       return;
     }
 
-    const productData = {
-      name,
-      brand,
-      price: Number(price),
-      category,
-      description,
-    };
+    const formData = new FormData();
+    formData.append("name", name);
+    formData.append("brand", brand);
+    formData.append("price", price);
+    formData.append("category", category);
+    if (image) formData.append("image", image);
 
     const res = await fetch(`${API}/api/products`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(productData),
+      body: formData,
     });
 
     if (res.ok) {
-      alert("Product added successfully");
       setName("");
       setBrand("");
       setPrice("");
       setCategory("mobile");
-      setDescription("");
+      setImage(null);
       fetchProducts();
     } else {
       alert("Failed to add product");
     }
   };
 
-  /* =========================
-     DELETE PRODUCT
-  ========================== */
-  const handleDelete = async (id) => {
+  // ==========================
+  // Delete product
+  // ==========================
+  const deleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
 
     await fetch(`${API}/api/products/${id}`, {
@@ -85,34 +81,21 @@ function ManageProducts() {
   };
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Manage Products</h2>
+    <div>
+      <h3>Manage Products</h3>
 
-      {/* ===== ADD PRODUCT FORM ===== */}
-      <form
-        onSubmit={handleAddProduct}
-        style={{
-          background: "#fff",
-          padding: "20px",
-          borderRadius: "8px",
-          marginBottom: "30px",
-          maxWidth: "500px",
-        }}
-      >
-        <h3>Add New Product</h3>
-
+      {/* Add product form */}
+      <form onSubmit={addProduct} className="card">
         <input
           placeholder="Product Name *"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          style={{ width: "100%", marginBottom: "10px" }}
         />
 
         <input
-          placeholder="Brand *"
+          placeholder="Brand"
           value={brand}
           onChange={(e) => setBrand(e.target.value)}
-          style={{ width: "100%", marginBottom: "10px" }}
         />
 
         <input
@@ -120,52 +103,45 @@ function ManageProducts() {
           placeholder="Price *"
           value={price}
           onChange={(e) => setPrice(e.target.value)}
-          style={{ width: "100%", marginBottom: "10px" }}
         />
 
-        <select
-          value={category}
-          onChange={(e) => setCategory(e.target.value)}
-          style={{ width: "100%", marginBottom: "10px" }}
-        >
+        <select value={category} onChange={(e) => setCategory(e.target.value)}>
           <option value="mobile">Mobile</option>
           <option value="accessory">Accessory</option>
         </select>
 
-        <textarea
-          placeholder="Description (optional)"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          style={{ width: "100%", marginBottom: "10px" }}
+        <input
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImage(e.target.files[0])}
         />
 
-        <button type="submit">Add Product</button>
+        <button className="btn primary">Add Product</button>
       </form>
 
-      {/* ===== PRODUCT LIST ===== */}
-      <h3>All Products</h3>
+      {/* Product list */}
+      <h4>All Products</h4>
 
       {products.map((p) => (
-        <div
-          key={p._id}
-          style={{
-            background: "#fff",
-            padding: "12px",
-            marginBottom: "10px",
-            borderRadius: "6px",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
+        <div key={p._id} className="card">
+          <strong>{p.name}</strong> — ₹{p.price}
           <div>
-            <b>{p.name}</b> — ₹{p.price}
-            <div style={{ fontSize: "13px", color: "#555" }}>
-              {p.brand} | {p.category}
-            </div>
+            {p.brand} | {p.category}
           </div>
-
-          <button onClick={() => handleDelete(p._id)}>Delete</button>
+          {p.image && (
+            <img
+              src={p.image}
+              alt={p.name}
+              style={{ width: "120px", marginTop: "10px" }}
+            />
+          )}
+          <button
+            className="btn"
+            onClick={() => deleteProduct(p._id)}
+            style={{ marginTop: "10px" }}
+          >
+            Delete
+          </button>
         </div>
       ))}
     </div>
