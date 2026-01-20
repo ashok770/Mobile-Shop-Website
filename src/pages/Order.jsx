@@ -6,42 +6,35 @@ function Order() {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // 👇 SAFE access
-  const product = location.state;
+  // Handle both old and new data structures
+  const product = location.state?.product || location.state;
+  const quantity = location.state?.quantity || 1;
 
-  // If user opens /order directly
   if (!product) {
     return (
       <div className="order-page">
         <h2>No product selected</h2>
         <p>Please select a product first.</p>
-
-        <button className="btn" onClick={() => navigate("/mobiles")}>
-          Go to Mobiles
+        <button className="btn" onClick={() => navigate("/")}>
+          Go to Home
         </button>
       </div>
     );
   }
 
+  const [qty, setQty] = useState(quantity);
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+
+  const finalPrice = product.finalPrice ?? product.price ?? product.originalPrice ?? 0;
+  const totalPrice = finalPrice * qty;
 
   const handleOrder = async () => {
-    // 🔐 Validation
     if (!name || !phone || !address) {
       alert("Please fill all details");
       return;
     }
-
-    if (phone.length < 10) {
-      alert("Please enter a valid phone number");
-      return;
-    }
-
-    setLoading(true);
 
     const orderData = {
       customerName: name,
@@ -49,9 +42,10 @@ function Order() {
       address,
       items: [
         {
+          productId: product._id,
           name: product.name,
-          price: product.finalPrice ?? product.price ?? product.originalPrice,
-          quantity: product.quantity || 1,
+          price: finalPrice,
+          quantity: qty,
         },
       ],
       paymentMethod: "COD",
@@ -60,83 +54,62 @@ function Order() {
     try {
       await createOrder(orderData);
 
-      // ✅ WhatsApp message
       const message = `
-🛒 New Order
+New Order 🛒
+Product: ${product.name}
+Quantity: ${qty}
+Price: ₹${finalPrice}
+Total: ₹${totalPrice}
+
+Customer:
 Name: ${name}
 Phone: ${phone}
 Address: ${address}
-Product: ${product.name}
-Price: ₹${product.finalPrice ?? product.price ?? product.originalPrice}
-Quantity: ${product.quantity || 1}
 Payment: Cash on Delivery
-      `;
+`;
 
-      const whatsappUrl = `https://wa.me/919876543210?text=${encodeURIComponent(
-        message,
-      )}`;
+      window.open(
+        `https://wa.me/919876543210?text=${encodeURIComponent(message)}`,
+        "_blank",
+      );
 
-      window.open(whatsappUrl, "_blank");
-
-      setSuccess(true);
-    } catch (error) {
-      alert("Failed to place order. Try again.");
-    } finally {
-      setLoading(false);
+      navigate("/");
+    } catch (err) {
+      alert("Order failed. Try again.");
     }
   };
-
-  // 🎉 Success Screen
-  if (success) {
-    return (
-      <div className="order-success">
-        <h2>🎉 Order Placed Successfully!</h2>
-        <p>We will contact you shortly.</p>
-
-        <button className="btn" onClick={() => navigate("/mobiles")}>
-          Continue Shopping
-        </button>
-      </div>
-    );
-  }
 
   return (
     <div className="order-page">
       <h2>Place Your Order</h2>
 
-      {/* Product Summary */}
-      <div className="order-product">
+      <div className="order-card">
         <img src={product.image} alt={product.name} />
+
         <h3>{product.name}</h3>
-        <div className="price">
+
+        <p>
           {product.originalPrice && product.discountPercent > 0 && (
             <span className="old-price">₹{product.originalPrice}</span>
           )}
-          <span className="new-price">
-            ₹{product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A"}
-          </span>
-        </div>
-        {product.discountPercent > 0 && (
-          <span className="discount-badge">
-            -{product.discountPercent}%
-          </span>
-        )}
-        {product.quantity && (
-          <p>Quantity: {product.quantity}</p>
-        )}
-      </div>
+          <strong>₹{finalPrice}</strong>
+        </p>
 
-      {/* Order Form */}
-      <div className="order-form">
+        <div className="qty">
+          <button onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
+          <span>{qty}</span>
+          <button onClick={() => setQty((q) => q + 1)}>+</button>
+        </div>
+
+        <h3>Total: ₹{totalPrice}</h3>
+
         <input
-          type="text"
           placeholder="Your Name"
           value={name}
           onChange={(e) => setName(e.target.value)}
         />
 
         <input
-          type="tel"
           placeholder="Phone Number"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -148,16 +121,12 @@ Payment: Cash on Delivery
           onChange={(e) => setAddress(e.target.value)}
         />
 
-        <p className="payment">
-          Payment Method: <b>Cash on Delivery</b>
+        <p>
+          <b>Payment:</b> Cash on Delivery
         </p>
 
-        <button
-          onClick={handleOrder}
-          className="btn order-btn"
-          disabled={loading}
-        >
-          {loading ? "Placing Order..." : "Confirm Order"}
+        <button className="btn order-btn" onClick={handleOrder}>
+          Confirm Order
         </button>
       </div>
     </div>
