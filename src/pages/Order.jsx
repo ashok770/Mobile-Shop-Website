@@ -50,8 +50,8 @@ function Order() {
       items: [
         {
           name: product.name,
-          price: product.price,
-          quantity: 1,
+          price: product.finalPrice ?? product.price ?? product.originalPrice,
+          quantity: product.quantity || 1,
         },
       ],
       paymentMethod: "COD",
@@ -67,7 +67,8 @@ Name: ${name}
 Phone: ${phone}
 Address: ${address}
 Product: ${product.name}
-Price: ₹${product.price}
+Price: ₹${product.finalPrice ?? product.price ?? product.originalPrice}
+Quantity: ${product.quantity || 1}
 Payment: Cash on Delivery
       `;
 
@@ -107,7 +108,22 @@ Payment: Cash on Delivery
       <div className="order-product">
         <img src={product.image} alt={product.name} />
         <h3>{product.name}</h3>
-        <p className="price">₹{product.price}</p>
+        <div className="price">
+          {product.originalPrice && product.discountPercent > 0 && (
+            <span className="old-price">₹{product.originalPrice}</span>
+          )}
+          <span className="new-price">
+            ₹{product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A"}
+          </span>
+        </div>
+        {product.discountPercent > 0 && (
+          <span className="discount-badge">
+            -{product.discountPercent}%
+          </span>
+        )}
+        {product.quantity && (
+          <p>Quantity: {product.quantity}</p>
+        )}
       </div>
 
       {/* Order Form */}

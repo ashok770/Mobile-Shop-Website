@@ -1,6 +1,7 @@
 import "../styles/main.css";
 import CategoryRow from "../components/CategoryRow";
 import OfferSection from "../components/OfferSection";
+import BelowThousandSection from "../components/BelowThousandSection";
 
 function Home() {
   return (
@@ -17,6 +18,8 @@ function Home() {
       <CategoryRow />
 
       {/* OFFERS */}
+      <BelowThousandSection />
+
       <OfferSection
         title="Mega Flash Sale"
         offerType="MEGA_FLASH_SALE"
