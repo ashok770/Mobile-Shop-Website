@@ -24,7 +24,17 @@ function ProductDetails() {
 
       <div>
         <h2>{product.name}</h2>
-        <h3>₹{product.price}</h3>
+        <h3>
+          {product.originalPrice && product.finalPrice && product.discountPercent > 0 && (
+            <span className="old-price">₹{product.originalPrice}</span>
+          )}
+          ₹{product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A"}
+        </h3>
+        {product.discountPercent > 0 && (
+          <span className="discount-badge">
+            -{product.discountPercent}%
+          </span>
+        )}
         <p>
           <b>Brand:</b> {product.brand}
         </p>

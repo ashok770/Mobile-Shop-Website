@@ -10,7 +10,9 @@ function ManageProducts() {
   // Add product states
   const [name, setName] = useState("");
   const [brand, setBrand] = useState("");
-  const [price, setPrice] = useState("");
+  const [originalPrice, setOriginalPrice] = useState("");
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [offerType, setOfferType] = useState("NONE");
   const [category, setCategory] = useState("mobile");
   const [image, setImage] = useState(null);
 
@@ -38,7 +40,7 @@ function ManageProducts() {
   const addProduct = async (e) => {
     e.preventDefault();
 
-    if (!name || !price || !category) {
+    if (!name || !originalPrice || !category) {
       alert("Please fill required fields");
       return;
     }
@@ -46,7 +48,9 @@ function ManageProducts() {
     const formData = new FormData();
     formData.append("name", name);
     formData.append("brand", brand);
-    formData.append("price", price);
+    formData.append("originalPrice", originalPrice);
+    formData.append("discountPercent", discountPercent);
+    formData.append("offerType", offerType);
     formData.append("category", category);
     if (image) formData.append("image", image);
 
@@ -61,7 +65,9 @@ function ManageProducts() {
     if (res.ok) {
       setName("");
       setBrand("");
-      setPrice("");
+      setOriginalPrice("");
+      setDiscountPercent(0);
+      setOfferType("NONE");
       setCategory("mobile");
       setImage(null);
       fetchProducts();
@@ -143,10 +149,27 @@ function ManageProducts() {
 
           <input
             type="number"
-            placeholder="Price *"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            placeholder="Original Price *"
+            value={originalPrice}
+            onChange={(e) => setOriginalPrice(e.target.value)}
           />
+
+          <input
+            type="number"
+            placeholder="Discount %"
+            value={discountPercent}
+            onChange={(e) => setDiscountPercent(e.target.value)}
+          />
+
+          <select
+            value={offerType}
+            onChange={(e) => setOfferType(e.target.value)}
+          >
+            <option value="NONE">No Offer</option>
+            <option value="MEGA_FLASH_SALE">Mega Flash Sale</option>
+            <option value="BUY_1_GET_1">Buy 1 Get 1 Free</option>
+            <option value="DAILY_SPECIAL">Daily Special</option>
+          </select>
 
           <select
             value={category}
@@ -177,8 +200,10 @@ function ManageProducts() {
 
               const formData = new FormData();
               formData.append("name", editingProduct.name);
-              formData.append("price", editingProduct.price);
               formData.append("brand", editingProduct.brand);
+              formData.append("originalPrice", editingProduct.originalPrice || editingProduct.price);
+              formData.append("discountPercent", editingProduct.discountPercent || 0);
+              formData.append("offerType", editingProduct.offerType || "NONE");
               formData.append("category", editingProduct.category);
               if (image) formData.append("image", image);
 
@@ -202,10 +227,11 @@ function ManageProducts() {
             />
 
             <input
+              placeholder="Original Price"
               type="number"
-              value={editingProduct.price}
+              value={editingProduct.originalPrice || editingProduct.price || ""}
               onChange={(e) =>
-                setEditingProduct({ ...editingProduct, price: e.target.value })
+                setEditingProduct({ ...editingProduct, originalPrice: e.target.value })
               }
             />
 
@@ -253,7 +279,18 @@ function ManageProducts() {
           <div key={p._id} className="product-card">
             {p.image && <img src={p.image} alt={p.name} />}
             <h4>{p.name}</h4>
-            <p className="price">₹{p.price}</p>
+            <p>
+              {p.originalPrice && p.finalPrice && (
+                <span className="old-price">₹{p.originalPrice}</span>
+              )}
+              <strong>₹{p.finalPrice ?? p.price ?? p.originalPrice ?? "N/A"}</strong>
+            </p>
+
+            {p.discountPercent > 0 && (
+              <span className="discount-badge">
+                -{p.discountPercent}%
+              </span>
+            )}
             <small>
               {p.brand} | {p.category}
             </small>

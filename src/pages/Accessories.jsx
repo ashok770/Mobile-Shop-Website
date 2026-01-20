@@ -27,7 +27,9 @@ function Accessories() {
           <MobileCard
             id={item._id}
             name={item.name}
-            price={item.price}
+            price={item.finalPrice ?? item.price ?? item.originalPrice}
+            originalPrice={item.originalPrice}
+            discountPercent={item.discountPercent || 0}
             image={item.image}
           />
         ))}

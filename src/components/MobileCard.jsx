@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-function MobileCard({ id, name, price, image }) {
+function MobileCard({ id, name, price, image, originalPrice, discountPercent }) {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
@@ -11,7 +11,17 @@ function MobileCard({ id, name, price, image }) {
     <div className="mobile-card">
       <img src={image} alt={name} />
       <h3>{name}</h3>
-      <p className="price">₹{price}</p>
+      <p className="price">
+        {originalPrice && discountPercent > 0 && (
+          <span className="old-price">₹{originalPrice}</span>
+        )}
+        ₹{price ?? "N/A"}
+      </p>
+      {discountPercent > 0 && (
+        <span className="discount-badge">
+          -{discountPercent}%
+        </span>
+      )}
 
       <button className="btn order-btn" onClick={handleViewDetails}>
         View Details

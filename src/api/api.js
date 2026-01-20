@@ -5,6 +5,11 @@ export const getProducts = async () => {
   return res.json();
 };
 
+export const getOfferProducts = async (offerType) => {
+  const res = await fetch(`${API}/api/products/offers/${offerType}`);
+  return res.json();
+};
+
 export const createOrder = async (orderData) => {
   const res = await fetch(`${API}/api/orders`, {
     method: "POST",

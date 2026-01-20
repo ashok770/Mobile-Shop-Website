@@ -79,7 +79,9 @@ function Mobiles() {
               key={mobile._id}
               id={mobile._id}
               name={mobile.name}
-              price={mobile.price}
+              price={mobile.finalPrice ?? mobile.price ?? mobile.originalPrice}
+              originalPrice={mobile.originalPrice}
+              discountPercent={mobile.discountPercent || 0}
               image={mobile.image}
             />
           ))
