@@ -40,16 +40,23 @@ function ProductCard({ product }) {
       <button 
         className="btn add-to-cart-btn"
         onClick={() => {
+          if (typeof product.stock !== "undefined" && product.stock <= 0) {
+            alert("Out of stock");
+            return;
+          }
+
           const cartProduct = {
             productId: product._id,
             name: product.name,
             image: product.image,
             price: product.finalPrice ?? product.price ?? product.originalPrice,
             originalPrice: product.originalPrice,
-            discountPercent: product.discountPercent || 0
+            discountPercent: product.discountPercent || 0,
+            stock: product.stock,
           };
+
           window.addToCart && window.addToCart(cartProduct);
-          alert('Added to cart!');
+          alert("Added to cart!");
         }}
       >
         Add to Cart

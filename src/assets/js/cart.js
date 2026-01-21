@@ -18,11 +18,23 @@ function saveCart(cart) {
 function addToCart(product) {
   let cart = getCart();
 
-  const existingItem = cart.find(
-    (item) => item.productId === product.productId,
-  );
+  // Basic stock check when provided
+  if (typeof product.stock !== "undefined" && product.stock <= 0) {
+    alert("Out of stock");
+    return;
+  }
+
+  const existingItem = cart.find((item) => item.productId === product.productId);
 
   if (existingItem) {
+    // If product.stock is provided, prevent exceeding available stock
+    if (typeof product.stock !== "undefined") {
+      if (existingItem.quantity + 1 > product.stock) {
+        alert("Cannot add more — not enough stock");
+        return;
+      }
+    }
+
     existingItem.quantity += 1;
   } else {
     cart.push({

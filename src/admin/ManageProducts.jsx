@@ -15,6 +15,7 @@ function ManageProducts() {
   const [offerType, setOfferType] = useState("NONE");
   const [category, setCategory] = useState("mobile");
   const [image, setImage] = useState(null);
+  const [stock, setStock] = useState(0);
 
   // Edit product state
   const [editingProduct, setEditingProduct] = useState(null);
@@ -52,6 +53,7 @@ function ManageProducts() {
     formData.append("discountPercent", discountPercent);
     formData.append("offerType", offerType);
     formData.append("category", category);
+    formData.append("stock", stock);
     if (image) formData.append("image", image);
 
     const res = await fetch(`${API}/api/products`, {
@@ -154,6 +156,13 @@ function ManageProducts() {
             onChange={(e) => setOriginalPrice(e.target.value)}
           />
 
+              <input
+                type="number"
+                placeholder="Stock Quantity"
+                value={stock}
+                onChange={(e) => setStock(e.target.value)}
+              />
+
           <input
             type="number"
             placeholder="Discount %"
@@ -205,6 +214,7 @@ function ManageProducts() {
               formData.append("discountPercent", editingProduct.discountPercent || 0);
               formData.append("offerType", editingProduct.offerType || "NONE");
               formData.append("category", editingProduct.category);
+              formData.append("stock", editingProduct.stock || 0);
               if (image) formData.append("image", image);
 
               await fetch(`${API}/api/products/${editingProduct._id}`, {
@@ -232,6 +242,15 @@ function ManageProducts() {
               value={editingProduct.originalPrice || editingProduct.price || ""}
               onChange={(e) =>
                 setEditingProduct({ ...editingProduct, originalPrice: e.target.value })
+              }
+            />
+
+            <input
+              type="number"
+              placeholder="Stock Quantity"
+              value={editingProduct.stock || 0}
+              onChange={(e) =>
+                setEditingProduct({ ...editingProduct, stock: e.target.value })
               }
             />
 
@@ -284,6 +303,10 @@ function ManageProducts() {
                 <span className="old-price">₹{p.originalPrice}</span>
               )}
               <strong>₹{p.finalPrice ?? p.price ?? p.originalPrice ?? "N/A"}</strong>
+            </p>
+
+            <p>
+              <small>Stock: {p.stock ?? 0}</small>
             </p>
 
             {p.discountPercent > 0 && (

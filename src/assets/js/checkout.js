@@ -40,13 +40,21 @@ function placeOrder() {
     },
     body: JSON.stringify(order)
   })
-    .then(res => res.json())
-    .then(data => {
+    .then(async (res) => {
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({ message: 'Server error' }));
+        alert(err.message || 'Order failed');
+        return null;
+      }
+      return res.json();
+    })
+    .then((data) => {
+      if (!data) return;
       clearCart();
       alert("Order placed successfully!");
       window.location.href = "index.html";
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       alert("Something went wrong. Try again.");
     });

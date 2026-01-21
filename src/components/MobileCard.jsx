@@ -7,6 +7,7 @@ function MobileCard({
   image,
   originalPrice,
   discountPercent,
+  stock,
 }) {
   const navigate = useNavigate();
 
@@ -15,6 +16,11 @@ function MobileCard({
   };
 
   const handleAddToCart = () => {
+    if (typeof stock !== "undefined" && stock <= 0) {
+      alert("Out of stock");
+      return;
+    }
+
     const cartProduct = {
       productId: id,
       name,
@@ -22,6 +28,7 @@ function MobileCard({
       price: price,
       originalPrice: originalPrice,
       discountPercent: discountPercent || 0,
+      stock,
     };
 
     if (window.addToCart) {

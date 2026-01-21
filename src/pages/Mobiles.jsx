@@ -83,6 +83,7 @@ function Mobiles() {
               originalPrice={mobile.originalPrice}
               discountPercent={mobile.discountPercent || 0}
               image={mobile.image}
+              stock={mobile.stock}
             />
           ))
         ) : (

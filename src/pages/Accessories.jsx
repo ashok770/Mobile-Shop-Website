@@ -31,6 +31,7 @@ function Accessories() {
             originalPrice={item.originalPrice}
             discountPercent={item.discountPercent || 0}
             image={item.image}
+            stock={item.stock}
           />
         ))}
       </div>
