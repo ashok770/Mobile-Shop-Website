@@ -726,3 +726,61 @@ body {
   text-align: center;
   font-weight: 600;
 }
+
+/* Orders Table */
+.orders-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.orders-table th,
+.orders-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.orders-table th {
+  background: #f8fafc;
+  font-weight: 600;
+  color: #374151;
+}
+
+.orders-table select {
+  padding: 4px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 12px;
+}
+
+/* Status Styling */
+.status.Pending {
+  color: orange;
+  font-weight: 600;
+}
+
+.status.Delivered {
+  color: green;
+  font-weight: 600;
+}
+
+.status.Cancelled {
+  color: red;
+  font-weight: 600;
+}
+
+/* Add to Cart Button */
+.add-to-cart-btn {
+  background: #16a34a;
+  color: white;
+  margin-bottom: 8px;
+}
+
+.add-to-cart-btn:hover {
+  background: #15803d;
+}

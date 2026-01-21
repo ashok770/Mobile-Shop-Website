@@ -37,6 +37,24 @@ function ProductCard({ product }) {
         <button onClick={() => setQty((q) => q + 1)}>+</button>
       </div>
 
+      <button 
+        className="btn add-to-cart-btn"
+        onClick={() => {
+          const cartProduct = {
+            productId: product._id,
+            name: product.name,
+            image: product.image,
+            price: product.finalPrice ?? product.price ?? product.originalPrice,
+            originalPrice: product.originalPrice,
+            discountPercent: product.discountPercent || 0
+          };
+          window.addToCart && window.addToCart(cartProduct);
+          alert('Added to cart!');
+        }}
+      >
+        Add to Cart
+      </button>
+
       <button className="order-btn" onClick={handleOrder}>
         Order Now
       </button>

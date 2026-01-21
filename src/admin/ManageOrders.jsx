@@ -1,62 +1,89 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const API = import.meta.env.VITE_API_URL;
 
 function ManageOrders() {
-  const [stats, setStats] = useState(null);
-  const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
   const token = localStorage.getItem("adminToken");
 
-  const fetchStats = async () => {
-    const res = await fetch(`${API}/api/orders/stats/admin`, {
+  const fetchOrders = async () => {
+    const res = await fetch(`${API}/api/orders`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     const data = await res.json();
-    setStats(data);
+    setOrders(data);
   };
 
   useEffect(() => {
-    fetchStats();
+    fetchOrders();
   }, []);
+
+  const updateStatus = async (id, status) => {
+    await fetch(`${API}/api/orders/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ orderStatus: status }),
+    });
+
+    fetchOrders();
+  };
 
   return (
     <div>
-      <h3>Orders Management</h3>
+      <h3>Orders</h3>
 
-      {/* Stats Summary */}
-      {stats && (
-        <div className="admin-stats">
-          <div className="stat-card">
-            <h4>Total Orders</h4>
-            <p>{stats.totalOrders}</p>
-          </div>
-          <div className="stat-card">
-            <h4>Pending Orders</h4>
-            <p>{stats.pendingOrders}</p>
-          </div>
-          <div className="stat-card">
-            <h4>Delivered Orders</h4>
-            <p>{stats.deliveredOrders}</p>
-          </div>
-          <div className="stat-card">
-            <h4>Total Revenue</h4>
-            <p>₹{stats.totalRevenue}</p>
-          </div>
-        </div>
-      )}
+      <table className="orders-table">
+        <thead>
+          <tr>
+            <th>Customer</th>
+            <th>Phone</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>Update</th>
+          </tr>
+        </thead>
 
-      {/* View Orders Button */}
-      <div style={{ textAlign: "center", marginTop: "30px" }}>
-        <button 
-          className="btn primary"
-          onClick={() => navigate("/admin/orders")}
-        >
-          View All Orders
-        </button>
-      </div>
+        <tbody>
+          {orders.map((order) => {
+            const item = order.items[0];
+            const total = item.price * item.quantity;
+
+            return (
+              <tr key={order._id}>
+                <td>{order.customerName}</td>
+                <td>{order.phone}</td>
+                <td>{item.name}</td>
+                <td>{item.quantity}</td>
+                <td>₹{total}</td>
+                <td>
+                  <span className={`status ${order.orderStatus}`}>
+                    {order.orderStatus}
+                  </span>
+                </td>
+                <td>
+                  <select
+                    value={order.orderStatus}
+                    onChange={(e) =>
+                      updateStatus(order._id, e.target.value)
+                    }
+                  >
+                    <option value="Pending">Pending</option>
+                    <option value="Delivered">Delivered</option>
+                    <option value="Cancelled">Cancelled</option>
+                  </select>
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }

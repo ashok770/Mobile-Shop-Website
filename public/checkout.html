@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .checkout-container {
+      max-width: 600px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 8px;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    .summary {
+      margin-top: 20px;
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+    }
+
+    .place-order-btn {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background: black;
+      color: white;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="checkout-container">
+    <h1>Checkout</h1>
+
+    <label>Full Name</label>
+    <input type="text" id="customerName" required />
+
+    <label>Phone Number</label>
+    <input type="text" id="phone" required />
+
+    <label>Delivery Address</label>
+    <textarea id="address" rows="3" required></textarea>
+
+    <div class="summary">
+      <strong>Total Items:</strong> <span id="totalItems">0</span><br>
+      <strong>Total Amount:</strong> Rs. <span id="totalAmount">0</span><br>
+      <strong>Payment Method:</strong> Cash on Delivery
+    </div>
+
+    <button class="place-order-btn" onclick="placeOrder()">
+      Place Order
+    </button>
+  </div>
+
+  <script src="cart.js"></script>
+  <script src="checkout.js"></script>
+</body>
+</html>

@@ -28,6 +28,20 @@ function Header() {
           <NavLink to="/accessories">Accessories</NavLink>
           <NavLink to="/services">Services</NavLink>
           <NavLink to="/contact">Contact</NavLink>
+          <button 
+            onClick={() => window.open('/cart.html', '_blank')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#16a34a',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              fontSize: '15px',
+              padding: '8px 12px'
+            }}
+          >
+            🛒 Cart
+          </button>
         </nav>
       </div>
     </header>
