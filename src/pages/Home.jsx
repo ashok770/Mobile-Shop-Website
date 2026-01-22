@@ -1,4 +1,5 @@
 import "../styles/main.css";
+import Carousel from "../components/Carousel";
 import CategoryRow from "../components/CategoryRow";
 import OfferSection from "../components/OfferSection";
 import BelowThousandSection from "../components/BelowThousandSection";
@@ -6,13 +7,8 @@ import BelowThousandSection from "../components/BelowThousandSection";
 function Home() {
   return (
     <div className="home-page">
-      {/* HERO */}
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1>Welcome to Mobile Shop</h1>
-          <p>Your one-stop shop for mobiles & accessories</p>
-        </div>
-      </section>
+      {/* HERO CAROUSEL */}
+      <Carousel />
 
       {/* CATEGORIES */}
       <CategoryRow />
