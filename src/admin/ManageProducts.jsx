@@ -14,7 +14,7 @@ function ManageProducts() {
   const [discountPercent, setDiscountPercent] = useState(0);
   const [offerType, setOfferType] = useState("NONE");
   const [category, setCategory] = useState("mobile");
-  const [image, setImage] = useState(null);
+  const [images, setImages] = useState([]);
   const [stock, setStock] = useState(0);
 
   // Edit product state
@@ -46,6 +46,11 @@ function ManageProducts() {
       return;
     }
 
+    if (images.length === 0) {
+      alert("Please upload at least one image");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("name", name);
     formData.append("brand", brand);
@@ -54,7 +59,11 @@ function ManageProducts() {
     formData.append("offerType", offerType);
     formData.append("category", category);
     formData.append("stock", stock);
-    if (image) formData.append("image", image);
+
+    // Append multiple images
+    images.forEach((file) => {
+      formData.append("images", file);
+    });
 
     const res = await fetch(`${API}/api/products`, {
       method: "POST",
@@ -71,37 +80,11 @@ function ManageProducts() {
       setDiscountPercent(0);
       setOfferType("NONE");
       setCategory("mobile");
-      setImage(null);
+      setImages([]);
       fetchProducts();
     } else {
       alert("Failed to add product");
     }
-  };
-
-  // ==========================
-  // Update product
-  // ==========================
-  const updateProduct = async (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("name", editingProduct.name);
-    formData.append("brand", editingProduct.brand);
-    formData.append("price", editingProduct.price);
-    formData.append("category", editingProduct.category);
-    if (image) formData.append("image", image);
-
-    await fetch(`${API}/api/products/${editingProduct._id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
-
-    setEditingProduct(null);
-    setImage(null);
-    fetchProducts();
   };
 
   // ==========================
@@ -124,7 +107,7 @@ function ManageProducts() {
     <div className="admin-products">
       <div className="section-header">
         <h3 className="section-title">Manage Products</h3>
-        <button 
+        <button
           className="btn primary view-orders-btn"
           onClick={() => navigate("/admin/orders")}
         >
@@ -156,12 +139,12 @@ function ManageProducts() {
             onChange={(e) => setOriginalPrice(e.target.value)}
           />
 
-              <input
-                type="number"
-                placeholder="Stock Quantity"
-                value={stock}
-                onChange={(e) => setStock(e.target.value)}
-              />
+          <input
+            type="number"
+            placeholder="Stock Quantity"
+            value={stock}
+            onChange={(e) => setStock(e.target.value)}
+          />
 
           <input
             type="number"
@@ -191,7 +174,8 @@ function ManageProducts() {
           <input
             type="file"
             accept="image/*"
-            onChange={(e) => setImage(e.target.files[0])}
+            multiple
+            onChange={(e) => setImages(Array.from(e.target.files))}
           />
 
           <button className="btn primary">Add Product</button>
@@ -210,12 +194,24 @@ function ManageProducts() {
               const formData = new FormData();
               formData.append("name", editingProduct.name);
               formData.append("brand", editingProduct.brand);
-              formData.append("originalPrice", editingProduct.originalPrice || editingProduct.price);
-              formData.append("discountPercent", editingProduct.discountPercent || 0);
+              formData.append(
+                "originalPrice",
+                editingProduct.originalPrice || editingProduct.price,
+              );
+              formData.append(
+                "discountPercent",
+                editingProduct.discountPercent || 0,
+              );
               formData.append("offerType", editingProduct.offerType || "NONE");
               formData.append("category", editingProduct.category);
               formData.append("stock", editingProduct.stock || 0);
-              if (image) formData.append("image", image);
+
+              // Append multiple images if selected
+              if (images.length > 0) {
+                images.forEach((file) => {
+                  formData.append("images", file);
+                });
+              }
 
               await fetch(`${API}/api/products/${editingProduct._id}`, {
                 method: "PUT",
@@ -224,7 +220,7 @@ function ManageProducts() {
               });
 
               setEditingProduct(null);
-              setImage(null);
+              setImages([]);
               fetchProducts();
             }}
             className="product-form"
@@ -241,7 +237,10 @@ function ManageProducts() {
               type="number"
               value={editingProduct.originalPrice || editingProduct.price || ""}
               onChange={(e) =>
-                setEditingProduct({ ...editingProduct, originalPrice: e.target.value })
+                setEditingProduct({
+                  ...editingProduct,
+                  originalPrice: e.target.value,
+                })
               }
             />
 
@@ -274,7 +273,12 @@ function ManageProducts() {
               <option value="accessory">Accessory</option>
             </select>
 
-            <input type="file" onChange={(e) => setImage(e.target.files[0])} />
+            <input
+              type="file"
+              accept="image/*"
+              multiple
+              onChange={(e) => setImages(Array.from(e.target.files))}
+            />
 
             <div className="action-row">
               <button className="btn primary">Update</button>
@@ -302,7 +306,9 @@ function ManageProducts() {
               {p.originalPrice && p.finalPrice && (
                 <span className="old-price">₹{p.originalPrice}</span>
               )}
-              <strong>₹{p.finalPrice ?? p.price ?? p.originalPrice ?? "N/A"}</strong>
+              <strong>
+                ₹{p.finalPrice ?? p.price ?? p.originalPrice ?? "N/A"}
+              </strong>
             </p>
 
             <p>
@@ -310,9 +316,7 @@ function ManageProducts() {
             </p>
 
             {p.discountPercent > 0 && (
-              <span className="discount-badge">
-                -{p.discountPercent}%
-              </span>
+              <span className="discount-badge">-{p.discountPercent}%</span>
             )}
             <small>
               {p.brand} | {p.category}

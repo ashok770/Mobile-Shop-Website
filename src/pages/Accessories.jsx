@@ -213,7 +213,7 @@ function Accessories() {
               price={item.finalPrice ?? item.price ?? item.originalPrice}
               originalPrice={item.originalPrice}
               discountPercent={item.discountPercent || 0}
-              image={item.image}
+              image={item.images?.[0] || item.image}
               stock={item.stock}
             />
           ))

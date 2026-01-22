@@ -82,7 +82,7 @@ function Mobiles() {
               price={mobile.finalPrice ?? mobile.price ?? mobile.originalPrice}
               originalPrice={mobile.originalPrice}
               discountPercent={mobile.discountPercent || 0}
-              image={mobile.image}
+              image={mobile.images?.[0] || mobile.image}
               stock={mobile.stock}
             />
           ))

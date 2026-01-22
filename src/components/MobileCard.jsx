@@ -41,7 +41,12 @@ function MobileCard({
 
   return (
     <div className="mobile-card">
-      <img src={image} alt={name} />
+      <img
+        src={image}
+        alt={name}
+        onClick={handleViewDetails}
+        style={{ cursor: "pointer" }}
+      />
       <h3>{name}</h3>
       <p className="price">
         {originalPrice && discountPercent > 0 && (
