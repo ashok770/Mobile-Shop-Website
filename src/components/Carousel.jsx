@@ -75,7 +75,9 @@ function Carousel() {
             <div className="carousel-content">
               <h1>{banner.title}</h1>
               <p>{banner.subtitle}</p>
-              <button className="carousel-btn" onClick={handleShopNow}>Shop Now</button>
+              <button className="carousel-btn" onClick={handleShopNow}>
+                Shop Now
+              </button>
             </div>
           </div>
         ))}

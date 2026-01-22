@@ -6,7 +6,12 @@ function Header() {
       <div className="container header-content">
         <Link to="/" className="brand-logo">
           <div className="logo-placeholder">
-            <img src="/images/logo.png" alt="Ommast Logo" className="logo-img" onError={(e) => e.target.style.display = 'none'} />
+            <img
+              src="/images/logo.png"
+              alt="Ommast Logo"
+              className="logo-img"
+              onError={(e) => (e.target.style.display = "none")}
+            />
             <div className="logo-fallback">
               <span className="logo-letter">O</span>
             </div>
@@ -28,16 +33,16 @@ function Header() {
           <NavLink to="/accessories">Accessories</NavLink>
           <NavLink to="/services">Services</NavLink>
           <NavLink to="/contact">Contact</NavLink>
-          <button 
-            onClick={() => window.open('/cart.html', '_blank')}
+          <button
+            onClick={() => (window.location.href = "/cart.html")}
             style={{
-              background: 'none',
-              border: 'none',
-              color: '#16a34a',
-              fontWeight: 'bold',
-              cursor: 'pointer',
-              fontSize: '15px',
-              padding: '8px 12px'
+              background: "none",
+              border: "none",
+              color: "#16a34a",
+              fontWeight: "bold",
+              cursor: "pointer",
+              fontSize: "15px",
+              padding: "8px 12px",
             }}
           >
             🛒 Cart
