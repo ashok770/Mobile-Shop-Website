@@ -14,13 +14,22 @@ function ProductCard({ product }) {
     });
   };
 
+  const handleViewDetails = () => {
+    navigate(`/mobiles/${product._id}`);
+  };
+
   return (
     <div className="product-card">
       {product.discountPercent > 0 && (
         <span className="discount-badge">-{product.discountPercent}%</span>
       )}
 
-      <img src={product.image} alt={product.name} />
+      <img
+        src={product.image}
+        alt={product.name}
+        onClick={handleViewDetails}
+        style={{ cursor: "pointer" }}
+      />
 
       <h4>{product.name}</h4>
 
@@ -37,7 +46,7 @@ function ProductCard({ product }) {
         <button onClick={() => setQty((q) => q + 1)}>+</button>
       </div>
 
-      <button 
+      <button
         className="btn add-to-cart-btn"
         onClick={() => {
           if (typeof product.stock !== "undefined" && product.stock <= 0) {
