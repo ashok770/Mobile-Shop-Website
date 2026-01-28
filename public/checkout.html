@@ -1,391 +1,423 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Checkout - Mobile Shop</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .header h1 {
-      font-size: 32px;
-      margin-bottom: 5px;
-    }
-
-    .progress-bar {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      max-width: 600px;
-      margin: 0 auto 30px;
-    }
-
-    .progress-step {
-      text-align: center;
-      flex: 1;
-    }
-
-    .progress-number {
-      width: 40px;
-      height: 40px;
-      background: white;
-      color: #667eea;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin: 0 auto 10px;
-    }
-
-    .progress-step.active .progress-number {
-      background: #667eea;
-      color: white;
-    }
-
-    .progress-step.active .step-name {
-      color: white;
-      font-weight: bold;
-    }
-
-    .progress-line {
-      flex: 1;
-      height: 2px;
-      background: rgba(255, 255, 255, 0.3);
-      margin: 20px 0;
-    }
-
-    .step-name {
-      font-size: 12px;
-      color: rgba(255, 255, 255, 0.7);
-    }
-
-    .checkout-container {
-      max-width: 900px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 30px;
-    }
-
-    .form-section {
-      background: white;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #333;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .form-group {
-      margin-bottom: 18px;
-    }
-
-    label {
-      display: block;
-      font-weight: 600;
-      margin-bottom: 8px;
-      color: #333;
-      font-size: 14px;
-    }
-
-    input, textarea, select {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-family: inherit;
-      font-size: 14px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
-    }
-
-    input:focus, textarea:focus, select:focus {
-      outline: none;
-      border-color: #667eea;
-      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
-
-    .order-summary {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      height: fit-content;
-      position: sticky;
-      top: 20px;
-    }
-
-    .summary-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .order-items {
-      max-height: 300px;
-      overflow-y: auto;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-    }
-
-    .order-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid #f0f0f0;
-      font-size: 13px;
-    }
-
-    .order-item:last-child {
-      border-bottom: none;
-    }
-
-    .item-name {
-      flex: 1;
-      color: #333;
-    }
-
-    .item-qty {
-      color: #999;
-      margin: 0 8px;
-    }
-
-    .item-price {
-      font-weight: bold;
-      color: #667eea;
-      min-width: 60px;
-      text-align: right;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 12px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    .summary-total {
-      font-size: 18px;
-      font-weight: bold;
-      color: #667eea;
-      display: flex;
-      justify-content: space-between;
-      padding-top: 15px;
-      border-top: 2px solid #eee;
-      margin-bottom: 20px;
-    }
-
-    .place-order-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-bottom: 10px;
-    }
-
-    .place-order-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    .place-order-btn:active {
-      transform: translateY(0);
-    }
-
-    .back-to-cart {
-      width: 100%;
-      padding: 12px;
-      background: #f0f0f0;
-      color: #333;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .back-to-cart:hover {
-      background: #e0e0e0;
-    }
-
-    .payment-info {
-      background: #f9f9f9;
-      padding: 12px 15px;
-      border-radius: 8px;
-      font-size: 13px;
-      color: #666;
-      margin-bottom: 15px;
-      border-left: 3px solid #667eea;
-    }
-
-    .required-mark {
-      color: #ff6b6b;
-    }
-
-    @media (max-width: 768px) {
-      .checkout-container {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Checkout - Mobile Shop</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      .form-row {
-        grid-template-columns: 1fr;
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 20px;
       }
 
-      .order-summary {
-        position: static;
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
 
       .header h1 {
-        font-size: 24px;
+        font-size: 32px;
+        margin-bottom: 5px;
       }
 
       .progress-bar {
-        display: none;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        max-width: 600px;
+        margin: 0 auto 30px;
       }
-    }
-  </style>
-</head>
-<body>
 
-  <div class="header">
-    <h1>✓ Order Checkout</h1>
-  </div>
+      .progress-step {
+        text-align: center;
+        flex: 1;
+      }
 
-  <div class="checkout-container">
-    <div class="form-section">
-      <div class="section-title">📋 Delivery Information</div>
+      .progress-number {
+        width: 40px;
+        height: 40px;
+        background: white;
+        color: #667eea;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        margin: 0 auto 10px;
+      }
 
-      <form id="checkoutForm">
-        <div class="form-group">
-          <label>Full Name <span class="required-mark">*</span></label>
-          <input type="text" id="customerName" required placeholder="Enter your full name" />
-        </div>
+      .progress-step.active .progress-number {
+        background: #667eea;
+        color: white;
+      }
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>Phone Number <span class="required-mark">*</span></label>
-            <input type="tel" id="phone" required placeholder="+92 300 1234567" pattern="[0-9+\s\-]{8,}" />
-          </div>
-          <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" id="email" placeholder="email@example.com" />
-          </div>
-        </div>
+      .progress-step.active .step-name {
+        color: white;
+        font-weight: bold;
+      }
 
-        <div class="form-group">
-          <label>Delivery Address <span class="required-mark">*</span></label>
-          <textarea id="address" required placeholder="Enter your complete delivery address (Street, City, Postal Code)"></textarea>
-        </div>
+      .progress-line {
+        flex: 1;
+        height: 2px;
+        background: rgba(255, 255, 255, 0.3);
+        margin: 20px 0;
+      }
 
-        <div class="form-row">
-          <div class="form-group">
-            <label>City <span class="required-mark">*</span></label>
-            <input type="text" id="city" required placeholder="e.g., Karachi" />
-          </div>
-          <div class="form-group">
-            <label>Postal Code</label>
-            <input type="text" id="postalCode" placeholder="e.g., 75500" />
-          </div>
-        </div>
+      .step-name {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.7);
+      }
 
-        <div class="section-title" style="margin-top: 30px;">💳 Payment Information</div>
+      .checkout-container {
+        max-width: 900px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 30px;
+      }
 
-        <div class="payment-info">
-          💰 <strong>Payment Method:</strong> Cash on Delivery (COD)<br>
-          Pay when your order arrives at your doorstep
-        </div>
+      .form-section {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
 
-        <div class="form-group">
-          <label>
-            <input type="checkbox" id="agreeTerms" required>
-            I agree to the terms and conditions
-          </label>
-        </div>
-      </form>
+      .section-title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .form-group {
+        margin-bottom: 18px;
+      }
+
+      label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 14px;
+      }
+
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 14px;
+        transition:
+          border-color 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      input:focus,
+      textarea:focus,
+      select:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+      }
+
+      .order-summary {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+      }
+
+      .summary-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .order-items {
+        max-height: 300px;
+        overflow-y: auto;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+      }
+
+      .order-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+        padding-bottom: 12px;
+        border-bottom: 1px solid #f0f0f0;
+        font-size: 13px;
+      }
+
+      .order-item:last-child {
+        border-bottom: none;
+      }
+
+      .item-name {
+        flex: 1;
+        color: #333;
+      }
+
+      .item-qty {
+        color: #999;
+        margin: 0 8px;
+      }
+
+      .item-price {
+        font-weight: bold;
+        color: #667eea;
+        min-width: 60px;
+        text-align: right;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 14px;
+        color: #666;
+      }
+
+      .summary-total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #667eea;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 15px;
+        border-top: 2px solid #eee;
+        margin-bottom: 20px;
+      }
+
+      .place-order-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      .place-order-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .place-order-btn:active {
+        transform: translateY(0);
+      }
+
+      .back-to-cart {
+        width: 100%;
+        padding: 12px;
+        background: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .back-to-cart:hover {
+        background: #e0e0e0;
+      }
+
+      .payment-info {
+        background: #f9f9f9;
+        padding: 12px 15px;
+        border-radius: 8px;
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+        border-left: 3px solid #667eea;
+      }
+
+      .required-mark {
+        color: #ff6b6b;
+      }
+
+      @media (max-width: 768px) {
+        .checkout-container {
+          grid-template-columns: 1fr;
+        }
+
+        .form-row {
+          grid-template-columns: 1fr;
+        }
+
+        .order-summary {
+          position: static;
+        }
+
+        .header h1 {
+          font-size: 24px;
+        }
+
+        .progress-bar {
+          display: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>✓ Order Checkout</h1>
     </div>
 
-    <div class="order-summary">
-      <div class="summary-title">📦 Order Summary</div>
-      
-      <div class="order-items" id="orderItems"></div>
+    <div class="checkout-container">
+      <div class="form-section">
+        <div class="section-title">📋 Delivery Information</div>
 
-      <div class="summary-row">
-        <span>Subtotal</span>
-        <span>Rs. <span id="subtotal">0</span></span>
+        <form id="checkoutForm">
+          <div class="form-group">
+            <label>Full Name <span class="required-mark">*</span></label>
+            <input
+              type="text"
+              id="customerName"
+              required
+              placeholder="Enter your full name"
+            />
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number <span class="required-mark">*</span></label>
+              <input
+                type="tel"
+                id="phone"
+                required
+                placeholder="+92 300 1234567"
+                pattern="[0-9+\s\-]{8,}"
+              />
+            </div>
+            <div class="form-group">
+              <label>Email Address</label>
+              <input type="email" id="email" placeholder="email@example.com" />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Delivery Address <span class="required-mark">*</span></label>
+            <textarea
+              id="address"
+              required
+              placeholder="Enter your complete delivery address (Street, City, Postal Code)"
+            ></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>City <span class="required-mark">*</span></label>
+              <input
+                type="text"
+                id="city"
+                required
+                placeholder="e.g., Karachi"
+              />
+            </div>
+            <div class="form-group">
+              <label>Postal Code</label>
+              <input type="text" id="postalCode" placeholder="e.g., 75500" />
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top: 30px">
+            💳 Payment Information
+          </div>
+
+          <div class="payment-info">
+            💰 <strong>Payment Method:</strong> Cash on Delivery (COD)<br />
+            Pay when your order arrives at your doorstep
+          </div>
+
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="agreeTerms" required />
+              I agree to the terms and conditions
+            </label>
+          </div>
+        </form>
       </div>
-      <div class="summary-row">
-        <span>Shipping</span>
-        <span style="color: #16a34a; font-weight: bold;">Free</span>
+
+      <div class="order-summary">
+        <div class="summary-title">📦 Order Summary</div>
+
+        <div class="order-items" id="orderItems"></div>
+
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>Rs. <span id="subtotal">0</span></span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span style="color: #16a34a; font-weight: bold">Free</span>
+        </div>
+
+        <div class="summary-total">
+          <span>Total Amount</span>
+          <span>Rs. <span id="totalAmount">0</span></span>
+        </div>
+
+        <button class="place-order-btn" onclick="placeOrder()">
+          Place Order
+        </button>
+
+        <button
+          class="back-to-cart"
+          onclick="window.location.href = 'cart.html'"
+        >
+          ← Back to Cart
+        </button>
       </div>
-
-      <div class="summary-total">
-        <span>Total Amount</span>
-        <span>Rs. <span id="totalAmount">0</span></span>
-      </div>
-
-      <button class="place-order-btn" onclick="placeOrder()">
-        Place Order
-      </button>
-
-      <button class="back-to-cart" onclick="window.location.href='cart.html'">
-        ← Back to Cart
-      </button>
     </div>
-  </div>
 
-  <script src="cart.js"></script>
-  <script src="checkout.js"></script>
-</body>
+    <script src="cart.js"></script>
+    <script src="checkout.js"></script>
+  </body>
 </html>

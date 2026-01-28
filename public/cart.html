@@ -1,354 +1,360 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Your Cart - Mobile Shop</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      min-height: 100vh;
-      padding: 20px;
-    }
-
-    .header {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      padding: 20px;
-      text-align: center;
-      margin-bottom: 30px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .header h1 {
-      font-size: 32px;
-      margin-bottom: 5px;
-    }
-
-    .header p {
-      font-size: 14px;
-      opacity: 0.9;
-    }
-
-    .cart-container {
-      max-width: 1000px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: 1fr 350px;
-      gap: 30px;
-    }
-
-    .cart-items-section {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .cart-item {
-      display: flex;
-      gap: 20px;
-      border-bottom: 1px solid #eee;
-      padding: 20px 0;
-      align-items: center;
-      transition: background 0.3s ease;
-    }
-
-    .cart-item:hover {
-      background: #f9f9f9;
-      padding: 20px;
-      margin: 0 -25px;
-      padding-left: 25px;
-      padding-right: 25px;
-    }
-
-    .cart-item:last-child {
-      border-bottom: none;
-    }
-
-    .item-image {
-      width: 120px;
-      height: 120px;
-      object-fit: cover;
-      border-radius: 8px;
-      background: #f0f0f0;
-    }
-
-    .item-details {
-      flex: 1;
-    }
-
-    .item-name {
-      font-size: 18px;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-
-    .item-price-section {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .item-price {
-      font-size: 18px;
-      font-weight: bold;
-      color: #667eea;
-    }
-
-    .item-original-price {
-      text-decoration: line-through;
-      color: #999;
-      font-size: 14px;
-    }
-
-    .discount-badge {
-      background: #ff6b6b;
-      color: white;
-      padding: 4px 8px;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: bold;
-    }
-
-    .quantity-controls {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
-    }
-
-    .qty-btn {
-      width: 32px;
-      height: 32px;
-      border: 1px solid #ddd;
-      background: #f5f5f5;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .qty-btn:hover {
-      background: #667eea;
-      color: white;
-      border-color: #667eea;
-    }
-
-    .qty-display {
-      min-width: 30px;
-      text-align: center;
-      font-weight: bold;
-    }
-
-    .remove-btn {
-      background: none;
-      border: none;
-      color: #ff6b6b;
-      cursor: pointer;
-      font-size: 14px;
-      text-decoration: underline;
-      transition: color 0.3s ease;
-    }
-
-    .remove-btn:hover {
-      color: #ff0000;
-    }
-
-    .item-total {
-      font-size: 16px;
-      font-weight: bold;
-      color: #333;
-      white-space: nowrap;
-      min-width: 80px;
-      text-align: right;
-    }
-
-    .cart-summary {
-      background: white;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      height: fit-content;
-      position: sticky;
-      top: 20px;
-    }
-
-    .summary-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #333;
-    }
-
-    .summary-row {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 15px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid #eee;
-      font-size: 14px;
-    }
-
-    .summary-row:last-of-type {
-      border-bottom: none;
-    }
-
-    .summary-total {
-      font-size: 24px;
-      font-weight: bold;
-      color: #667eea;
-      margin-bottom: 20px;
-    }
-
-    .checkout-btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      margin-bottom: 10px;
-    }
-
-    .checkout-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-    }
-
-    .checkout-btn:active {
-      transform: translateY(0);
-    }
-
-    .continue-shopping {
-      width: 100%;
-      padding: 12px;
-      background: #f0f0f0;
-      color: #333;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .continue-shopping:hover {
-      background: #e0e0e0;
-    }
-
-    .empty-cart {
-      text-align: center;
-      padding: 60px 20px;
-      color: #666;
-    }
-
-    .empty-cart-icon {
-      font-size: 80px;
-      margin-bottom: 20px;
-    }
-
-    .empty-cart h2 {
-      font-size: 24px;
-      margin-bottom: 10px;
-      color: #333;
-    }
-
-    .empty-cart p {
-      font-size: 16px;
-      margin-bottom: 30px;
-    }
-
-    .empty-cart-btn {
-      display: inline-block;
-      padding: 12px 30px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: transform 0.3s ease;
-    }
-
-    .empty-cart-btn:hover {
-      transform: translateY(-2px);
-    }
-
-    @media (max-width: 768px) {
-      .cart-container {
-        grid-template-columns: 1fr;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Your Cart - Mobile Shop</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
       }
 
-      .cart-summary {
-        position: static;
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
       }
 
       .header h1 {
-        font-size: 24px;
+        font-size: 32px;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .cart-container {
+        max-width: 1000px;
+        margin: auto;
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 30px;
+      }
+
+      .cart-items-section {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       }
 
       .cart-item {
-        flex-wrap: wrap;
+        display: flex;
+        gap: 20px;
+        border-bottom: 1px solid #eee;
+        padding: 20px 0;
+        align-items: center;
+        transition: background 0.3s ease;
       }
-    }
-  </style>
-</head>
-<body>
 
-  <div class="header">
-    <h1>🛒 Your Shopping Cart</h1>
-    <p>Review your items and proceed to checkout</p>
-  </div>
+      .cart-item:hover {
+        background: #f9f9f9;
+        padding: 20px;
+        margin: 0 -25px;
+        padding-left: 25px;
+        padding-right: 25px;
+      }
 
-  <div class="cart-container">
-    <div class="cart-items-section">
-      <div id="cartItems"></div>
+      .cart-item:last-child {
+        border-bottom: none;
+      }
+
+      .item-image {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 8px;
+        background: #f0f0f0;
+      }
+
+      .item-details {
+        flex: 1;
+      }
+
+      .item-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+      }
+
+      .item-price-section {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .item-price {
+        font-size: 18px;
+        font-weight: bold;
+        color: #667eea;
+      }
+
+      .item-original-price {
+        text-decoration: line-through;
+        color: #999;
+        font-size: 14px;
+      }
+
+      .discount-badge {
+        background: #ff6b6b;
+        color: white;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: bold;
+      }
+
+      .quantity-controls {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .qty-btn {
+        width: 32px;
+        height: 32px;
+        border: 1px solid #ddd;
+        background: #f5f5f5;
+        cursor: pointer;
+        border-radius: 4px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+      }
+
+      .qty-btn:hover {
+        background: #667eea;
+        color: white;
+        border-color: #667eea;
+      }
+
+      .qty-display {
+        min-width: 30px;
+        text-align: center;
+        font-weight: bold;
+      }
+
+      .remove-btn {
+        background: none;
+        border: none;
+        color: #ff6b6b;
+        cursor: pointer;
+        font-size: 14px;
+        text-decoration: underline;
+        transition: color 0.3s ease;
+      }
+
+      .remove-btn:hover {
+        color: #ff0000;
+      }
+
+      .item-total {
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+        white-space: nowrap;
+        min-width: 80px;
+        text-align: right;
+      }
+
+      .cart-summary {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        height: fit-content;
+        position: sticky;
+        top: 20px;
+      }
+
+      .summary-title {
+        font-size: 20px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #333;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+      }
+
+      .summary-row:last-of-type {
+        border-bottom: none;
+      }
+
+      .summary-total {
+        font-size: 24px;
+        font-weight: bold;
+        color: #667eea;
+        margin-bottom: 20px;
+      }
+
+      .checkout-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+        margin-bottom: 10px;
+      }
+
+      .checkout-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+      }
+
+      .checkout-btn:active {
+        transform: translateY(0);
+      }
+
+      .continue-shopping {
+        width: 100%;
+        padding: 12px;
+        background: #f0f0f0;
+        color: #333;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      .continue-shopping:hover {
+        background: #e0e0e0;
+      }
+
+      .empty-cart {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+      }
+
+      .empty-cart-icon {
+        font-size: 80px;
+        margin-bottom: 20px;
+      }
+
+      .empty-cart h2 {
+        font-size: 24px;
+        margin-bottom: 10px;
+        color: #333;
+      }
+
+      .empty-cart p {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+
+      .empty-cart-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: bold;
+        transition: transform 0.3s ease;
+      }
+
+      .empty-cart-btn:hover {
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 768px) {
+        .cart-container {
+          grid-template-columns: 1fr;
+        }
+
+        .cart-summary {
+          position: static;
+        }
+
+        .header h1 {
+          font-size: 24px;
+        }
+
+        .cart-item {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🛒 Your Shopping Cart</h1>
+      <p>Review your items and proceed to checkout</p>
     </div>
 
-    <div class="cart-summary" id="cartSummary" style="display:none;">
-      <div class="summary-title">Order Summary</div>
-      <div class="summary-row">
-        <span>Subtotal</span>
-        <span>Rs. <span id="subtotal">0</span></span>
-      </div>
-      <div class="summary-row">
-        <span>Shipping</span>
-        <span>Free</span>
-      </div>
-      <div class="summary-row">
-        <span>Items</span>
-        <span id="totalItems">0</span>
-      </div>
-      <div class="summary-total">
-        Total: Rs. <span id="totalPrice">0</span>
+    <div class="cart-container">
+      <div class="cart-items-section">
+        <div id="cartItems"></div>
       </div>
 
-      <button class="checkout-btn" onclick="window.location.href='checkout.html'">
-        Proceed to Checkout →
-      </button>
+      <div class="cart-summary" id="cartSummary" style="display: none">
+        <div class="summary-title">Order Summary</div>
+        <div class="summary-row">
+          <span>Subtotal</span>
+          <span>Rs. <span id="subtotal">0</span></span>
+        </div>
+        <div class="summary-row">
+          <span>Shipping</span>
+          <span>Free</span>
+        </div>
+        <div class="summary-row">
+          <span>Items</span>
+          <span id="totalItems">0</span>
+        </div>
+        <div class="summary-total">
+          Total: Rs. <span id="totalPrice">0</span>
+        </div>
 
-      <button class="continue-shopping" onclick="window.location.href='/mobiles'">
-        ← Continue Shopping
-      </button>
+        <button
+          class="checkout-btn"
+          onclick="window.location.href = 'checkout.html'"
+        >
+          Proceed to Checkout →
+        </button>
+
+        <button
+          class="continue-shopping"
+          onclick="window.location.href = '/mobiles'"
+        >
+          ← Continue Shopping
+        </button>
+      </div>
     </div>
-  </div>
 
-  <script src="cart.js"></script>
-  <script src="cart-ui.js"></script>
-
-</body>
+    <script src="cart.js"></script>
+    <script src="cart-ui.js"></script>
+  </body>
 </html>

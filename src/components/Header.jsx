@@ -8,7 +8,7 @@ function Header() {
           <div className="logo-placeholder">
             <img
               src="/images/logo.png"
-              alt="Ommast Logo"
+              alt="Ommasta Logo"
               className="logo-img"
               onError={(e) => (e.target.style.display = "none")}
             />
