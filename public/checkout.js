@@ -90,21 +90,14 @@ function placeOrder() {
   const order = {
     customerName,
     phone,
-    email: email || "not-provided",
     address,
-    city,
     items: cart.map((item) => ({
       productId: item.productId,
       name: item.name,
       price: item.price,
       quantity: item.quantity,
     })),
-    totalAmount: totals.totalPrice,
-    totalItems: totals.totalItems,
     paymentMethod: "COD",
-    orderStatus: "Pending",
-    paymentStatus: "Unpaid",
-    orderDate: new Date().toISOString(),
   };
 
   // Show loading state
@@ -127,14 +120,18 @@ function placeOrder() {
     body: JSON.stringify(order),
   })
     .then((res) => {
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      if (!res.ok) {
+        return res.json().then((errorData) => {
+          throw new Error(errorData.message || `HTTP error! status: ${res.status}`);
+        });
+      }
       return res.json();
     })
     .then((data) => {
       clearCart();
       alert(
         "✅ Order placed successfully!\nOrder ID: " +
-          (data.orderId || "Your order has been received"),
+          (data._id || "Your order has been received"),
       );
 
       // Store order confirmation
@@ -142,7 +139,7 @@ function placeOrder() {
         "lastOrder",
         JSON.stringify({
           ...order,
-          orderId: data.orderId || Date.now(),
+          orderId: data._id || Date.now(),
         }),
       );
 
