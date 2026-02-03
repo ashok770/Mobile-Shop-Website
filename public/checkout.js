@@ -122,7 +122,9 @@ function placeOrder() {
     .then((res) => {
       if (!res.ok) {
         return res.json().then((errorData) => {
-          throw new Error(errorData.message || `HTTP error! status: ${res.status}`);
+          throw new Error(
+            errorData.message || `HTTP error! status: ${res.status}`,
+          );
         });
       }
       return res.json();
