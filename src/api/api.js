@@ -1,4 +1,4 @@
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || "https://mobile-shop-website-backend.onrender.com";
 
 export const getProducts = async () => {
   const res = await fetch(`${API}/api/products`);

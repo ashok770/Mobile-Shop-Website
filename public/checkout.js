@@ -107,10 +107,7 @@ function placeOrder() {
   btn.textContent = "⏳ Processing...";
 
   // Send order to backend
-  const apiUrl =
-    window.location.hostname === "localhost"
-      ? "http://localhost:5000/api/orders"
-      : "https://your-domain.com/api/orders"; // Update with your production domain
+  const apiUrl = "https://mobile-shop-website-backend.onrender.com/api/orders";
 
   fetch(apiUrl, {
     method: "POST",
