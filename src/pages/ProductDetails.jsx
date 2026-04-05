@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { getProducts } from "../api/api";
+import { DarkPatternProductNudges } from "../components/darkPatternDemo/DarkPatternDemoBlocks";
 
 function ProductDetails() {
   const { id } = useParams();
@@ -67,6 +68,7 @@ function ProductDetails() {
         {product.discountPercent > 0 && (
           <span className="discount-badge">-{product.discountPercent}%</span>
         )}
+        <DarkPatternProductNudges />
         <p>
           <b>Brand:</b> {product.brand}
         </p>

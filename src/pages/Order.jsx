@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { createOrder } from "../api/api";
+import { DarkPatternCheckoutNudges } from "../components/darkPatternDemo/DarkPatternDemoBlocks";
 
 function Order() {
   const location = useLocation();
@@ -82,6 +83,7 @@ Payment: Cash on Delivery
   return (
     <div className="order-page">
       <h2>Place Your Order</h2>
+      <DarkPatternCheckoutNudges />
 
       <div className="order-card">
         <img src={product.image} alt={product.name} />
