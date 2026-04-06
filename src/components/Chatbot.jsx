@@ -12,12 +12,22 @@ const Chatbot = () => {
     const userMsg = { sender: "user", text: input };
     setMessages((prev) => [...prev, userMsg]);
 
-    const res = await axios.post("/api/chat", {
-      message: input,
-    });
+    try {
+      const res = await axios.post("http://localhost:5000/api/chat", {
+        message: input,
+      });
 
-    const botMsg = { sender: "bot", text: res.data.reply };
-    setMessages((prev) => [...prev, botMsg]);
+      console.log("Response:", res.data);
+
+      const botMsg = { sender: "bot", text: res.data.reply };
+      setMessages((prev) => [...prev, botMsg]);
+    } catch (error) {
+      console.error("Frontend Error:", error);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Error talking to server" },
+      ]);
+    }
 
     setInput("");
   };
