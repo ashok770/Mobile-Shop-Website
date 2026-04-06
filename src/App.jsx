@@ -3,6 +3,7 @@ import "./App.css";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import Chatbot from "./components/Chatbot";
 
 // Public pages
 import Home from "./pages/Home";
@@ -50,6 +51,9 @@ function Layout() {
 
       {/* Footer only for public pages */}
       {!isAdminRoute && <Footer />}
+
+      {/* Chatbot only for public pages */}
+      {!isAdminRoute && <Chatbot />}
     </>
   );
 }
