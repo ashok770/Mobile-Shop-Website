@@ -19,7 +19,10 @@ const Chatbot = () => {
 
       console.log("Response:", res.data);
 
-      const botMsg = { sender: "bot", text: res.data.reply };
+      const botMsg =
+        res.data.type === "products"
+          ? { sender: "bot", type: "products", products: res.data.products }
+          : { sender: "bot", text: res.data.reply };
       setMessages((prev) => [...prev, botMsg]);
     } catch (error) {
       console.error("Frontend Error:", error);
@@ -62,8 +65,55 @@ const Chatbot = () => {
         >
           <div style={{ height: "300px", overflowY: "scroll" }}>
             {messages.map((msg, i) => (
-              <div key={i}>
-                <b>{msg.sender}:</b> {msg.text}
+              <div key={i} style={{ marginBottom: "10px" }}>
+                {msg.sender === "user" ? (
+                  <div style={{ textAlign: "right" }}>
+                    <span
+                      style={{
+                        background: "#007bff",
+                        color: "#fff",
+                        padding: "5px 10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      {msg.text}
+                    </span>
+                  </div>
+                ) : msg.type === "products" ? (
+                  <div>
+                    {msg.products.map((p, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          border: "1px solid #ddd",
+                          padding: "8px",
+                          marginBottom: "5px",
+                          borderRadius: "8px",
+                        }}
+                      >
+                        <div>
+                          <b>{p.name}</b>
+                        </div>
+                        <div>₹{p.price}</div>
+                        <a href={p.link} target="_blank" rel="noreferrer">
+                          🔗 View Product
+                        </a>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div style={{ textAlign: "left" }}>
+                    <span
+                      style={{
+                        background: "#eee",
+                        padding: "5px 10px",
+                        borderRadius: "10px",
+                      }}
+                    >
+                      {msg.text}
+                    </span>
+                  </div>
+                )}
               </div>
             ))}
           </div>
