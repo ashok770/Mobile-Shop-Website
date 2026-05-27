@@ -1,5 +1,4 @@
 import { NavLink, Link } from "react-router-dom";
-import { DarkPatternDemoBanner } from "./darkPatternDemo/DarkPatternDemoBlocks";
 
 function Header() {
   return (
@@ -50,7 +49,6 @@ function Header() {
           </button>
         </nav>
       </div>
-      <DarkPatternDemoBanner />
     </header>
   );
 }
