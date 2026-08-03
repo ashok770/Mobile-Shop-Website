@@ -9,32 +9,51 @@ function Carousel() {
   const banners = [
     {
       id: 1,
-      image:
-        "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=1200&h=500&fit=crop",
+      /*
+        FIX 5: wider image request (w=1400) for sharper rendering on large screens.
+        bgPos: "center right" pushes the phone subject to the right half,
+        leaving the left side clean for the text overlay.
+      */
+      image: "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=1400&h=500&fit=crop",
+      bgPos: "center right",
       title: "Latest iPhone Models",
       subtitle: "Get up to 30% off on premium Apple devices",
       tag: "Hot Deal",
     },
     {
       id: 2,
-      image:
-        "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=500&fit=crop",
+      /*
+        FIX 5: original image was laptops — off-brand for a mobile shop.
+        Replaced with a Samsung/Android-focused smartphone image.
+        bgPos: "center right" keeps device on the right, text on the left.
+      */
+      image: "https://images.unsplash.com/photo-1610945415295-d9bbf067e59c?w=1400&h=500&fit=crop",
+      bgPos: "center right",
       title: "Android Flagship Sale",
       subtitle: "Samsung, OnePlus & more at unbeatable prices",
       tag: "Limited Offer",
     },
     {
       id: 3,
-      image:
-        "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=500&fit=crop",
+      /*
+        FIX 5: original was a watch — completely off-brand.
+        Replaced with a budget smartphone image.
+        bgPos: "center" keeps the subject centered under the overlay.
+      */
+      image: "https://images.unsplash.com/photo-1585060544812-6b45742d762f?w=1400&h=500&fit=crop",
+      bgPos: "center",
       title: "Budget Friendly Phones",
       subtitle: "Quality smartphones under ₹20,000",
       tag: "Best Value",
     },
     {
       id: 4,
-      image:
-        "https://images.unsplash.com/photo-1505228395891-9a51e7e86e81?w=1200&h=500&fit=crop",
+      /*
+        FIX 5: bgPos "right 30%" keeps the person's face visible on the right
+        while the left side stays uncluttered for the text overlay.
+      */
+      image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=1400&h=500&fit=crop",
+      bgPos: "right 30%",
       title: "Exclusive Accessories",
       subtitle: "Complete your mobile experience",
       tag: "New Arrivals",
@@ -71,10 +90,25 @@ function Carousel() {
           <div
             key={banner.id}
             className={`carousel-slide ${index === currentSlide ? "active" : ""}`}
-            style={{ backgroundImage: `url(${banner.image})` }}
+            style={{
+              backgroundImage: `url(${banner.image})`,
+              /* FIX 5: per-slide focal point — subject right, text left */
+              backgroundPosition: banner.bgPos,
+            }}
+            /* FIX 9: hide inactive slides from assistive technology */
+            aria-hidden={index !== currentSlide}
           >
-            <div className="carousel-overlay"></div>
-            <div className="carousel-content">
+            <div className="carousel-overlay" />
+            {/*
+              FIX 9: aria-live="polite" on the active slide's content so screen
+              readers announce the new slide title when it changes.
+              aria-atomic="true" reads the whole block, not just the changed part.
+            */}
+            <div
+              className="carousel-content"
+              aria-live={index === currentSlide ? "polite" : undefined}
+              aria-atomic="true"
+            >
               <span className="carousel-tag">{banner.tag}</span>
               <h1>{banner.title}</h1>
               <p>{banner.subtitle}</p>
@@ -93,13 +127,16 @@ function Carousel() {
         &#10095;
       </button>
 
-      <div className="carousel-dots">
-        {banners.map((_, index) => (
+      <div className="carousel-dots" role="tablist" aria-label="Slide indicators">
+        {banners.map((banner, index) => (
           <span
             key={index}
+            role="tab"
+            aria-selected={index === currentSlide}
+            aria-label={`Go to slide ${index + 1}: ${banner.title}`}
             className={`dot ${index === currentSlide ? "active" : ""}`}
             onClick={() => goToSlide(index)}
-          ></span>
+          />
         ))}
       </div>
     </div>

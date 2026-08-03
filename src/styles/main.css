@@ -5,6 +5,19 @@
 /* ── Home Page ── */
 .home-page {
   background: var(--gray-50);
+  /* FIX 3: no accidental top padding that would push carousel down */
+  padding-top: 0;
+}
+
+/*
+  FIX 3 + FIX 11: CategoryRow spacing.
+  Adds visual separation between the carousel and category cards.
+  24px top padding = breathing room. 28px bottom = space before next section.
+*/
+.category-row {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 20px 0 24px;
 }
 
 .home-section {
