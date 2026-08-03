@@ -1,6 +1,5 @@
 import "../styles/main.css";
 import Carousel from "../components/Carousel";
-import CategoryRow from "../components/CategoryRow";
 import OfferSection from "../components/OfferSection";
 import BelowThousandSection from "../components/BelowThousandSection";
 
@@ -9,9 +8,6 @@ function Home() {
     <div className="home-page">
       {/* HERO CAROUSEL */}
       <Carousel />
-
-      {/* CATEGORIES */}
-      <CategoryRow />
 
       {/* OFFERS */}
       <BelowThousandSection />

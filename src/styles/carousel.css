@@ -12,10 +12,11 @@
     — On 1920×1080: caps at 520px so it doesn't look stretched.
     — min() ensures it never exceeds 520px on large screens.
   */
-  height: min(440px, 58vh);
+  height: 500px;
+  max-height: 520px;
+  min-height: 300px;
   overflow: hidden;
   background: var(--dark);
-  /* FIX 3: bottom margin creates breathing room before CategoryRow */
   margin-bottom: 0;
 }
 
@@ -56,37 +57,38 @@
 
 .carousel-content {
   position: absolute;
-  top: 50%;
-  /*
-    FIX 4: Replace left:8% with a container-aware offset.
-    calc(50% - 616px) = left edge of a 1232px content area centered in viewport.
-    max(24px, ...) ensures minimum 24px padding on smaller screens.
-    This aligns the text with the navbar logo and CategoryRow cards below.
-  */
-  left: max(24px, calc(50% - 616px));
-  transform: translateY(-50%);
+  top: 0;
+  bottom: 0;
+  left: max(40px, calc(50% - 600px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 16px;
   text-align: left;
   color: var(--white);
   z-index: 2;
-  max-width: 540px;
+  width: 100%;
+  max-width: 500px;
+  padding: 32px 0;
 }
 
 .carousel-tag {
   display: inline-block;
+  width: fit-content;
   background: var(--accent);
   color: var(--white);
   font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  padding: 5px 12px;
+  padding: 5px 14px;
   border-radius: var(--radius-full);
-  margin-bottom: 16px;
 }
 
 .carousel-content h1 {
   font-size: 42px;
-  margin-bottom: 12px;
+  margin: 0;
   font-weight: 800;
   letter-spacing: -0.8px;
   line-height: 1.15;
@@ -96,7 +98,7 @@
 
 .carousel-content p {
   font-size: 17px;
-  margin-bottom: 24px;
+  margin: 0;
   color: rgba(255, 255, 255, 0.82);
   line-height: 1.55;
   text-shadow: none;
@@ -105,8 +107,9 @@
 .carousel-btn {
   display: inline-flex;
   align-items: center;
+  width: fit-content;
   gap: 6px;
-  padding: 13px 28px;
+  padding: 12px 28px;
   font-size: 15px;
   background: var(--white);
   color: var(--dark);
@@ -116,7 +119,6 @@
   font-weight: 700;
   transition: var(--transition);
   letter-spacing: 0.2px;
-  /* FIX 7: accessibility — visible focus ring for keyboard users */
 }
 
 .carousel-btn:hover {
@@ -210,10 +212,10 @@
 
 /* Responsive */
 
-/* FIX 6: laptop breakpoint — was missing, caused 46px heading on 1024px screens */
 @media (max-width: 1024px) {
   .carousel-container {
-    height: min(400px, 56vh);
+    height: 440px;
+    max-height: 460px;
   }
 
   .carousel-content h1 {
@@ -227,13 +229,16 @@
 
 @media (max-width: 768px) {
   .carousel-container {
-    /* FIX 1 mobile: proportional height, leaves room for category cards */
-    height: min(300px, 46vh);
+    height: 320px;
+    max-height: 340px;
+    min-height: 260px;
   }
 
   .carousel-content {
     left: 20px;
     max-width: calc(100% - 40px);
+    padding: 20px 0;
+    gap: 12px;
   }
 
   .carousel-content h1 {
@@ -273,7 +278,9 @@
 
 @media (max-width: 480px) {
   .carousel-container {
-    height: min(240px, 44vh);
+    height: 260px;
+    min-height: unset;
+    max-height: unset;
   }
 
   .carousel-content h1 {
