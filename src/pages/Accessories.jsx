@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MobileCard from "../components/MobileCard";
+import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/api";
 
 const TYPE_FILTERS = ["All", "Smartwatch", "Mobile Charger", "Mobile Cover"];
@@ -85,16 +85,7 @@ function Accessories() {
         <div className="mobile-list">
           {filteredAccessories.length > 0 ? (
             filteredAccessories.map((item) => (
-              <MobileCard
-                key={item._id}
-                id={item._id}
-                name={item.name}
-                price={item.finalPrice ?? item.price ?? item.originalPrice}
-                originalPrice={item.originalPrice}
-                discountPercent={item.discountPercent || 0}
-                image={item.images?.[0] || item.image}
-                stock={item.stock}
-              />
+              <ProductCard key={item._id} product={item} />
             ))
           ) : (
             <p className="page-empty">No accessories found matching your filters.</p>

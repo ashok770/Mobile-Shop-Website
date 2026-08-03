@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import MobileCard from "../components/MobileCard";
+import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/api";
 
 function Mobiles() {
@@ -56,16 +56,7 @@ function Mobiles() {
         <div className="mobile-list">
           {filteredMobiles.length > 0 ? (
             filteredMobiles.map((mobile) => (
-              <MobileCard
-                key={mobile._id}
-                id={mobile._id}
-                name={mobile.name}
-                price={mobile.finalPrice ?? mobile.price ?? mobile.originalPrice}
-                originalPrice={mobile.originalPrice}
-                discountPercent={mobile.discountPercent || 0}
-                image={mobile.images?.[0] || mobile.image}
-                stock={mobile.stock}
-              />
+              <ProductCard key={mobile._id} product={mobile} />
             ))
           ) : (
             <p className="page-empty">No mobiles found matching your search.</p>

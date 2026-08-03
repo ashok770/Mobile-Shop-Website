@@ -195,121 +195,63 @@
   letter-spacing: 0.2px;
 }
 
-/* ── Product Cards (Home offers) ── */
+/* ── Product Card (unified — used on Home, Mobiles, Offers) ── */
 .product-card {
   background: var(--white);
   border-radius: var(--radius-lg);
   border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-card);
   padding: 16px;
-  text-align: center;
-  transition: var(--transition);
-  position: relative;
-  overflow: hidden;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+  min-height: 380px;
+  transition: var(--transition);
 }
 
 .product-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
   box-shadow: var(--shadow-card-hover);
   border-color: var(--gray-300);
 }
 
 .product-card img {
   width: 100%;
-  height: 180px;
+  height: 190px;
   object-fit: contain;
-  margin-bottom: 4px;
-  transition: var(--transition);
+  border-radius: var(--radius-md);
+  background: var(--gray-50);
   cursor: pointer;
+  transition: var(--transition);
+  flex-shrink: 0;
 }
 
 .product-card:hover img {
-  transform: scale(1.03);
-}
-
-.product-card h4 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--gray-800);
-  line-height: 1.4;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.product-card .price {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin: 4px 0;
-  background: none;
-  -webkit-text-fill-color: unset;
-}
-
-/* ── Mobile Cards (Listing pages) ── */
-.mobile-card {
-  background: var(--white);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--gray-200);
-  padding: 20px 16px 16px;
-  transition: var(--transition);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  position: relative;
-  overflow: hidden;
-}
-
-.mobile-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card-hover);
-  border-color: var(--gray-300);
-}
-
-.mobile-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: contain;
-  margin: 0 auto;
-  cursor: pointer;
-  transition: var(--transition);
-}
-
-.mobile-card:hover img {
   transform: scale(1.04);
 }
 
-.mobile-card h3 {
+.product-card__name {
   font-size: 14px;
   font-weight: 600;
   color: var(--gray-800);
-  line-height: 1.4;
-  margin: 8px 0 4px;
+  line-height: 1.45;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex-grow: 1;
 }
 
-.mobile-card .price {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--gray-900);
-  background: none;
-  -webkit-text-fill-color: unset;
-  margin: 4px 0 8px;
+.product-card__price {
   display: flex;
   align-items: center;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.mobile-card .card-actions {
+.card-actions {
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -347,7 +289,6 @@
   letter-spacing: 0.3px;
 }
 
-.mobile-card .discount-badge,
 .product-card .discount-badge {
   position: absolute;
   top: 12px;
@@ -810,12 +751,12 @@
     gap: 12px;
   }
 
-  .mobile-card img {
+  .product-card img {
     height: 140px;
   }
 
-  .product-card img {
-    height: 140px;
+  .product-card {
+    min-height: 320px;
   }
 }
 

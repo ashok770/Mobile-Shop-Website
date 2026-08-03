@@ -1,21 +1,30 @@
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
-  const [qty, setQty] = useState(1);
 
-  const handleOrder = () => {
-    navigate("/order", {
-      state: {
-        product,
-        quantity: qty,
-      },
-    });
-  };
+  const displayPrice =
+    product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A";
+  const image = product.images?.[0] || product.image;
 
-  const handleViewDetails = () => {
-    navigate(`/mobiles/${product._id}`);
+  const handleViewDetails = () => navigate(`/mobiles/${product._id}`);
+
+  const handleAddToCart = () => {
+    if (typeof product.stock !== "undefined" && product.stock <= 0) {
+      alert("Out of stock");
+      return;
+    }
+    const cartProduct = {
+      productId: product._id,
+      name: product.name,
+      image,
+      price: displayPrice,
+      originalPrice: product.originalPrice,
+      discountPercent: product.discountPercent || 0,
+      stock: product.stock,
+    };
+    window.addToCart && window.addToCart(cartProduct);
+    alert("Added to cart!");
   };
 
   return (
@@ -25,55 +34,28 @@ function ProductCard({ product }) {
       )}
 
       <img
-        src={product.image}
+        src={image}
         alt={product.name}
         onClick={handleViewDetails}
-        style={{ cursor: "pointer" }}
       />
 
-      <h4>{product.name}</h4>
+      <h3 className="product-card__name">{product.name}</h3>
 
-      <div className="price">
-        {product.originalPrice && (
+      <div className="product-card__price">
+        {product.originalPrice && product.discountPercent > 0 && (
           <span className="old-price">₹{product.originalPrice}</span>
         )}
-        <span className="new-price">₹{product.finalPrice}</span>
+        <span className="new-price">₹{displayPrice}</span>
       </div>
 
-      <div className="qty">
-        <button onClick={() => setQty((q) => Math.max(1, q - 1))}>−</button>
-        <span>{qty}</span>
-        <button onClick={() => setQty((q) => q + 1)}>+</button>
+      <div className="card-actions">
+        <button className="btn order-btn" onClick={handleViewDetails}>
+          View Details
+        </button>
+        <button className="btn add-to-cart-btn" onClick={handleAddToCart}>
+          Add to Cart
+        </button>
       </div>
-
-      <button
-        className="btn add-to-cart-btn"
-        onClick={() => {
-          if (typeof product.stock !== "undefined" && product.stock <= 0) {
-            alert("Out of stock");
-            return;
-          }
-
-          const cartProduct = {
-            productId: product._id,
-            name: product.name,
-            image: product.image,
-            price: product.finalPrice ?? product.price ?? product.originalPrice,
-            originalPrice: product.originalPrice,
-            discountPercent: product.discountPercent || 0,
-            stock: product.stock,
-          };
-
-          window.addToCart && window.addToCart(cartProduct);
-          alert("Added to cart!");
-        }}
-      >
-        Add to Cart
-      </button>
-
-      <button className="order-btn" onClick={handleOrder}>
-        Order Now
-      </button>
     </div>
   );
 }
