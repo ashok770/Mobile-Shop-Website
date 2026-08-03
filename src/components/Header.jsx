@@ -3,6 +3,9 @@ import { NavLink, Link } from "react-router-dom";
 function Header() {
   return (
     <header className="site-header">
+      <div className="header-topbar">
+        Free delivery on orders above ₹999 &nbsp;|&nbsp; Genuine products with warranty
+      </div>
       <div className="container header-content">
         <Link to="/" className="brand-logo">
           <div className="logo-placeholder">
@@ -34,16 +37,8 @@ function Header() {
           <NavLink to="/services">Services</NavLink>
           <NavLink to="/contact">Contact</NavLink>
           <button
+            className="cart-btn"
             onClick={() => (window.location.href = "/cart.html")}
-            style={{
-              background: "none",
-              border: "none",
-              color: "#16a34a",
-              fontWeight: "bold",
-              cursor: "pointer",
-              fontSize: "15px",
-              padding: "8px 12px",
-            }}
           >
             🛒 Cart
           </button>

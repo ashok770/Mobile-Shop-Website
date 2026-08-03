@@ -24,71 +24,53 @@ function Mobiles() {
   });
 
   return (
-    <div className="container">
-      {/* Page Heading */}
-      <div style={{ marginBottom: "25px" }}>
-        <h2>All Mobiles</h2>
-        <p style={{ color: "#555", marginTop: "6px" }}>
-          Browse latest mobiles from top brands
-        </p>
-      </div>
-
-      {/* Search + Filters */}
-      <div className="mobiles-toolbar">
-        <input
-          type="text"
-          placeholder="Search mobiles..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="search-input"
-        />
-
-        <div className="filters">
-          <button
-            className={brand === "All" ? "active" : ""}
-            onClick={() => setBrand("All")}
-          >
-            All
-          </button>
-          <button
-            className={brand === "Samsung" ? "active" : ""}
-            onClick={() => setBrand("Samsung")}
-          >
-            Samsung
-          </button>
-          <button
-            className={brand === "Apple" ? "active" : ""}
-            onClick={() => setBrand("Apple")}
-          >
-            Apple
-          </button>
-          <button
-            className={brand === "Redmi" ? "active" : ""}
-            onClick={() => setBrand("Redmi")}
-          >
-            Redmi
-          </button>
+    <div className="page-wrapper">
+      <div className="container">
+        <div className="page-header">
+          <h2>All Mobiles</h2>
+          <p>Browse latest smartphones from top brands — Samsung, Apple, Redmi & more</p>
         </div>
-      </div>
 
-      {/* Mobiles Grid */}
-      <div className="mobile-list">
-        {filteredMobiles.length > 0 ? (
-          filteredMobiles.map((mobile) => (
-            <MobileCard
-              key={mobile._id}
-              id={mobile._id}
-              name={mobile.name}
-              price={mobile.finalPrice ?? mobile.price ?? mobile.originalPrice}
-              originalPrice={mobile.originalPrice}
-              discountPercent={mobile.discountPercent || 0}
-              image={mobile.images?.[0] || mobile.image}
-              stock={mobile.stock}
-            />
-          ))
-        ) : (
-          <p style={{ marginTop: "30px", color: "#666" }}>No mobiles found.</p>
-        )}
+        <div className="mobiles-toolbar">
+          <input
+            type="text"
+            placeholder="Search mobiles..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="search-input"
+          />
+
+          <div className="filters">
+            {["All", "Samsung", "Apple", "Redmi"].map((b) => (
+              <button
+                key={b}
+                className={brand === b ? "active" : ""}
+                onClick={() => setBrand(b)}
+              >
+                {b}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="mobile-list">
+          {filteredMobiles.length > 0 ? (
+            filteredMobiles.map((mobile) => (
+              <MobileCard
+                key={mobile._id}
+                id={mobile._id}
+                name={mobile.name}
+                price={mobile.finalPrice ?? mobile.price ?? mobile.originalPrice}
+                originalPrice={mobile.originalPrice}
+                discountPercent={mobile.discountPercent || 0}
+                image={mobile.images?.[0] || mobile.image}
+                stock={mobile.stock}
+              />
+            ))
+          ) : (
+            <p className="page-empty">No mobiles found matching your search.</p>
+          )}
+        </div>
       </div>
     </div>
   );

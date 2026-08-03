@@ -20,9 +20,11 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
-  if (!product) return <p>Loading...</p>;
+  if (!product) return <p className="product-loading">Loading product...</p>;
 
   const imageList = product.images || (product.image ? [product.image] : []);
+  const displayPrice =
+    product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A";
 
   return (
     <div className="container product-details">
@@ -37,12 +39,10 @@ function ProductDetails() {
                 src={img}
                 alt={`${product.name} ${index + 1}`}
                 onClick={() => setMainImage(img)}
-                className="thumbnail"
+                className={`thumbnail ${mainImage === img ? "active" : ""}`}
                 style={{
                   cursor: "pointer",
-                  opacity: mainImage === img ? 1 : 0.6,
-                  border:
-                    mainImage === img ? "2px solid #ff6b35" : "2px solid #ddd",
+                  opacity: mainImage === img ? 1 : 0.55,
                 }}
               />
             ))}
@@ -50,36 +50,73 @@ function ProductDetails() {
         )}
       </div>
 
-      <div>
+      <div className="product-info">
         <h2>{product.name}</h2>
-        <h3>
+
+        <div className="product-price-block">
           {product.originalPrice &&
             product.finalPrice &&
             product.discountPercent > 0 && (
               <span className="old-price">₹{product.originalPrice}</span>
             )}
-          ₹
-          {product.finalPrice ??
-            product.price ??
-            product.originalPrice ??
-            "N/A"}
-        </h3>
-        {product.discountPercent > 0 && (
-          <span className="discount-badge">-{product.discountPercent}%</span>
-        )}
-        <p>
-          <b>Brand:</b> {product.brand}
-        </p>
-        <p>
-          <b>Category:</b> {product.category}
-        </p>
+          <span className="current-price">₹{displayPrice}</span>
+          {product.discountPercent > 0 && (
+            <span className="discount-badge">
+              -{product.discountPercent}% OFF
+            </span>
+          )}
+        </div>
 
-        <button
-          className="btn order-btn"
-          onClick={() => navigate("/order", { state: product })}
-        >
-          Order Now
-        </button>
+        <div className="product-meta">
+          <p>
+            <b>Brand:</b> {product.brand}
+          </p>
+          <p>
+            <b>Category:</b> {product.category}
+          </p>
+          {typeof product.stock !== "undefined" && (
+            <p>
+              <b>Availability:</b>{" "}
+              {product.stock > 0 ? (
+                <span style={{ color: "var(--success)" }}>In Stock</span>
+              ) : (
+                <span style={{ color: "var(--accent)" }}>Out of Stock</span>
+              )}
+            </p>
+          )}
+        </div>
+
+        <div className="product-actions">
+          <button
+            className="btn order-btn"
+            onClick={() => navigate("/order", { state: product })}
+          >
+            Order Now
+          </button>
+          <button
+            className="btn add-to-cart-btn"
+            style={{ width: "auto", padding: "14px 32px" }}
+            onClick={() => {
+              if (typeof product.stock !== "undefined" && product.stock <= 0) {
+                alert("Out of stock");
+                return;
+              }
+              const cartProduct = {
+                productId: product._id,
+                name: product.name,
+                image: mainImage,
+                price: displayPrice,
+                originalPrice: product.originalPrice,
+                discountPercent: product.discountPercent || 0,
+                stock: product.stock,
+              };
+              window.addToCart && window.addToCart(cartProduct);
+              alert("Added to cart!");
+            }}
+          >
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );

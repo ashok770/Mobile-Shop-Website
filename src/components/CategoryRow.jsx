@@ -9,29 +9,29 @@ function CategoryRow() {
       name: "Mobiles",
       icon: "📱",
       path: "/mobiles",
-      color: "#2563eb"
+      color: "#1428a0",
     },
     {
       id: 2,
       name: "Accessories",
       icon: "🎧",
-      path: "/accessories", 
-      color: "#16a34a"
+      path: "/accessories",
+      color: "#00873e",
     },
     {
       id: 3,
       name: "Services",
       icon: "🔧",
       path: "/services",
-      color: "#dc2626"
+      color: "#e31837",
     },
     {
       id: 4,
       name: "Contact",
       icon: "📞",
       path: "/contact",
-      color: "#7c3aed"
-    }
+      color: "#ff6600",
+    },
   ];
 
   return (
@@ -43,7 +43,7 @@ function CategoryRow() {
               key={category.id}
               className="category-card"
               onClick={() => navigate(category.path)}
-              style={{ borderColor: category.color }}
+              style={{ "--cat-color": category.color }}
             >
               <div className="category-icon" style={{ color: category.color }}>
                 {category.icon}

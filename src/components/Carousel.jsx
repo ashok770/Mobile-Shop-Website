@@ -6,28 +6,30 @@ function Carousel() {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // Banner images - using placeholder images, replace with your actual images
   const banners = [
     {
       id: 1,
       image:
         "https://images.unsplash.com/photo-1511707267537-b85faf00021e?w=1200&h=500&fit=crop",
       title: "Latest iPhone Models",
-      subtitle: "Get up to 30% off",
+      subtitle: "Get up to 30% off on premium Apple devices",
+      tag: "Hot Deal",
     },
     {
       id: 2,
       image:
         "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=500&fit=crop",
       title: "Android Flagship Sale",
-      subtitle: "Premium phones at great prices",
+      subtitle: "Samsung, OnePlus & more at unbeatable prices",
+      tag: "Limited Offer",
     },
     {
       id: 3,
       image:
         "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=1200&h=500&fit=crop",
       title: "Budget Friendly Phones",
-      subtitle: "Quality under ₹20,000",
+      subtitle: "Quality smartphones under ₹20,000",
+      tag: "Best Value",
     },
     {
       id: 4,
@@ -35,10 +37,10 @@ function Carousel() {
         "https://images.unsplash.com/photo-1505228395891-9a51e7e86e81?w=1200&h=500&fit=crop",
       title: "Exclusive Accessories",
       subtitle: "Complete your mobile experience",
+      tag: "New Arrivals",
     },
   ];
 
-  // Auto-slide every 5 seconds
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % banners.length);
@@ -73,25 +75,24 @@ function Carousel() {
           >
             <div className="carousel-overlay"></div>
             <div className="carousel-content">
+              <span className="carousel-tag">{banner.tag}</span>
               <h1>{banner.title}</h1>
               <p>{banner.subtitle}</p>
               <button className="carousel-btn" onClick={handleShopNow}>
-                Shop Now
+                Shop Now →
               </button>
             </div>
           </div>
         ))}
       </div>
 
-      {/* Navigation Arrows */}
-      <button className="carousel-nav prev" onClick={prevSlide}>
+      <button className="carousel-nav prev" onClick={prevSlide} aria-label="Previous slide">
         &#10094;
       </button>
-      <button className="carousel-nav next" onClick={nextSlide}>
+      <button className="carousel-nav next" onClick={nextSlide} aria-label="Next slide">
         &#10095;
       </button>
 
-      {/* Dot Indicators */}
       <div className="carousel-dots">
         {banners.map((_, index) => (
           <span

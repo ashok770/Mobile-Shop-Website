@@ -21,7 +21,7 @@ function ProductCard({ product }) {
   return (
     <div className="product-card">
       {product.discountPercent > 0 && (
-        <span className="discount-badge">-{product.discountPercent}%</span>
+        <span className="discount-badge">-{product.discountPercent}% OFF</span>
       )}
 
       <img
