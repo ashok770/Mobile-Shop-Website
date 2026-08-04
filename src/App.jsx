@@ -15,6 +15,8 @@ import Contact from "./pages/Contact";
 import Order from "./pages/Order";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
+import Payment from "./pages/Payment";
+import OrderSuccess from "./pages/OrderSuccess";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -45,6 +47,8 @@ function Layout() {
         <Route path="/order" element={<Order />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
+        <Route path="/payment" element={<Payment />} />
+        <Route path="/order-success" element={<OrderSuccess />} />
 
         {/* Admin (hidden) */}
         <Route path="/admin/login" element={<AdminLogin />} />
