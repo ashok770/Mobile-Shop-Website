@@ -1,5 +1,6 @@
 import "../styles/main.css";
 import Carousel from "../components/Carousel";
+import ExploreCategories from "../components/ExploreCategories";
 import OfferSection from "../components/OfferSection";
 import BelowThousandSection from "../components/BelowThousandSection";
 
@@ -8,6 +9,8 @@ function Home() {
     <div className="home-page">
       {/* HERO CAROUSEL */}
       <Carousel />
+
+      <ExploreCategories />
 
       {/* OFFERS */}
       <BelowThousandSection />
