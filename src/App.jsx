@@ -13,6 +13,7 @@ import Accessories from "./pages/Accessories";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Order from "./pages/Order";
+import Cart from "./pages/Cart";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -41,6 +42,7 @@ function Layout() {
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/order" element={<Order />} />
+        <Route path="/cart" element={<Cart />} />
 
         {/* Admin (hidden) */}
         <Route path="/admin/login" element={<AdminLogin />} />

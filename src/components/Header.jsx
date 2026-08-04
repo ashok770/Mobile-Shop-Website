@@ -327,7 +327,7 @@ function Header() {
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                onClick={() => (window.location.href = "/cart.html")}
+                onClick={() => navigate("/cart")}
                 className="relative flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label={`Cart, ${cartCount} items`}
               >
