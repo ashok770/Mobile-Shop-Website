@@ -1,45 +1,50 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 :root {
-  /* Brand — Samsung/Croma inspired */
-  --primary: #1428a0;
-  --primary-dark: #0a1a6b;
-  --primary-light: #e8edff;
-  --accent: #e31837;
+  /* Brand tokens */
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #eff6ff;
+  --background: #ffffff;
+  --surface: #f8fafc;
+  --border: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #6b7280;
+  --discount: #ef4444;
+  --success: #16a34a;
+  --rating: #f59e0b;
+  --accent: #ef4444;
   --accent-orange: #ff6600;
-  --success: #00873e;
-  --success-light: #e6f7ed;
-  --warning: #ff9500;
 
   /* Neutrals */
   --dark: #0d1117;
-  --gray-900: #1a1a2e;
-  --gray-800: #2d2d3a;
-  --gray-700: #444455;
-  --gray-600: #6b6b7b;
-  --gray-500: #888899;
-  --gray-400: #b0b0be;
-  --gray-300: #d4d4de;
-  --gray-200: #e8e8f0;
-  --gray-100: #f4f4f8;
-  --gray-50: #fafafa;
+  --gray-900: #111827;
+  --gray-800: #1f2937;
+  --gray-700: #374151;
+  --gray-600: #6b7280;
+  --gray-500: #9ca3af;
+  --gray-400: #d1d5db;
+  --gray-300: #e5e7eb;
+  --gray-200: #f3f4f6;
+  --gray-100: #f8fafc;
+  --gray-50: #ffffff;
   --white: #ffffff;
 
   /* Layout */
   --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 16px;
+  --radius-lg: 18px;
   --radius-xl: 24px;
   --radius-full: 9999px;
 
   /* Shadows */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-  --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.14);
-  --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+  --shadow-sm: 0 1px 3px rgba(17, 24, 39, 0.06);
+  --shadow-md: 0 4px 16px rgba(17, 24, 39, 0.08);
+  --shadow-lg: 0 6px 22px rgba(17, 24, 39, 0.1);
+  --shadow-xl: 0 10px 34px rgba(17, 24, 39, 0.12);
+  --shadow-card: 0 4px 16px rgba(17, 24, 39, 0.06);
+  --shadow-card-hover: 0 10px 24px rgba(17, 24, 39, 0.12);
 
   /* Motion */
   --transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -61,15 +66,24 @@ html {
 }
 
 body {
-  font-family: 'Inter', system-ui, -apple-system, sans-serif;
-  background: var(--gray-50);
-  color: var(--gray-900);
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background: var(--background);
+  color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-weight: 700;
   color: var(--gray-900);
   line-height: 1.25;
