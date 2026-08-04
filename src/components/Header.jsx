@@ -213,7 +213,7 @@ function Header() {
         }}
       >
         <div className="max-w-[1320px] mx-auto px-5 lg:px-8">
-          <div className="flex items-center gap-4 lg:gap-6 h-[68px]">
+          <div className="flex items-center gap-4 lg:gap-6 h-[78px]">
 
             {/* ── Logo ── */}
             <Link
@@ -505,7 +505,7 @@ function Header() {
       </AnimatePresence>
 
       {/* Spacer so content doesn't hide under fixed header */}
-      <div className="h-[68px]" aria-hidden="true" />
+      <div className="h-[78px]" aria-hidden="true" />
     </>
   );
 }

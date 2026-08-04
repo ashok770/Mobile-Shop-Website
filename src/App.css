@@ -11,7 +11,7 @@
 
 /* ── Explore Categories ── */
 .explore-categories {
-  padding: 36px 0 48px;
+  padding: 20px 0 48px;
   background: var(--background);
   overflow: hidden;
 }
