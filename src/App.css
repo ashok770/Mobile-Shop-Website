@@ -325,7 +325,7 @@
   margin-top: auto;
 }
 
-..product-card .card-actions .btn {
+.product-card .card-actions .btn {
   width: 100%;
   height: 46px;
   min-height: 46px;

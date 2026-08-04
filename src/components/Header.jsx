@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { NavLink, Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -121,7 +121,16 @@ function DropdownMenu({ items }) {
 function NavItem({ item }) {
   const [open, setOpen] = useState(false);
   const ref = useRef(null);
-  const navigate = useNavigate();
+  const location = useLocation();
+  const isActive = item.path
+    ? location.pathname === item.path
+    : item.dropdown?.some((sub) => location.pathname === sub.path.split("?")[0]);
+  const linkClassName = `flex items-center gap-1.5 px-1 py-1 text-[16px] font-semibold tracking-normal transition-colors duration-[250ms] relative group ${
+    isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
+  }`;
+  const underlineClassName = `absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-blue-600 transition-all duration-[250ms] ${
+    isActive ? "w-3/4" : "w-0 group-hover:w-full"
+  }`;
 
   useEffect(() => {
     const handler = (e) => {
@@ -135,10 +144,10 @@ function NavItem({ item }) {
     return (
       <Link
         to={item.path}
-        className="flex items-center gap-1.5 px-1 py-1 text-[16px] font-semibold text-slate-700 hover:text-blue-600 transition-colors duration-[250ms] relative group"
+        className={linkClassName}
       >
         {item.label}
-        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-600 rounded-full group-hover:w-full transition-all duration-[250ms]" />
+        <span className={underlineClassName} />
       </Link>
     );
   }
@@ -147,7 +156,7 @@ function NavItem({ item }) {
     <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex items-center gap-1.5 px-1 py-1 text-[16px] font-semibold text-slate-700 hover:text-blue-600 transition-colors duration-[250ms] relative group"
+        className={linkClassName}
         aria-haspopup="true"
         aria-expanded={open}
       >
@@ -155,7 +164,7 @@ function NavItem({ item }) {
         <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
           <ChevronDown size={14} />
         </motion.span>
-        <span className="absolute bottom-0 left-0 w-0 h-[2px] bg-blue-600 rounded-full group-hover:w-full transition-all duration-[250ms]" />
+        <span className={underlineClassName} />
       </button>
       <AnimatePresence>
         {open && <DropdownMenu items={item.dropdown} />}
@@ -197,19 +206,17 @@ function Header() {
   return (
     <>
       <motion.header
-        className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+        className="fixed top-0 left-0 right-0 z-50 transition-all duration-[250ms]"
         animate={{
-          backdropFilter: scrolled ? "blur(28px)" : "blur(16px)",
-          WebkitBackdropFilter: scrolled ? "blur(28px)" : "blur(16px)",
+          backdropFilter: "blur(12px)",
+          WebkitBackdropFilter: "blur(12px)",
         }}
         style={{
-          background: scrolled
-            ? "rgba(255,255,255,0.96)"
-            : "rgba(255,255,255,0.92)",
-          borderBottom: "1px solid rgba(255,255,255,0.3)",
+          background: "rgba(255,255,255,0.95)",
+          borderBottom: "1px solid rgba(15,23,42,0.06)",
           boxShadow: scrolled
-            ? "0 8px 32px rgba(0,0,0,0.08), 0 1px 0 rgba(255,255,255,0.6)"
-            : "0 2px 16px rgba(0,0,0,0.04)",
+            ? "0 8px 24px rgba(15,23,42,0.08)"
+            : "0 4px 20px rgba(15,23,42,0.05)",
         }}
       >
         <div className="max-w-[1320px] mx-auto px-5 lg:px-8">
@@ -221,7 +228,7 @@ function Header() {
               className="flex items-center gap-2.5 shrink-0 group"
               aria-label="Ommasta Home"
             >
-              <div className="w-10 h-10 rounded-xl overflow-hidden border border-white/40 shadow-sm">
+              <div className="w-[39px] h-[39px] rounded-xl overflow-hidden border border-white/40 shadow-sm">
                 <img
                   src="/images/logo.png"
                   alt="Ommasta"
@@ -265,13 +272,13 @@ function Header() {
                   boxShadow: searchFocused
                     ? "0 0 0 3px rgba(37,99,235,0.15), 0 4px 20px rgba(37,99,235,0.1)"
                     : "0 2px 8px rgba(0,0,0,0.06)",
-                  scale: searchFocused ? 1.01 : 1,
+                  scale: 1,
                 }}
                 transition={{ duration: 0.25 }}
                 className="flex items-center w-full h-[46px] rounded-full border transition-colors duration-[250ms]"
                 style={{
-                  background: "rgba(248,250,252,0.9)",
-                  borderColor: searchFocused ? "rgba(37,99,235,0.5)" : "rgba(226,232,240,0.8)",
+                  background: "#ffffff",
+                  borderColor: searchFocused ? "rgba(37,99,235,0.55)" : "#e2e8f0",
                 }}
               >
                 <Search
@@ -293,13 +300,13 @@ function Header() {
             </form>
 
             {/* ── Right Icons ── */}
-            <div className="flex items-center gap-1 ml-auto lg:ml-0">
+            <div className="flex items-center gap-1.5 ml-auto lg:ml-0">
 
               {/* Mobile search icon */}
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                className="md:hidden flex items-center justify-center w-10 h-10 rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="md:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label="Search"
                 onClick={() => navigate("/mobiles")}
               >
@@ -310,7 +317,7 @@ function Header() {
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full text-slate-600 hover:text-rose-500 hover:bg-rose-50 transition-colors duration-[250ms]"
+                className="hidden sm:flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
@@ -321,7 +328,7 @@ function Header() {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => (window.location.href = "/cart.html")}
-                className="relative flex items-center justify-center w-10 h-10 rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="relative flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label={`Cart, ${cartCount} items`}
               >
                 <ShoppingCart size={20} />
@@ -346,7 +353,7 @@ function Header() {
               <motion.button
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
-                className="hidden sm:flex items-center justify-center w-10 h-10 rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="hidden sm:flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label="User profile"
               >
                 <CircleUser size={20} />
@@ -357,7 +364,7 @@ function Header() {
                 whileHover={{ scale: 1.08 }}
                 whileTap={{ scale: 0.94 }}
                 onClick={() => setMobileOpen((o) => !o)}
-                className="lg:hidden flex items-center justify-center w-10 h-10 rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="lg:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
               >
