@@ -14,6 +14,7 @@ import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Order from "./pages/Order";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -43,6 +44,7 @@ function Layout() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/order" element={<Order />} />
         <Route path="/cart" element={<Cart />} />
+        <Route path="/checkout" element={<Checkout />} />
 
         {/* Admin (hidden) */}
         <Route path="/admin/login" element={<AdminLogin />} />

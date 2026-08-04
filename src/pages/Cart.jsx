@@ -98,7 +98,7 @@ function Cart() {
               <div className="cart-summary-row"><span>Tax</span><strong>₹0</strong></div>
               <div className="cart-summary-divider" />
               <div className="cart-grand-total"><span>Grand Total</span><strong>₹{formatPrice(subtotal)}</strong></div>
-              <button className="cart-checkout-button" type="button" onClick={() => { window.location.href = "/checkout.html"; }}>Proceed to Checkout</button>
+              <button className="cart-checkout-button" type="button" onClick={() => navigate("/checkout")}>Proceed to Checkout</button>
               <button className="cart-continue-button" type="button" onClick={() => navigate("/mobiles")}>Continue Shopping</button>
               <div className="cart-trust-list">
                 <div><Check size={16} /><span>Genuine Products</span></div>
