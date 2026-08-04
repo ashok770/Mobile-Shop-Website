@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Check, ChevronRight, CircleCheck, CreditCard, Landmark, MapPin, ShoppingCart, ShieldCheck, WalletCards } from "lucide-react";
+import { Check, ChevronRight, CreditCard, Landmark, ShoppingCart, ShieldCheck, WalletCards } from "lucide-react";
+import CheckoutStepper from "../components/CheckoutStepper";
 import "./Checkout.css";
 
 const CART_KEY = "mobile_shop_cart";
@@ -39,11 +40,10 @@ function Checkout() {
     } catch (error) { alert(`Error placing order: ${error.message}\n\nPlease try again or contact support.`); setLoading(false); }
   };
 
-  const steps = [{ label:"Cart", icon:ShoppingCart, state:"done" }, { label:"Delivery", icon:MapPin, state:"current" }, { label:"Payment", icon:CreditCard, state:"upcoming" }, { label:"Complete", icon:CircleCheck, state:"upcoming" }];
   return <main className="checkout-page-shell"><div className="checkout-page-container">
     <nav className="checkout-breadcrumb" aria-label="Breadcrumb"><Link to="/">Home</Link><ChevronRight size={14}/><Link to="/cart">Cart</Link><ChevronRight size={14}/><span>Checkout</span></nav>
     <header className="checkout-heading"><h1>Checkout</h1><p>Complete your purchase securely.</p></header>
-    <section className="checkout-tracker" aria-label="Checkout progress">{steps.map(({ label, icon:Icon, state }, index) => <div className="checkout-step-wrap" key={label}><div className={`checkout-step ${state}`}><span className="checkout-step-circle">{state === "done" ? <Check size={19}/> : <Icon size={19}/>}</span><span>{label}</span></div>{index < steps.length - 1 && <i className={state === "done" ? "complete" : ""}/>}</div>)}</section>
+    <CheckoutStepper currentStep={2} />
     {!cart.length ? <section className="checkout-empty"><ShoppingCart size={42}/><h2>Your cart is empty</h2><p>Add an item before proceeding to checkout.</p><button onClick={() => navigate("/mobiles")}>Continue Shopping</button></section> :
     <form className="checkout-layout" onSubmit={submitOrder}>
       <div className="checkout-left-column">

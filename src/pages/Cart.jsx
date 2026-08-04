@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Check, ChevronRight, MapPin, Minus, Plus, ShieldCheck, ShoppingBag, Trash2 } from "lucide-react";
+import CheckoutStepper from "../components/CheckoutStepper";
 import "./Cart.css";
 
 const CART_KEY = "mobile_shop_cart";
@@ -55,6 +56,7 @@ function Cart() {
           </div>
           <span className="cart-item-count">{itemCount} {itemCount === 1 ? "Item" : "Items"}</span>
         </header>
+        <CheckoutStepper currentStep={1} />
 
         <div className="delivery-info-card">
           <span className="delivery-info-icon"><MapPin size={20} /></span>
