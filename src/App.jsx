@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import "./App.css";
 
 import Header from "./components/Header";
@@ -17,6 +17,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
+import Login from "./pages/auth/Login";
+import Register from "./pages/auth/Register";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -28,13 +30,15 @@ import OrdersPage from "./admin/OrdersPage";
 function Layout() {
   const location = useLocation();
 
-  // ✅ Detect admin routes
-  const isAdminRoute = location.pathname.startsWith("/admin");
+  const hideLayout =
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/login") ||
+    location.pathname.startsWith("/register");
 
   return (
     <>
       {/* Header only for public pages */}
-      {!isAdminRoute && <Header />}
+      {!hideLayout && <Header />}
 
       <Routes>
         {/* Public */}
@@ -49,6 +53,8 @@ function Layout() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/order-success" element={<OrderSuccess />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
         {/* Admin (hidden) */}
         <Route path="/admin/login" element={<AdminLogin />} />
@@ -58,18 +64,14 @@ function Layout() {
       </Routes>
 
       {/* Footer only for public pages */}
-      {!isAdminRoute && <Footer />}
+      {!hideLayout && <Footer />}
 
       {/* Chatbot only for public pages */}
-      {!isAdminRoute && <Chatbot />}
+      {!hideLayout && <Chatbot />}
     </>
   );
 }
 
 export default function App() {
-  return (
-    <BrowserRouter>
-      <Layout />
-    </BrowserRouter>
-  );
+  return <Layout />;
 }
