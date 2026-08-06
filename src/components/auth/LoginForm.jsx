@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, Globe } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
 
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ const LoginForm = () => {
 
     try {
       await login(formData);
-      navigate("/");
+      navigate(location.state?.from || "/", { replace: true });
     } catch (err) {
       setError(
         err?.response?.data?.message || "Login failed. Please try again.",
@@ -38,14 +39,14 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 auth-form-section">
+    <form onSubmit={handleSubmit} className="auth-form-section">
       {error && (
         <div className="rounded-[20px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <label
           htmlFor="email"
           className="block text-sm font-semibold text-slate-700"
@@ -67,7 +68,7 @@ const LoginForm = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <label
           htmlFor="password"
           className="block text-sm font-semibold text-slate-700"
@@ -83,7 +84,7 @@ const LoginForm = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="Enter your password"
-            className="auth-input pr-14"
+            className="auth-input auth-input-with-action"
             required
           />
           <button
@@ -109,7 +110,7 @@ const LoginForm = () => {
       <button
         type="submit"
         disabled={loading}
-        className="flex w-full items-center justify-center gap-3 rounded-xl bg-sky-600 px-5 py-4 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(56,189,248,0.18)] transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-100 disabled:cursor-not-allowed disabled:opacity-70"
+        className="auth-primary-button"
       >
         {loading ? (
           <>
@@ -121,9 +122,9 @@ const LoginForm = () => {
         )}
       </button>
 
-      <div className="relative py-4">
+      <div className="auth-divider">
         <div className="absolute inset-x-0 top-1/2 h-px bg-slate-200" />
-        <span className="auth-divider-label">Continue with</span>
+        <span className="auth-divider-label">Or continue with</span>
       </div>
 
       <button type="button" className="auth-secondary-button">

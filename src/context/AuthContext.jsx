@@ -1,40 +1,40 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import * as authService from "../services/authService";
 
 const AuthContext = createContext();
+const TOKEN_KEY = "token";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
-  const checkAuth = async () => {
+  const checkAuth = useCallback(async () => {
     try {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem(TOKEN_KEY);
 
       if (!token) {
-        setLoading(false);
         return;
       }
 
       const res = await authService.getCurrentUser();
 
       setUser(res.user);
-    } catch (error) {
-      localStorage.removeItem("token");
+    } catch {
+      localStorage.removeItem(TOKEN_KEY);
       setUser(null);
+    } finally {
+      setLoading(false);
     }
+  }, []);
 
-    setLoading(false);
-  };
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
 
   const login = async (credentials) => {
     const res = await authService.login(credentials);
 
-    localStorage.setItem("token", res.token);
+    localStorage.setItem(TOKEN_KEY, res.token);
 
     setUser(res.user);
 
@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const logout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem(TOKEN_KEY);
     setUser(null);
   };
 

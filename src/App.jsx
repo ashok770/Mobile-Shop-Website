@@ -1,5 +1,6 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
+import useAuth from "./hooks/useAuth";
 
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -19,6 +20,8 @@ import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
+import Profile from "./pages/Profile";
+import AccountSection from "./pages/AccountSection";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -26,6 +29,31 @@ import AdminDashboard from "./admin/AdminDashboard";
 import ManageProducts from "./admin/ManageProducts";
 import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/OrdersPage";
+
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth();
+  const location = useLocation();
+
+  if (loading) return null;
+
+  return user ? (
+    children
+  ) : (
+    <Navigate
+      to="/login"
+      replace
+      state={{ from: `${location.pathname}${location.search}${location.hash}` }}
+    />
+  );
+}
+
+function GuestOnlyRoute({ children }) {
+  const { user, loading } = useAuth();
+
+  if (loading) return null;
+
+  return user ? <Navigate to="/profile" replace /> : children;
+}
 
 function Layout() {
   const location = useLocation();
@@ -53,8 +81,54 @@ function Layout() {
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/order-success" element={<OrderSuccess />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route
+          path="/login"
+          element={
+            <GuestOnlyRoute>
+              <Login />
+            </GuestOnlyRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <GuestOnlyRoute>
+              <Register />
+            </GuestOnlyRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/orders"
+          element={
+            <ProtectedRoute>
+              <AccountSection title="My Orders" description="Your order history will appear here." />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/addresses"
+          element={
+            <ProtectedRoute>
+              <AccountSection title="Saved Addresses" description="Your saved delivery addresses will appear here." />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/wishlist"
+          element={
+            <ProtectedRoute>
+              <AccountSection title="Wishlist" description="Your saved products will appear here." />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Admin (hidden) */}
         <Route path="/admin/login" element={<AdminLogin />} />

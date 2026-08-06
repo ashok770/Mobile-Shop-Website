@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import useAuth from "../hooks/useAuth";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -9,8 +10,13 @@ import {
   Menu,
   X,
   ChevronDown,
+  LogIn,
+  LogOut,
+  MapPin,
+  Package,
   Smartphone,
   Headphones,
+  UserPlus,
   Wrench,
   Phone,
   Zap,
@@ -47,8 +53,16 @@ const NAV_ITEMS = [
     label: "Categories",
     icon: <Smartphone size={14} />,
     dropdown: [
-      { label: "Smartphones", icon: <Smartphone size={15} />, path: "/mobiles" },
-      { label: "Accessories", icon: <Headphones size={15} />, path: "/accessories" },
+      {
+        label: "Smartphones",
+        icon: <Smartphone size={15} />,
+        path: "/mobiles",
+      },
+      {
+        label: "Accessories",
+        icon: <Headphones size={15} />,
+        path: "/accessories",
+      },
       { label: "Services", icon: <Wrench size={15} />, path: "/services" },
       { label: "Contact", icon: <Phone size={15} />, path: "/contact" },
     ],
@@ -124,7 +138,9 @@ function NavItem({ item }) {
   const location = useLocation();
   const isActive = item.path
     ? location.pathname === item.path
-    : item.dropdown?.some((sub) => location.pathname === sub.path.split("?")[0]);
+    : item.dropdown?.some(
+        (sub) => location.pathname === sub.path.split("?")[0],
+      );
   const linkClassName = `flex items-center gap-1.5 px-1 py-1 text-[16px] font-semibold tracking-normal transition-colors duration-[250ms] relative group ${
     isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
   }`;
@@ -142,10 +158,7 @@ function NavItem({ item }) {
 
   if (!item.dropdown) {
     return (
-      <Link
-        to={item.path}
-        className={linkClassName}
-      >
+      <Link to={item.path} className={linkClassName}>
         {item.label}
         <span className={underlineClassName} />
       </Link>
@@ -153,7 +166,12 @@ function NavItem({ item }) {
   }
 
   return (
-    <div ref={ref} className="relative" onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
+    <div
+      ref={ref}
+      className="relative"
+      onMouseEnter={() => setOpen(true)}
+      onMouseLeave={() => setOpen(false)}
+    >
       <button
         onClick={() => setOpen((o) => !o)}
         className={linkClassName}
@@ -161,7 +179,10 @@ function NavItem({ item }) {
         aria-expanded={open}
       >
         {item.label}
-        <motion.span animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.2 }}>
+        <motion.span
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: 0.2 }}
+        >
           <ChevronDown size={14} />
         </motion.span>
         <span className={underlineClassName} />
@@ -179,18 +200,35 @@ function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [searchVal, setSearchVal] = useState("");
+  const [accountMenuOpen, setAccountMenuOpen] = useState(false);
+  const accountMenuRef = useRef(null);
   const cartCount = useCartCount();
   const navigate = useNavigate();
-
+  const { user, logout, loading } = useAuth();
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    if (!accountMenuOpen) return undefined;
+
+    const closeOnOutsideClick = (event) => {
+      if (!accountMenuRef.current?.contains(event.target)) {
+        setAccountMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeOnOutsideClick);
+    return () => document.removeEventListener("mousedown", closeOnOutsideClick);
+  }, [accountMenuOpen]);
+
   /* close mobile menu on resize */
   useEffect(() => {
-    const onResize = () => { if (window.innerWidth >= 1024) setMobileOpen(false); };
+    const onResize = () => {
+      if (window.innerWidth >= 1024) setMobileOpen(false);
+    };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
@@ -201,6 +239,18 @@ function Header() {
       navigate(`/mobiles?search=${encodeURIComponent(searchVal.trim())}`);
       setSearchVal("");
     }
+  };
+
+  const navigateFromAccountMenu = (path) => {
+    setAccountMenuOpen(false);
+    navigate(path);
+  };
+
+  const handleLogout = () => {
+    setAccountMenuOpen(false);
+    setMobileOpen(false);
+    logout();
+    navigate("/", { replace: true });
   };
 
   return (
@@ -221,7 +271,6 @@ function Header() {
       >
         <div className="max-w-[1320px] mx-auto px-5 lg:px-8">
           <div className="flex items-center gap-4 lg:gap-6 h-[74px]">
-
             {/* ── Logo ── */}
             <Link
               to="/"
@@ -247,7 +296,10 @@ function Header() {
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-[17px] font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-200">
-                  Om<span className="text-blue-600 group-hover:text-orange-500 transition-colors duration-200">masta</span>
+                  Om
+                  <span className="text-blue-600 group-hover:text-orange-500 transition-colors duration-200">
+                    masta
+                  </span>
                 </span>
                 <span className="text-[9px] font-semibold tracking-[0.18em] uppercase text-slate-400">
                   Mobile Shop
@@ -256,7 +308,10 @@ function Header() {
             </Link>
 
             {/* ── Desktop Nav ── */}
-            <nav className="hidden lg:flex items-center gap-6 ml-2" aria-label="Main navigation">
+            <nav
+              className="hidden lg:flex items-center gap-6 ml-2"
+              aria-label="Main navigation"
+            >
               {NAV_ITEMS.map((item) => (
                 <NavItem key={item.label} item={item} />
               ))}
@@ -278,7 +333,9 @@ function Header() {
                 className="flex items-center w-full h-[46px] rounded-full border transition-colors duration-[250ms]"
                 style={{
                   background: "#ffffff",
-                  borderColor: searchFocused ? "rgba(37,99,235,0.55)" : "#e2e8f0",
+                  borderColor: searchFocused
+                    ? "rgba(37,99,235,0.55)"
+                    : "#e2e8f0",
                 }}
               >
                 <Search
@@ -301,7 +358,6 @@ function Header() {
 
             {/* ── Right Icons ── */}
             <div className="flex items-center gap-1.5 ml-auto lg:ml-0">
-
               {/* Mobile search icon */}
               <motion.button
                 whileHover={{ scale: 1.08 }}
@@ -339,9 +395,15 @@ function Header() {
                       initial={{ scale: 0 }}
                       animate={{ scale: 1 }}
                       exit={{ scale: 0 }}
-                      transition={{ type: "spring", stiffness: 500, damping: 25 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 500,
+                        damping: 25,
+                      }}
                       className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1"
-                      style={{ background: "linear-gradient(135deg,#f97316,#ef4444)" }}
+                      style={{
+                        background: "linear-gradient(135deg,#f97316,#ef4444)",
+                      }}
                     >
                       {cartCount > 99 ? "99+" : cartCount}
                     </motion.span>
@@ -349,15 +411,70 @@ function Header() {
                 </AnimatePresence>
               </motion.button>
 
-              {/* Profile */}
-              <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.94 }}
-                className="hidden sm:flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
-                aria-label="User profile"
-              >
-                <CircleUser size={20} />
-              </motion.button>
+              {/* Account menu */}
+              <div ref={accountMenuRef} className="relative hidden sm:block">
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.94 }}
+                  onClick={() => setAccountMenuOpen((open) => !open)}
+                  disabled={loading}
+                  className="flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms] disabled:cursor-wait disabled:opacity-60"
+                  aria-label="Account menu"
+                  aria-expanded={accountMenuOpen}
+                >
+                  <CircleUser size={20} />
+                </motion.button>
+
+                <AnimatePresence>
+                  {accountMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                      transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
+                      className="absolute right-0 top-full mt-3 w-60 overflow-hidden rounded-2xl border border-white/70 bg-white/90 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl"
+                    >
+                      {user ? (
+                        <>
+                          <div className="px-3 py-2.5">
+                            <p className="truncate text-sm font-semibold text-slate-800">
+                              {user.name || "My Account"}
+                            </p>
+                            <p className="truncate text-xs text-slate-500">{user.email}</p>
+                          </div>
+                          <div className="my-1 h-px bg-slate-200/80" />
+                          <button onClick={() => navigateFromAccountMenu("/profile")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <CircleUser size={17} /> My Profile
+                          </button>
+                          <button onClick={() => navigateFromAccountMenu("/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <Package size={17} /> My Orders
+                          </button>
+                          <button onClick={() => navigateFromAccountMenu("/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <MapPin size={17} /> Saved Addresses
+                          </button>
+                          <button onClick={() => navigateFromAccountMenu("/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <Heart size={17} /> Wishlist
+                          </button>
+                          <div className="my-1 h-px bg-slate-200/80" />
+                          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50">
+                            <LogOut size={17} /> Logout
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <p className="px-3 py-2.5 text-sm font-semibold text-slate-800">Welcome to Ommasta</p>
+                          <button onClick={() => navigateFromAccountMenu("/login")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <LogIn size={17} /> Login
+                          </button>
+                          <button onClick={() => navigateFromAccountMenu("/register")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
+                            <UserPlus size={17} /> Create Account
+                          </button>
+                        </>
+                      )}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
 
               {/* Hamburger */}
               <motion.button
@@ -431,7 +548,9 @@ function Header() {
             >
               {/* Panel header */}
               <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
-                <span className="text-[16px] font-bold text-slate-900">Menu</span>
+                <span className="text-[16px] font-bold text-slate-900">
+                  Menu
+                </span>
                 <button
                   onClick={() => setMobileOpen(false)}
                   className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition-colors duration-200"
@@ -443,7 +562,10 @@ function Header() {
 
               {/* Mobile search */}
               <div className="px-4 py-3 border-b border-slate-100">
-                <form onSubmit={handleSearch} className="flex items-center gap-2 bg-slate-100 rounded-xl px-3 py-2.5">
+                <form
+                  onSubmit={handleSearch}
+                  className="flex items-center gap-2 bg-slate-100 rounded-xl px-3 py-2.5"
+                >
                   <Search size={15} className="text-slate-400 shrink-0" />
                   <input
                     type="search"
@@ -456,7 +578,10 @@ function Header() {
               </div>
 
               {/* Nav links */}
-              <nav className="flex-1 overflow-y-auto px-3 py-3" aria-label="Mobile navigation">
+              <nav
+                className="flex-1 overflow-y-auto px-3 py-3"
+                aria-label="Mobile navigation"
+              >
                 {NAV_ITEMS.map((item, i) => (
                   <motion.div
                     key={item.label}
@@ -486,7 +611,9 @@ function Header() {
                             onClick={() => setMobileOpen(false)}
                             className="flex items-center gap-3 px-5 py-2.5 rounded-xl text-[14px] font-medium text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-all duration-200"
                           >
-                            {sub.icon && <span className="text-slate-400">{sub.icon}</span>}
+                            {sub.icon && (
+                              <span className="text-slate-400">{sub.icon}</span>
+                            )}
                             {sub.label}
                           </Link>
                         ))}
@@ -497,14 +624,29 @@ function Header() {
               </nav>
 
               {/* Panel footer */}
-              <div className="px-4 py-4 border-t border-slate-100 flex items-center gap-3">
-                <button className="flex items-center gap-2 text-[14px] font-medium text-slate-600 hover:text-blue-600 transition-colors duration-200">
-                  <CircleUser size={18} /> Profile
-                </button>
-                <span className="text-slate-200">|</span>
-                <button className="flex items-center gap-2 text-[14px] font-medium text-slate-600 hover:text-rose-500 transition-colors duration-200">
-                  <Heart size={18} /> Wishlist
-                </button>
+              <div className="px-4 py-4 border-t border-slate-100 space-y-1">
+                {user ? (
+                  <>
+                    <button onClick={() => { navigate("/profile"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                      <CircleUser size={18} /> My Account
+                    </button>
+                    <button onClick={() => { navigate("/orders"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                      <Package size={18} /> Orders
+                    </button>
+                    <button onClick={handleLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-rose-600 hover:bg-rose-50 transition-colors duration-200">
+                      <LogOut size={18} /> Logout
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button onClick={() => { navigate("/login"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                      <LogIn size={18} /> Login
+                    </button>
+                    <button onClick={() => { navigate("/register"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                      <UserPlus size={18} /> Register
+                    </button>
+                  </>
+                )}
               </div>
             </motion.div>
           </>

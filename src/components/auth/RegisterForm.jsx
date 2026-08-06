@@ -90,14 +90,14 @@ const RegisterForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 auth-form-section">
+    <form onSubmit={handleSubmit} className="auth-form-section">
       {error && (
         <div className="rounded-[20px] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
           {error}
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <label
           htmlFor="name"
           className="block text-sm font-semibold text-slate-700"
@@ -119,7 +119,7 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <label
           htmlFor="email"
           className="block text-sm font-semibold text-slate-700"
@@ -141,7 +141,7 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <label
           htmlFor="password"
           className="block text-sm font-semibold text-slate-700"
@@ -157,7 +157,7 @@ const RegisterForm = () => {
             value={formData.password}
             onChange={handleChange}
             placeholder="Create a password"
-            className="auth-input pr-14"
+            className="auth-input auth-input-with-action"
             required
           />
           <button
@@ -171,7 +171,7 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="auth-field">
         <div className="flex items-center justify-between gap-4">
           <label
             htmlFor="confirmPassword"
@@ -190,7 +190,7 @@ const RegisterForm = () => {
             value={formData.confirmPassword}
             onChange={handleChange}
             placeholder="Confirm your password"
-            className="auth-input pr-14"
+            className="auth-input auth-input-with-action"
             required
           />
           <button
@@ -204,23 +204,23 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <div className="h-2 overflow-hidden rounded-full bg-slate-200">
+      <div className="auth-password-guidance">
+        <div className="auth-strength-track">
           <div
             className={`h-full rounded-full ${strengthColor}`}
             style={{ width: `${(passwordScore / 3) * 100}%` }}
           />
         </div>
-        <div className="grid gap-2">
+        <div className="auth-password-list">
           {passwordRequirements.map((requirement) => {
             const isValid = requirement.test(formData.password);
             return (
               <div
                 key={requirement.label}
-                className="flex items-center gap-2 text-sm text-slate-600"
+                className="auth-password-item"
               >
                 <span
-                  className={`inline-flex h-4 w-4 items-center justify-center rounded-full ${isValid ? "bg-emerald-500 text-white" : "bg-slate-200 text-slate-400"}`}
+                  className={`auth-password-status ${isValid ? "is-valid" : ""}`}
                 >
                   {isValid ? "✓" : "•"}
                 </span>
@@ -231,7 +231,7 @@ const RegisterForm = () => {
         </div>
       </div>
 
-      <label className="flex items-center gap-3 text-sm text-slate-700">
+      <label className="auth-terms">
         <input
           type="checkbox"
           checked={termsAccepted}
@@ -251,7 +251,7 @@ const RegisterForm = () => {
       <button
         type="submit"
         disabled={loading}
-        className="flex w-full items-center justify-center gap-3 rounded-xl bg-sky-600 px-5 py-4 text-sm font-semibold text-white shadow-[0_14px_35px_rgba(56,189,248,0.18)] transition hover:bg-sky-700 focus:outline-none focus:ring-4 focus:ring-sky-100 disabled:cursor-not-allowed disabled:opacity-70"
+        className="auth-primary-button"
       >
         {loading ? (
           <>
@@ -263,9 +263,9 @@ const RegisterForm = () => {
         )}
       </button>
 
-      <div className="relative py-4">
+      <div className="auth-divider">
         <div className="absolute inset-x-0 top-1/2 h-px bg-slate-200" />
-        <span className="auth-divider-label">Continue with</span>
+        <span className="auth-divider-label">Or continue with</span>
       </div>
 
       <button type="button" className="auth-secondary-button">
