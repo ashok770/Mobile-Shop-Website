@@ -2,7 +2,7 @@ import axiosInstance from "../utils/axiosInstance";
 
 const API =
   import.meta.env.VITE_API_URL ||
-  "https://mobile-shop-website-backend.onrender.com";
+  "http://localhost:5000";
 
 export const getProducts = async () => {
   const res = await fetch(`${API}/api/products`);

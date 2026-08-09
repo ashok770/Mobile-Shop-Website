@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axiosInstance from "../utils/axiosInstance";
 
 const Chatbot = () => {
   const [messages, setMessages] = useState([]);
@@ -13,7 +13,7 @@ const Chatbot = () => {
     setMessages((prev) => [...prev, userMsg]);
 
     try {
-      const res = await axios.post("http://localhost:5000/api/chat", {
+      const res = await axiosInstance.post("/chat", {
         message: input,
       });
 
