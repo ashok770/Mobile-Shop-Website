@@ -23,7 +23,7 @@ function OrdersPage() {
   }, []);
 
   const updateOrderStatus = async (id, orderStatus) => {
-    await fetch(`${API}/api/orders/${id}`, {
+    await fetch(`${API}/api/orders/${id}/status`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -39,8 +39,8 @@ function OrdersPage() {
     <div className="admin-container">
       <div className="admin-header">
         <h2>All Orders ({orders.length})</h2>
-        <button 
-          className="btn" 
+        <button
+          className="btn"
           onClick={() => navigate("/admin/dashboard")}
           style={{ marginBottom: "20px" }}
         >
@@ -51,7 +51,11 @@ function OrdersPage() {
       <div className="admin-content">
         <div className="admin-section">
           {orders.map((order) => (
-            <div key={order._id} className="card" style={{ marginBottom: "20px" }}>
+            <div
+              key={order._id}
+              className="card"
+              style={{ marginBottom: "20px" }}
+            >
               <h4>{order.customerName}</h4>
               <p>📞 {order.phone}</p>
               <p>📍 {order.address}</p>
@@ -76,7 +80,11 @@ function OrdersPage() {
               <select
                 value={order.orderStatus}
                 onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-                style={{ marginTop: "10px", padding: "8px", borderRadius: "4px" }}
+                style={{
+                  marginTop: "10px",
+                  padding: "8px",
+                  borderRadius: "4px",
+                }}
               >
                 <option value="Pending">Pending</option>
                 <option value="Delivered">Delivered</option>

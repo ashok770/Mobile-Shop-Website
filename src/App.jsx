@@ -20,7 +20,7 @@ import Payment from "./pages/Payment";
 import OrderSuccess from "./pages/OrderSuccess";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
-import Profile from "./pages/Profile";
+import Dashboard from "./pages/account/Dashboard";
 import AccountSection from "./pages/AccountSection";
 
 // Admin pages
@@ -101,7 +101,7 @@ function Layout() {
           path="/profile"
           element={
             <ProtectedRoute>
-              <Profile />
+              <Dashboard />
             </ProtectedRoute>
           }
         />

@@ -428,46 +428,50 @@ function Header() {
                 <AnimatePresence>
                   {accountMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 8, scale: 0.97 }}
-                      transition={{ duration: 0.18, ease: [0.4, 0, 0.2, 1] }}
-                      className="absolute right-0 top-full mt-3 w-60 overflow-hidden rounded-2xl border border-white/70 bg-white/90 p-2 shadow-[0_18px_45px_rgba(15,23,42,0.16)] backdrop-blur-xl"
+                      exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                      transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                      className="absolute right-0 top-full mt-3 w-[272px] overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 p-2.5 shadow-[0_22px_56px_rgba(15,23,42,0.16)] ring-1 ring-black/[0.025] backdrop-blur-2xl"
                     >
                       {user ? (
                         <>
-                          <div className="px-3 py-2.5">
-                            <p className="truncate text-sm font-semibold text-slate-800">
+                          <div className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/70 px-3.5 py-3">
+                            <p className="truncate text-[13px] font-bold tracking-[-0.01em] text-slate-900">
                               {user.name || "My Account"}
                             </p>
-                            <p className="truncate text-xs text-slate-500">{user.email}</p>
+                            <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500">{user.email}</p>
                           </div>
-                          <div className="my-1 h-px bg-slate-200/80" />
-                          <button onClick={() => navigateFromAccountMenu("/profile")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <CircleUser size={17} /> My Profile
+                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
+                          <button onClick={() => navigateFromAccountMenu("/profile")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <CircleUser size={17} strokeWidth={1.9} /> My Profile
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <Package size={17} /> My Orders
+                          <button onClick={() => navigateFromAccountMenu("/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <Package size={17} strokeWidth={1.9} /> My Orders
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <MapPin size={17} /> Saved Addresses
+                          <button onClick={() => navigateFromAccountMenu("/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <MapPin size={17} strokeWidth={1.9} /> Saved Addresses
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <Heart size={17} /> Wishlist
+                          <button onClick={() => navigateFromAccountMenu("/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <Heart size={17} strokeWidth={1.9} /> Wishlist
                           </button>
-                          <div className="my-1 h-px bg-slate-200/80" />
-                          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-rose-600 transition hover:bg-rose-50">
-                            <LogOut size={17} /> Logout
+                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
+                          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-rose-600 transition-all duration-200 hover:bg-rose-50 hover:shadow-sm">
+                            <LogOut size={17} strokeWidth={1.9} /> Logout
                           </button>
                         </>
                       ) : (
                         <>
-                          <p className="px-3 py-2.5 text-sm font-semibold text-slate-800">Welcome to Ommasta</p>
-                          <button onClick={() => navigateFromAccountMenu("/login")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <LogIn size={17} /> Login
+                          <div className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/70 px-3.5 py-3">
+                            <p className="text-[13px] font-bold tracking-[-0.01em] text-slate-900">Welcome to Ommasta</p>
+                            <p className="mt-0.5 text-[11px] font-medium text-slate-500">Sign in for a faster checkout.</p>
+                          </div>
+                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
+                          <button onClick={() => navigateFromAccountMenu("/login")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <LogIn size={17} strokeWidth={1.9} /> Login
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/register")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm font-medium text-slate-600 transition hover:bg-blue-50 hover:text-blue-600">
-                            <UserPlus size={17} /> Create Account
+                          <button onClick={() => navigateFromAccountMenu("/register")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                            <UserPlus size={17} strokeWidth={1.9} /> Create Account
                           </button>
                         </>
                       )}
