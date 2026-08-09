@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { Mail, Calendar, ShoppingBag, Heart, Edit3, Award } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
 import { formatDate } from "../../utils/formatDate";
@@ -68,10 +69,13 @@ export default function ProfileCard({ stats }) {
           </div>
         </div>
 
-        <button className="mt-8 w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white py-3 font-semibold flex items-center justify-center gap-2 transition-colors">
+        <Link
+          to="/profile/settings"
+          className="mt-8 w-full rounded-xl bg-blue-600 hover:bg-blue-700 text-white py-3 font-semibold flex items-center justify-center gap-2 transition-colors"
+        >
           <Edit3 size={18} />
           Edit Profile
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -21,6 +21,11 @@ import OrderSuccess from "./pages/OrderSuccess";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import Dashboard from "./pages/account/Dashboard";
+import Orders from "./pages/account/Orders";
+import OrderDetails from "./pages/account/OrderDetails";
+import Addresses from "./pages/account/Addresses";
+import Wishlist from "./pages/account/Wishlist";
+import Settings from "./pages/account/Settings";
 import AccountSection from "./pages/AccountSection";
 
 // Admin pages
@@ -106,10 +111,53 @@ function Layout() {
           }
         />
         <Route
+          path="/profile/orders"
+          element={
+            <ProtectedRoute>
+              <Orders />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/orders/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/addresses"
+          element={
+            <ProtectedRoute>
+              <Addresses />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/wishlist"
+          element={
+            <ProtectedRoute>
+              <Wishlist />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile/settings"
+          element={
+            <ProtectedRoute>
+              <Settings />
+            </ProtectedRoute>
+          }
+        />
+        <Route
           path="/orders"
           element={
             <ProtectedRoute>
-              <AccountSection title="My Orders" description="Your order history will appear here." />
+              <AccountSection
+                title="My Orders"
+                description="Your order history will appear here."
+              />
             </ProtectedRoute>
           }
         />
@@ -117,7 +165,10 @@ function Layout() {
           path="/addresses"
           element={
             <ProtectedRoute>
-              <AccountSection title="Saved Addresses" description="Your saved delivery addresses will appear here." />
+              <AccountSection
+                title="Saved Addresses"
+                description="Your saved delivery addresses will appear here."
+              />
             </ProtectedRoute>
           }
         />
@@ -125,7 +176,10 @@ function Layout() {
           path="/wishlist"
           element={
             <ProtectedRoute>
-              <AccountSection title="Wishlist" description="Your saved products will appear here." />
+              <AccountSection
+                title="Wishlist"
+                description="Your saved products will appear here."
+              />
             </ProtectedRoute>
           }
         />
