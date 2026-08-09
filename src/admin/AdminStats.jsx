@@ -4,24 +4,37 @@ const API = import.meta.env.VITE_API_URL;
 
 function AdminStats() {
   const [stats, setStats] = useState(null);
+  const [error, setError] = useState("");
   const token = localStorage.getItem("adminToken");
 
   useEffect(() => {
     const fetchStats = async () => {
-      const res = await fetch(`${API}/api/orders/stats/admin`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      setError("");
 
-      const data = await res.json();
-      setStats(data);
+      try {
+        const res = await fetch(`${API}/api/orders/stats/admin`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.message || "Unable to load order statistics.");
+        }
+
+        setStats(data);
+      } catch (error) {
+        setStats(null);
+        setError(error.message || "Unable to load order statistics.");
+      }
     };
 
     fetchStats();
   }, []);
 
-  if (!stats) return null;
+  if (error) return <p role="alert">{error}</p>;
+  if (!stats) return <p>Loading order statistics...</p>;
 
   return (
     <div className="admin-stats">

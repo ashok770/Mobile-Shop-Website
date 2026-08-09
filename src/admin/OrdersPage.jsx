@@ -5,17 +5,34 @@ const API = import.meta.env.VITE_API_URL;
 
 function OrdersPage() {
   const [orders, setOrders] = useState([]);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const token = localStorage.getItem("adminToken");
 
   const fetchOrders = async () => {
-    const res = await fetch(`${API}/api/orders`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    const data = await res.json();
-    setOrders(data);
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch(`${API}/api/orders`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Unable to load orders.");
+      }
+
+      setOrders(Array.isArray(data.orders) ? data.orders : []);
+    } catch (error) {
+      setOrders([]);
+      setError(error.message || "Unable to load orders.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -23,16 +40,27 @@ function OrdersPage() {
   }, []);
 
   const updateOrderStatus = async (id, orderStatus) => {
-    await fetch(`${API}/api/orders/${id}/status`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ orderStatus }),
-    });
+    setError("");
 
-    fetchOrders();
+    try {
+      const res = await fetch(`${API}/api/orders/${id}/status`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ orderStatus }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Unable to update the order.");
+      }
+
+      fetchOrders();
+    } catch (error) {
+      setError(error.message || "Unable to update the order.");
+    }
   };
 
   return (
@@ -50,48 +78,53 @@ function OrdersPage() {
 
       <div className="admin-content">
         <div className="admin-section">
-          {orders.map((order) => (
-            <div
-              key={order._id}
-              className="card"
-              style={{ marginBottom: "20px" }}
-            >
-              <h4>{order.customerName}</h4>
-              <p>📞 {order.phone}</p>
-              <p>📍 {order.address}</p>
-
-              <p>
-                <b>Payment:</b> {order.paymentMethod} ({order.paymentStatus})
-              </p>
-
-              <div>
-                <b>Items:</b>
-                {order.items.map((item, i) => (
-                  <p key={i}>
-                    {item.name} × {item.quantity} — ₹{item.price}
-                  </p>
-                ))}
-              </div>
-
-              <p>
-                <b>Order Status:</b> {order.orderStatus}
-              </p>
-
-              <select
-                value={order.orderStatus}
-                onChange={(e) => updateOrderStatus(order._id, e.target.value)}
-                style={{
-                  marginTop: "10px",
-                  padding: "8px",
-                  borderRadius: "4px",
-                }}
+          {loading && <p>Loading orders...</p>}
+          {error && <p role="alert">{error}</p>}
+          {!loading && !error && orders.length === 0 && <p>No orders found.</p>}
+          {!loading && !error && orders.length > 0 && (
+            orders.map((order) => (
+              <div
+                key={order._id}
+                className="card"
+                style={{ marginBottom: "20px" }}
               >
-                <option value="Pending">Pending</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </div>
-          ))}
+                <h4>{order.customerName}</h4>
+                <p>📞 {order.phone}</p>
+                <p>📍 {order.address}</p>
+
+                <p>
+                  <b>Payment:</b> {order.paymentMethod} ({order.paymentStatus})
+                </p>
+
+                <div>
+                  <b>Items:</b>
+                  {order.items.map((item, i) => (
+                    <p key={i}>
+                      {item.name} × {item.quantity} — ₹{item.price}
+                    </p>
+                  ))}
+                </div>
+
+                <p>
+                  <b>Order Status:</b> {order.orderStatus}
+                </p>
+
+                <select
+                  value={order.orderStatus}
+                  onChange={(e) => updateOrderStatus(order._id, e.target.value)}
+                  style={{
+                    marginTop: "10px",
+                    padding: "8px",
+                    borderRadius: "4px",
+                  }}
+                >
+                  <option value="Pending">Pending</option>
+                  <option value="Delivered">Delivered</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
