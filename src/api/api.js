@@ -1,4 +1,8 @@
-const API = import.meta.env.VITE_API_URL || "https://mobile-shop-website-backend.onrender.com";
+import axiosInstance from "../utils/axiosInstance";
+
+const API =
+  import.meta.env.VITE_API_URL ||
+  "https://mobile-shop-website-backend.onrender.com";
 
 export const getProducts = async () => {
   const res = await fetch(`${API}/api/products`);
@@ -11,12 +15,7 @@ export const getOfferProducts = async (offerType) => {
 };
 
 export const createOrder = async (orderData) => {
-  const res = await fetch(`${API}/api/orders`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(orderData),
-  });
-  return res.json();
+  // Uses axiosInstance so the interceptor attaches Authorization: Bearer <token>
+  const { data } = await axiosInstance.post("/orders", orderData);
+  return data;
 };
