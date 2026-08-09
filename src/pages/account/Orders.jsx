@@ -7,6 +7,7 @@ import {
   Hash,
   ExternalLink,
   RefreshCw,
+  CreditCard,
 } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -97,17 +98,16 @@ export default function Orders() {
             </Link>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
-            <div className="divide-y divide-gray-100">
+          <div className="space-y-4">
               {orders.map((order) => {
                 const productName =
                   order.items?.[0]?.name || `Order ${order._id?.slice(-6)}`;
                 const itemCount = order.items?.length || 1;
 
                 return (
-                  <div
+                  <article
                     key={order._id}
-                    className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 sm:gap-6 px-6 sm:px-8 py-5 hover:bg-gray-50 transition-colors"
+                    className="bg-white rounded-3xl border border-gray-200 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-5 px-6 sm:px-8 py-6 hover:border-blue-200 hover:shadow-md transition-all"
                   >
                     <div className="min-w-0">
                       <p className="font-semibold text-gray-900 truncate">
@@ -130,6 +130,7 @@ export default function Orders() {
                             {itemCount} {itemCount > 1 ? "items" : "item"}
                           </span>
                         )}
+                        {order.paymentMethod && <span className="flex items-center gap-1"><CreditCard size={13} className="text-gray-400" />{order.paymentMethod === "COD" ? "Cash on Delivery" : "Online Payment"}</span>}
                       </div>
                     </div>
 
@@ -155,10 +156,9 @@ export default function Orders() {
                         <ExternalLink size={14} />
                       </Link>
                     </div>
-                  </div>
+                  </article>
                 );
               })}
-            </div>
           </div>
         )}
       </div>

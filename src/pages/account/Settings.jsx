@@ -1,36 +1,54 @@
-import { useState } from "react";
-import { User, Mail, Save, RefreshCw, Lock } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Camera, LogOut, Mail, Save, RefreshCw, Lock, User } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import useAuth from "../../hooks/useAuth";
 import axiosInstance from "../../utils/axiosInstance";
 
 export default function Settings() {
-  const { user, setUser } = useAuth();
+  const { user, setUser, logout } = useAuth();
+  const navigate = useNavigate();
   const [name, setName] = useState(user?.name || "");
   const [avatar, setAvatar] = useState(user?.avatar || "");
   const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState(null);
-  const [error, setError] = useState(null);
+  const [fieldError, setFieldError] = useState("");
+
+  useEffect(() => {
+    setName(user?.name || "");
+    setAvatar(user?.avatar || "");
+  }, [user]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    setMessage(null);
-    setError(null);
+    const trimmedName = name.trim();
+    if (trimmedName.length < 2) {
+      setFieldError("Please enter a name with at least 2 characters.");
+      return;
+    }
+    setFieldError("");
 
     try {
-      const { data } = await axiosInstance.put("/profile", { name, avatar });
+      const { data } = await axiosInstance.put("/profile", { name: trimmedName, avatar: avatar.trim() });
       setUser(data.user);
-      setMessage("Profile updated successfully.");
+      toast.success(data.message || "Profile updated successfully.");
     } catch (err) {
-      setError(err.response?.data?.message || "Failed to update profile");
+      toast.error(err.response?.data?.message || "Failed to update profile");
     } finally {
       setSaving(false);
     }
   };
 
+  const initials = (user?.name || "U").trim().charAt(0).toUpperCase();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <main className="bg-gray-50 min-h-screen">
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
         <header className="mb-8 sm:mb-10">
           <p className="text-blue-600 font-semibold uppercase tracking-[0.25em] text-xs sm:text-sm">
             My Account
@@ -44,25 +62,21 @@ export default function Settings() {
         </header>
 
         <div className="space-y-6">
-          {/* Profile form */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-6">
-              Profile Information
-            </h2>
-
-            {message && (
-              <div className="rounded-xl bg-green-50 text-green-700 px-4 py-3 text-sm mb-4">
-                {message}
+          <section className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-blue-600 to-blue-400" />
+            <div className="p-6 sm:p-8">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-5 pb-7 mb-7 border-b border-gray-100">
+                <div className="relative h-20 w-20 rounded-2xl overflow-hidden bg-blue-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg shadow-blue-100">
+                  {avatar ? <img src={avatar} alt="Profile" className="h-full w-full object-cover" onError={(event) => { event.currentTarget.style.display = "none"; }} /> : initials}
+                  <span className="absolute bottom-1 right-1 h-6 w-6 rounded-lg bg-white text-blue-600 flex items-center justify-center shadow"><Camera size={13} /></span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Profile Information</h2>
+                  <p className="text-sm text-gray-500 mt-1">Keep your account details up to date.</p>
+                </div>
               </div>
-            )}
 
-            {error && (
-              <div className="rounded-xl bg-red-50 text-red-700 px-4 py-3 text-sm mb-4">
-                {error}
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-5">
+              <form onSubmit={handleSubmit} className="space-y-5">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-1">
                   Full Name
@@ -74,13 +88,14 @@ export default function Settings() {
                   />
                   <input
                     value={name}
-                    onChange={(e) => setName(e.target.value)}
+                    onChange={(e) => { setName(e.target.value); setFieldError(""); }}
                     required
                     minLength={2}
                     className="w-full rounded-xl border border-gray-300 pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Your full name"
                   />
                 </div>
+                {fieldError && <p className="mt-1.5 text-sm text-red-600">{fieldError}</p>}
               </div>
 
               <div>
@@ -133,13 +148,12 @@ export default function Settings() {
                 )}
               </button>
             </form>
-          </div>
+            </div>
+          </section>
 
           {/* Password section - backend does not support this */}
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
-            <h2 className="text-lg font-bold text-gray-900 mb-2">
-              Change Password
-            </h2>
+          <section className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Security</h2>
 
             <div className="flex items-start gap-3 rounded-xl bg-yellow-50 px-4 py-3">
               <Lock
@@ -157,7 +171,18 @@ export default function Settings() {
                 </p>
               </div>
             </div>
-          </div>
+          </section>
+
+          <section className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
+            <h2 className="text-lg font-bold text-gray-900">Account actions</h2>
+            <p className="text-sm text-gray-500 mt-1">Sign out safely from this device.</p>
+            <div className="mt-5 pt-5 border-t border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <p className="text-sm text-gray-600">You can sign in again at any time.</p>
+              <button onClick={handleLogout} className="inline-flex items-center justify-center gap-2 rounded-xl border border-red-200 bg-red-50 text-red-700 px-5 py-2.5 text-sm font-semibold hover:bg-red-100 transition-colors">
+                <LogOut size={16} /> Sign out
+              </button>
+            </div>
+          </section>
         </div>
       </div>
     </main>

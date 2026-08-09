@@ -446,13 +446,13 @@ function Header() {
                           <button onClick={() => navigateFromAccountMenu("/profile")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
                             <CircleUser size={17} strokeWidth={1.9} /> My Profile
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                          <button onClick={() => navigateFromAccountMenu("/profile/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
                             <Package size={17} strokeWidth={1.9} /> My Orders
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                          <button onClick={() => navigateFromAccountMenu("/profile/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
                             <MapPin size={17} strokeWidth={1.9} /> Saved Addresses
                           </button>
-                          <button onClick={() => navigateFromAccountMenu("/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
+                          <button onClick={() => navigateFromAccountMenu("/profile/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
                             <Heart size={17} strokeWidth={1.9} /> Wishlist
                           </button>
                           <div className="mx-1 my-2 h-px bg-slate-200/80" />
@@ -634,7 +634,7 @@ function Header() {
                     <button onClick={() => { navigate("/profile"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
                       <CircleUser size={18} /> My Account
                     </button>
-                    <button onClick={() => { navigate("/orders"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
+                    <button onClick={() => { navigate("/profile/orders"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
                       <Package size={18} /> Orders
                     </button>
                     <button onClick={handleLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-rose-600 hover:bg-rose-50 transition-colors duration-200">

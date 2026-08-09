@@ -26,7 +26,6 @@ import OrderDetails from "./pages/account/OrderDetails";
 import Addresses from "./pages/account/Addresses";
 import Wishlist from "./pages/account/Wishlist";
 import Settings from "./pages/account/Settings";
-import AccountSection from "./pages/AccountSection";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
@@ -154,10 +153,7 @@ function Layout() {
           path="/orders"
           element={
             <ProtectedRoute>
-              <AccountSection
-                title="My Orders"
-                description="Your order history will appear here."
-              />
+              <Navigate to="/profile/orders" replace />
             </ProtectedRoute>
           }
         />
@@ -165,10 +161,7 @@ function Layout() {
           path="/addresses"
           element={
             <ProtectedRoute>
-              <AccountSection
-                title="Saved Addresses"
-                description="Your saved delivery addresses will appear here."
-              />
+              <Navigate to="/profile/addresses" replace />
             </ProtectedRoute>
           }
         />
@@ -176,10 +169,7 @@ function Layout() {
           path="/wishlist"
           element={
             <ProtectedRoute>
-              <AccountSection
-                title="Wishlist"
-                description="Your saved products will appear here."
-              />
+              <Navigate to="/profile/wishlist" replace />
             </ProtectedRoute>
           }
         />

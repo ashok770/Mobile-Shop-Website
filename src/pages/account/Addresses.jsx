@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { MapPin, Plus, Pencil, Trash2, Star, RefreshCw, X } from "lucide-react";
+import { MapPin, Plus, Pencil, Trash2, Star, RefreshCw, X, CheckCircle2, LoaderCircle } from "lucide-react";
+import toast from "react-hot-toast";
 import axiosInstance from "../../utils/axiosInstance";
 
 const emptyForm = {
@@ -21,6 +22,10 @@ export default function Addresses() {
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
   const [formError, setFormError] = useState(null);
+  const [fieldErrors, setFieldErrors] = useState({});
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [deleting, setDeleting] = useState(false);
+  const [defaultingId, setDefaultingId] = useState(null);
 
   const fetchAddresses = async () => {
     setLoading(true);
@@ -45,12 +50,14 @@ export default function Addresses() {
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
+    setFieldErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const openAdd = () => {
     setEditingId(null);
     setForm(emptyForm);
     setFormError(null);
+    setFieldErrors({});
     setShowForm(true);
   };
 
@@ -66,6 +73,7 @@ export default function Addresses() {
       isDefault: address.isDefault || false,
     });
     setFormError(null);
+    setFieldErrors({});
     setShowForm(true);
   };
 
@@ -74,10 +82,24 @@ export default function Addresses() {
     setEditingId(null);
     setForm(emptyForm);
     setFormError(null);
+    setFieldErrors({});
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (form.fullName.trim().length < 2) errors.fullName = "Enter your full name.";
+    if (!/^[6-9]\d{9}$/.test(form.phone.trim())) errors.phone = "Enter a valid 10-digit Indian phone number.";
+    if (!form.street.trim()) errors.street = "Enter your street address.";
+    if (!form.city.trim()) errors.city = "Enter your city.";
+    if (!form.state.trim()) errors.state = "Enter your state.";
+    if (!/^\d{6}$/.test(form.pincode.trim())) errors.pincode = "Enter a valid 6-digit PIN code.";
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) return;
     setSaving(true);
     setFormError(null);
 
@@ -85,9 +107,11 @@ export default function Addresses() {
       if (editingId) {
         const { data } = await axiosInstance.put(`/address/${editingId}`, form);
         setAddresses(data.addresses || []);
+        toast.success(data.message || "Address updated successfully.");
       } else {
         const { data } = await axiosInstance.post("/address", form);
         setAddresses(data.addresses || []);
+        toast.success(data.message || "Address added successfully.");
       }
       closeForm();
     } catch (err) {
@@ -97,27 +121,33 @@ export default function Addresses() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Are you sure you want to delete this address?")) {
-      return;
-    }
-
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
     try {
-      const { data } = await axiosInstance.delete(`/address/${id}`);
+      const { data } = await axiosInstance.delete(`/address/${deleteTarget._id}`);
       setAddresses(data.addresses || []);
+      setDeleteTarget(null);
+      toast.success(data.message || "Address deleted successfully.");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to delete address");
+      toast.error(err.response?.data?.message || "Failed to delete address");
+    } finally {
+      setDeleting(false);
     }
   };
 
   const handleSetDefault = async (id) => {
+    setDefaultingId(id);
     try {
       const { data } = await axiosInstance.put(`/address/${id}`, {
         isDefault: true,
       });
       setAddresses(data.addresses || []);
+      toast.success(data.message || "Default address updated.");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to set default address");
+      toast.error(err.response?.data?.message || "Failed to set default address");
+    } finally {
+      setDefaultingId(null);
     }
   };
 
@@ -133,7 +163,7 @@ export default function Addresses() {
               Saved Addresses
             </h1>
             <p className="text-gray-500 mt-3">
-              Manage your delivery addresses.
+              Manage your delivery locations.
             </p>
           </div>
 
@@ -171,7 +201,7 @@ export default function Addresses() {
               <MapPin size={28} />
             </div>
             <h2 className="text-2xl font-bold text-gray-900">
-              No saved addresses
+              No saved addresses yet
             </h2>
             <p className="text-gray-500 mt-3 max-w-sm mx-auto">
               Add a delivery address to make checkout faster.
@@ -223,10 +253,11 @@ export default function Addresses() {
                   {!address.isDefault && (
                     <button
                       onClick={() => handleSetDefault(address._id)}
+                      disabled={defaultingId === address._id}
                       className="inline-flex items-center gap-1.5 text-blue-600 font-semibold text-sm hover:underline"
                     >
-                      <Star size={14} />
-                      Set Default
+                      {defaultingId === address._id ? <LoaderCircle size={14} className="animate-spin" /> : <Star size={14} />}
+                      {defaultingId === address._id ? "Updating..." : "Set as Default"}
                     </button>
                   )}
 
@@ -239,7 +270,7 @@ export default function Addresses() {
                   </button>
 
                   <button
-                    onClick={() => handleDelete(address._id)}
+                    onClick={() => setDeleteTarget(address)}
                     className="inline-flex items-center gap-1.5 text-red-600 font-semibold text-sm hover:text-red-700 transition-colors"
                   >
                     <Trash2 size={14} />
@@ -261,13 +292,14 @@ export default function Addresses() {
                 </h2>
                 <button
                   onClick={closeForm}
+                  type="button"
                   className="text-gray-400 hover:text-gray-600 transition-colors"
                 >
                   <X size={20} />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-4">
+              <form onSubmit={handleSubmit} className="p-6 sm:p-8 space-y-5">
                 {formError && (
                   <div className="rounded-xl bg-red-50 text-red-700 px-4 py-3 text-sm">
                     {formError}
@@ -286,6 +318,7 @@ export default function Addresses() {
                     className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter full name"
                   />
+                  {fieldErrors.fullName && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.fullName}</p>}
                 </div>
 
                 <div>
@@ -302,6 +335,7 @@ export default function Addresses() {
                     className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="10-digit phone number"
                   />
+                  {fieldErrors.phone && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.phone}</p>}
                 </div>
 
                 <div>
@@ -317,6 +351,7 @@ export default function Addresses() {
                     className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     placeholder="House no, street, area"
                   />
+                  {fieldErrors.street && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.street}</p>}
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
@@ -330,8 +365,9 @@ export default function Addresses() {
                       onChange={handleChange}
                       required
                       className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="City"
-                    />
+                    placeholder="City"
+                  />
+                    {fieldErrors.city && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.city}</p>}
                   </div>
 
                   <div>
@@ -344,8 +380,9 @@ export default function Addresses() {
                       onChange={handleChange}
                       required
                       className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="State"
-                    />
+                    placeholder="State"
+                  />
+                    {fieldErrors.state && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.state}</p>}
                   </div>
                 </div>
 
@@ -363,6 +400,7 @@ export default function Addresses() {
                     className="w-full rounded-xl border border-gray-300 px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                     placeholder="6-digit PIN code"
                   />
+                  {fieldErrors.pincode && <p className="mt-1.5 text-xs text-red-600">{fieldErrors.pincode}</p>}
                 </div>
 
                 <label className="flex items-center gap-2 text-sm text-gray-700 cursor-pointer">
@@ -390,13 +428,27 @@ export default function Addresses() {
                     className="flex-1 rounded-xl bg-blue-600 hover:bg-blue-700 text-white py-3 font-semibold transition-colors disabled:opacity-60"
                   >
                     {saving
-                      ? "Saving..."
+                      ? <><LoaderCircle size={16} className="animate-spin" /> Saving...</>
                       : editingId
                         ? "Update Address"
                         : "Save Address"}
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+
+        {deleteTarget && (
+          <div className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/45 p-4" role="dialog" aria-modal="true" aria-labelledby="delete-address-title">
+            <div className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl">
+              <div className="h-12 w-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center"><Trash2 size={21} /></div>
+              <h2 id="delete-address-title" className="mt-5 text-xl font-bold text-gray-900">Delete this address?</h2>
+              <p className="mt-2 text-sm leading-6 text-gray-500">This action cannot be undone. Your saved address will be permanently removed.</p>
+              <div className="mt-7 flex flex-col-reverse sm:flex-row gap-3">
+                <button type="button" disabled={deleting} onClick={() => setDeleteTarget(null)} className="flex-1 rounded-xl border border-gray-300 py-3 text-sm font-semibold text-gray-700 hover:bg-gray-50">Cancel</button>
+                <button type="button" disabled={deleting} onClick={handleDelete} className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-red-600 py-3 text-sm font-semibold text-white hover:bg-red-700 disabled:opacity-60">{deleting ? <><LoaderCircle size={16} className="animate-spin" /> Deleting...</> : "Delete Address"}</button>
+              </div>
             </div>
           </div>
         )}

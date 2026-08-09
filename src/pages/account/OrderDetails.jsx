@@ -10,6 +10,8 @@ import {
   User,
   CreditCard,
   RefreshCw,
+  ShoppingBag,
+  CheckCircle2,
 } from "lucide-react";
 import axiosInstance from "../../utils/axiosInstance";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -44,7 +46,7 @@ export default function OrderDetails() {
 
       if (status === 404) {
         setError("Order not found.");
-      } else if (status === 401) {
+      } else if (status === 401 || status === 403) {
         setError("Your session has expired. Please log in again.");
       } else {
         setError(message);
@@ -97,9 +99,8 @@ export default function OrderDetails() {
               Try Again
             </button>
           </div>
-        ) : (
+        ) : order ? (
           <div className="space-y-6">
-            {/* Order header */}
             <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
@@ -124,6 +125,22 @@ export default function OrderDetails() {
               </div>
             </div>
 
+            {order.orderStatus !== "Cancelled" && (
+              <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
+                <h2 className="text-lg font-bold text-gray-900">Order progress</h2>
+                <div className="mt-6 flex items-start overflow-x-auto pb-2">
+                  {["Pending", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered"].map((step, index, steps) => {
+                    const currentIndex = ["Pending", "Confirmed", "Packed", "Shipped", "Out for Delivery", "Delivered"].indexOf(order.orderStatus);
+                    const complete = currentIndex >= index;
+                    return <div className="flex min-w-24 flex-1 items-center last:flex-none" key={step}>
+                      <div className="flex flex-col items-center text-center"><span className={`h-8 w-8 rounded-full flex items-center justify-center ${complete ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-400"}`}>{complete ? <CheckCircle2 size={16} /> : index + 1}</span><span className={`mt-2 text-xs font-medium whitespace-nowrap ${complete ? "text-blue-700" : "text-gray-400"}`}>{step}</span></div>
+                      {index < steps.length - 1 && <div className={`h-0.5 flex-1 min-w-5 mb-7 ${currentIndex > index ? "bg-blue-600" : "bg-gray-200"}`} />}
+                    </div>;
+                  })}
+                </div>
+              </div>
+            )}
+
             {/* Items */}
             <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
               <div className="px-6 sm:px-8 py-5 border-b border-gray-100">
@@ -138,13 +155,16 @@ export default function OrderDetails() {
                     key={item._id || item.productId}
                     className="flex items-center justify-between gap-4 px-6 sm:px-8 py-4"
                   >
-                    <div className="min-w-0">
+                    <div className="flex min-w-0 items-center gap-3">
+                      {item.image ? <img src={item.image} alt="" className="h-14 w-14 rounded-xl object-cover border border-gray-100" /> : <div className="h-14 w-14 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center"><ShoppingBag size={20} /></div>}
+                      <div className="min-w-0">
                       <p className="font-semibold text-gray-900 truncate">
                         {item.name}
                       </p>
                       <p className="text-sm text-gray-500 mt-0.5">
-                        Qty: {item.quantity}
+                        Qty: {item.quantity} · {formatCurrency(item.price)} each
                       </p>
+                      </div>
                     </div>
                     <span className="font-semibold text-gray-900">
                       {formatCurrency(item.price * item.quantity)}
@@ -226,6 +246,8 @@ export default function OrderDetails() {
               </div>
             </div>
           </div>
+        ) : (
+          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm py-16 px-8 text-center"><Package className="mx-auto text-blue-600" size={32} /><h2 className="mt-4 text-xl font-bold text-gray-900">Order not found</h2><Link to="/profile/orders" className="mt-5 inline-flex text-blue-600 font-semibold">Back to Orders</Link></div>
         )}
       </div>
     </main>
