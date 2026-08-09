@@ -5,6 +5,7 @@ import ProfileCard from "../../components/account/ProfileCard";
 import QuickActions from "../../components/account/QuickActions";
 import RecentOrders from "../../components/account/RecentOrders";
 import RecommendedProducts from "../../components/account/RecommendedProducts";
+import "./dashboard.css";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -30,19 +31,15 @@ export default function Dashboard() {
   const firstName = user?.name?.split(" ")[0] || "there";
 
   return (
-    <main className="bg-gray-50 min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+    <main className="dashboard-shell">
+      <div className="dashboard-container">
         {/* ── Dashboard Header ── */}
-        <header className="mb-10 sm:mb-12">
-          <p className="text-blue-600 font-semibold uppercase tracking-[0.25em] text-xs sm:text-sm">
-            My Account
-          </p>
+        <header className="dashboard-header">
+          <span className="dashboard-header__eyebrow">My Account</span>
 
-          <h1 className="text-3xl sm:text-4xl font-bold mt-2 text-gray-900">
-            Welcome Back, {firstName} 👋
-          </h1>
+          <h1>Welcome Back, {firstName} 👋</h1>
 
-          <p className="text-gray-500 mt-3 max-w-2xl">
+          <p>
             Manage your profile, orders, wishlist and account settings from one
             place.
           </p>
@@ -53,12 +50,12 @@ export default function Dashboard() {
             <div className="h-10 w-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin" />
           </div>
         ) : error ? (
-          <div className="bg-white rounded-3xl border border-gray-200 shadow-sm py-16 px-8 text-center">
-            <div className="text-5xl mb-4">⚠️</div>
-            <h2 className="text-2xl font-bold text-gray-900">
-              Something went wrong
-            </h2>
-            <p className="text-gray-500 mt-3">{error}</p>
+          <div className="dash-state">
+            <div className="dash-state__icon bg-red-50 text-red-600 text-3xl">
+              ⚠️
+            </div>
+            <h2>Something went wrong</h2>
+            <p>{error}</p>
           </div>
         ) : (
           <>
@@ -81,7 +78,7 @@ export default function Dashboard() {
             </section>
 
             {/* ── Recommended For You ── */}
-            <section className="mt-10 sm:mt-12 pb-8">
+            <section className="recommended-section">
               <RecommendedProducts
                 products={dashboardData?.recommendedProducts || []}
               />

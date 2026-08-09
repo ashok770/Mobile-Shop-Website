@@ -34,48 +34,30 @@ const actions = [
 
 export default function QuickActions() {
   return (
-    <div className="bg-white rounded-3xl border border-gray-200 shadow-sm overflow-hidden">
-      <div className="px-6 sm:px-8 py-6 border-b border-gray-100">
-        <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-          Quick Actions
-        </h2>
-
-        <p className="text-gray-500 mt-1">
-          Everything you need to manage your Ommasta account.
-        </p>
+    <div className="quick-actions">
+      <div className="quick-actions__header">
+        <h2>Quick Actions</h2>
+        <p>Everything you need to manage your Ommasta account.</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4 sm:gap-5 p-6 sm:p-8">
+      <div className="quick-actions__grid">
         {actions.map((item) => {
           const Icon = item.icon;
 
           return (
-            <Link
-              key={item.title}
-              to={item.link}
-              className="group rounded-2xl border border-gray-200 p-6 hover:border-blue-500 hover:shadow-lg transition-all duration-300 bg-white flex flex-col min-h-[160px]"
-            >
-              <div className="flex justify-between items-start flex-1">
+            <Link key={item.title} to={item.link} className="quick-action">
+              <div className="quick-action__top">
                 <div>
-                  <div
-                    className={`h-14 w-14 rounded-2xl flex items-center justify-center ${item.color} group-hover:scale-105 transition-transform`}
-                  >
+                  <div className={`quick-action__icon ${item.color}`}>
                     <Icon size={26} />
                   </div>
 
-                  <h3 className="mt-5 text-lg font-semibold text-gray-900">
-                    {item.title}
-                  </h3>
+                  <h3 className="quick-action__title">{item.title}</h3>
 
-                  <p className="text-gray-500 mt-2 text-sm">
-                    {item.description}
-                  </p>
+                  <p className="quick-action__desc">{item.description}</p>
                 </div>
 
-                <ChevronRight
-                  className="text-gray-400 group-hover:text-blue-600 group-hover:translate-x-1 transition"
-                  size={22}
-                />
+                <ChevronRight className="quick-action__arrow" size={22} />
               </div>
             </Link>
           );
