@@ -1,11 +1,19 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/api";
 
 function Mobiles() {
   const [mobiles, setMobiles] = useState([]);
-  const [brand, setBrand] = useState("All");
+  const location = useLocation();
+  const urlBrand = new URLSearchParams(location.search).get("brand") || "All";
+  const [brandFilter, setBrandFilter] = useState(() => ({
+    search: location.search,
+    brand: urlBrand,
+  }));
   const [searchTerm, setSearchTerm] = useState("");
+  const brand =
+    brandFilter.search === location.search ? brandFilter.brand : urlBrand;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,7 +53,9 @@ function Mobiles() {
               <button
                 key={b}
                 className={brand === b ? "active" : ""}
-                onClick={() => setBrand(b)}
+                onClick={() =>
+                  setBrandFilter({ search: location.search, brand: b })
+                }
               >
                 {b}
               </button>
