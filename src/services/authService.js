@@ -10,6 +10,11 @@ export const login = async (userData) => {
   return data;
 };
 
+export const googleLogin = async (credential) => {
+  const { data } = await axiosInstance.post("/auth/google", { credential });
+  return data;
+};
+
 export const getCurrentUser = async () => {
   const { data } = await axiosInstance.get("/auth/me");
   return data;

@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User, Globe } from "lucide-react";
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react";
 import useAuth from "../../hooks/useAuth";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { getGoogleAuthErrorMessage } from "../../utils/googleAuthErrors";
+import GoogleSignInButton from "./GoogleSignInButton";
 
 const passwordRequirements = [
   { label: "At least 8 characters", test: (value) => value.length >= 8 },
@@ -14,7 +16,9 @@ const passwordRequirements = [
 
 const RegisterForm = () => {
   const navigate = useNavigate();
-  const { register } = useAuth();
+  const location = useLocation();
+  const { register, googleLogin } = useAuth();
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -26,7 +30,9 @@ const RegisterForm = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
+  const isSubmitting = loading || googleLoading;
 
   const passwordScore = useMemo(
     () =>
@@ -84,9 +90,23 @@ const RegisterForm = () => {
       setError(
         err?.response?.data?.message || "Registration failed. Try again.",
       );
+    } finally {
+      setLoading(false);
     }
+  };
 
-    setLoading(false);
+  const handleGoogleRegister = async (credential) => {
+    setError("");
+    setGoogleLoading(true);
+
+    try {
+      await googleLogin(credential);
+      navigate(location.state?.from || "/", { replace: true });
+    } catch (err) {
+      setError(getGoogleAuthErrorMessage(err));
+    } finally {
+      setGoogleLoading(false);
+    }
   };
 
   return (
@@ -114,6 +134,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             placeholder="Enter your full name"
             className="auth-input"
+            disabled={isSubmitting}
             required
           />
         </div>
@@ -136,6 +157,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             placeholder="you@example.com"
             className="auth-input"
+            disabled={isSubmitting}
             required
           />
         </div>
@@ -158,12 +180,14 @@ const RegisterForm = () => {
             onChange={handleChange}
             placeholder="Create a password"
             className="auth-input auth-input-with-action"
+            disabled={isSubmitting}
             required
           />
           <button
             type="button"
             onClick={() => setShowPassword((value) => !value)}
             className="auth-input-action"
+            disabled={isSubmitting}
             aria-label={showPassword ? "Hide password" : "Show password"}
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -191,12 +215,14 @@ const RegisterForm = () => {
             onChange={handleChange}
             placeholder="Confirm your password"
             className="auth-input auth-input-with-action"
+            disabled={isSubmitting}
             required
           />
           <button
             type="button"
             onClick={() => setShowConfirm((value) => !value)}
             className="auth-input-action"
+            disabled={isSubmitting}
             aria-label={showConfirm ? "Hide password" : "Show password"}
           >
             {showConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -237,6 +263,7 @@ const RegisterForm = () => {
           checked={termsAccepted}
           onChange={(e) => setTermsAccepted(e.target.checked)}
           className="h-4 w-4 rounded border-slate-300 text-sky-600 focus:ring-sky-500"
+          disabled={isSubmitting}
           required
         />
         <span>
@@ -250,7 +277,7 @@ const RegisterForm = () => {
 
       <button
         type="submit"
-        disabled={loading}
+        disabled={isSubmitting}
         className="auth-primary-button"
       >
         {loading ? (
@@ -268,10 +295,20 @@ const RegisterForm = () => {
         <span className="auth-divider-label">Or continue with</span>
       </div>
 
-      <button type="button" className="auth-secondary-button">
-        <Globe size={18} />
-        Continue with Google
-      </button>
+      {googleLoading ? (
+        <div className="auth-secondary-button">
+          <span className="inline-flex h-4 w-4 animate-spin rounded-full border-2 border-slate-400 border-t-transparent" />
+          Signing up with Google...
+        </div>
+      ) : (
+        <GoogleSignInButton
+          clientId={googleClientId}
+          mode="register"
+          disabled={isSubmitting}
+          onCredential={handleGoogleRegister}
+          onError={(err) => setError(getGoogleAuthErrorMessage(err))}
+        />
+      )}
     </form>
   );
 };

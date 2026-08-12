@@ -31,14 +31,22 @@ export const AuthProvider = ({ children }) => {
     checkAuth();
   }, [checkAuth]);
 
+  const finishAuth = (res) => {
+    localStorage.setItem(TOKEN_KEY, res.token);
+    setUser(res.user);
+    return res;
+  };
+
   const login = async (credentials) => {
     const res = await authService.login(credentials);
 
-    localStorage.setItem(TOKEN_KEY, res.token);
+    return finishAuth(res);
+  };
 
-    setUser(res.user);
+  const googleLogin = async (credential) => {
+    const res = await authService.googleLogin(credential);
 
-    return res;
+    return finishAuth(res);
   };
 
   const register = async (userData) => {
@@ -56,6 +64,7 @@ export const AuthProvider = ({ children }) => {
         user,
         loading,
         login,
+        googleLogin,
         register,
         logout,
         setUser,
