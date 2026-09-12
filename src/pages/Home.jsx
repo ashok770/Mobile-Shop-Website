@@ -49,12 +49,12 @@ function Home() {
       <NewArrivalsSection />
       
       {/* CONFIDENCE & SERVICES — Why Ommastra Section */}
-      <div className="mt-12 sm:mt-16 lg:mt-20 mb-10 sm:mb-14">
+      <div className="mt-12 sm:mt-16 lg:mt-20 mb-8 lg:mb-12">
         <ServicesSection />
       </div>
 
       {/* ASSURANCE & TRUST STRIP */}
-      <div className="mb-8 sm:mb-10 lg:mb-12">
+      <div className="mb-6 lg:mb-8">
         <TrustStrip />
       </div>
     </div>
