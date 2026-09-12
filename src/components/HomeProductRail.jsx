@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
+import ProductCardSkeleton from "./ProductCardSkeleton";
 
 function HomeProductRail({
   title,
@@ -8,15 +9,17 @@ function HomeProductRail({
   viewAllLink,
   viewAllLabel = "View All",
   variant,
+  isLoading = false,
+  skeletonCount = 4,
 }) {
-  const visibleProducts = products.slice(0, 4);
+  const visibleProducts = products ? products.slice(0, 4) : [];
 
-  if (visibleProducts.length === 0) return null;
+  if (!isLoading && visibleProducts.length === 0) return null;
 
   return (
     <section
       className={`home-section home-product-section home-product-section--${variant}`}
-      data-product-count={visibleProducts.length}
+      data-product-count={isLoading ? skeletonCount : visibleProducts.length}
     >
       <div className="section-header">
         <div>
@@ -31,12 +34,16 @@ function HomeProductRail({
       </div>
 
       <div
-        className="home-product-rail"
-        data-product-count={visibleProducts.length}
+        className={`home-product-rail ${!isLoading ? "reveal-fade" : ""}`}
+        data-product-count={isLoading ? skeletonCount : visibleProducts.length}
       >
-        {visibleProducts.map((product) => (
-          <ProductCard key={product._id} product={product} />
-        ))}
+        {isLoading
+          ? Array.from({ length: skeletonCount }).map((_, i) => (
+              <ProductCardSkeleton key={`skeleton-${i}`} />
+            ))
+          : visibleProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
+            ))}
       </div>
     </section>
   );

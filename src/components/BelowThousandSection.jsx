@@ -4,11 +4,16 @@ import HomeProductRail from "./HomeProductRail";
 
 function BelowThousandSection() {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProducts = async () => {
-      const productsBelowThousand = await getBelowThousandProducts();
-      setProducts(productsBelowThousand);
+      try {
+        const productsBelowThousand = await getBelowThousandProducts();
+        setProducts(productsBelowThousand);
+      } finally {
+        setIsLoading(false);
+      }
     };
     fetchProducts();
   }, []);
@@ -19,6 +24,7 @@ function BelowThousandSection() {
       products={products}
       viewAllLink="/offers/below-1000"
       variant="value"
+      isLoading={isLoading}
     />
   );
 }

@@ -1,7 +1,8 @@
-import { useNavigate, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useState } from "react";
 
 function ProductCard({ product }) {
-  const navigate = useNavigate();
+  const [imageLoaded, setImageLoaded] = useState(false);
 
   const rawPrice = product.finalPrice ?? product.price ?? product.originalPrice ?? 0;
   
@@ -43,7 +44,12 @@ function ProductCard({ product }) {
         <span className="discount-badge">{product.discountPercent}% OFF</span>
       )}
 
-      <img src={image} alt={product.name} />
+      <img 
+        src={image} 
+        alt={product.name} 
+        className={`product-image ${imageLoaded ? "loaded" : "skeleton-shimmer"}`}
+        onLoad={() => setImageLoaded(true)}
+      />
 
       <h3 className="product-card__name group-hover:text-blue-600 transition-colors duration-200">{product.name}</h3>
       

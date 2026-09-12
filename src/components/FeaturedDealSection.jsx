@@ -81,7 +81,26 @@ function FeaturedDealSection() {
     };
   }, []);
 
-  if (status !== "ready" || !featuredProduct) return null;
+  if (status === "error") return null;
+
+  if (status === "loading" || !featuredProduct) {
+    return (
+      <section className="featured-deal home-section" aria-busy="true">
+        <p className="featured-deal__eyebrow">FEATURED DEAL</p>
+        <div className="featured-deal__card skeleton-card">
+          <div className="featured-deal__visual skeleton-shimmer" style={{ background: '#f1f5f9' }}></div>
+          <div className="featured-deal__content">
+            <div className="skeleton-title short skeleton-shimmer" style={{ height: '16px', marginBottom: '8px' }}></div>
+            <div className="skeleton-title skeleton-shimmer" style={{ height: '32px', marginBottom: '24px', width: '80%' }}></div>
+            <div className="skeleton-price-block">
+              <div className="skeleton-price skeleton-shimmer" style={{ height: '28px', width: '50%' }}></div>
+            </div>
+            <div className="skeleton-btn skeleton-shimmer" style={{ width: '140px', marginTop: '16px' }}></div>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   const image = featuredProduct.images?.[0] || featuredProduct.image;
   const price = getPrice(featuredProduct);
@@ -89,7 +108,7 @@ function FeaturedDealSection() {
   const hasDiscount = featuredProduct.discountPercent > 0;
 
   return (
-    <section className="featured-deal home-section">
+    <section className="featured-deal home-section reveal-fade">
       <p className="featured-deal__eyebrow">FEATURED DEAL</p>
       <div className="featured-deal__card">
         <div className="featured-deal__visual">

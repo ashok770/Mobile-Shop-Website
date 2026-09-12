@@ -33,7 +33,7 @@ function NewArrivalsSection() {
     };
   }, []);
 
-  if (status !== "ready") return null;
+  if (status === "error") return null;
 
   return (
     <HomeProductRail
@@ -43,6 +43,7 @@ function NewArrivalsSection() {
       viewAllLink="/mobiles"
       viewAllLabel="View All →"
       variant="arrivals"
+      isLoading={status === "loading"}
     />
   );
 }

@@ -4,10 +4,13 @@ import HomeProductRail from "./HomeProductRail";
 
 function OfferSection({ title, offerType, viewAllLink, variant }) {
   const [products, setProducts] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (offerType) {
-      getOfferProducts(offerType).then(setProducts);
+      getOfferProducts(offerType)
+        .then(setProducts)
+        .finally(() => setIsLoading(false));
     }
   }, [offerType]);
 
@@ -17,6 +20,7 @@ function OfferSection({ title, offerType, viewAllLink, variant }) {
       products={products}
       viewAllLink={viewAllLink}
       variant={variant}
+      isLoading={isLoading}
     />
   );
 }
