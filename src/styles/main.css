@@ -975,3 +975,166 @@
   margin: 0;
 }
 
+/* ============================================================
+   SHOP BY BRAND PREMIUM SECTION
+   ============================================================ */
+.shop-by-brand-section {
+  width: 100%;
+  background-color: #f8fafc; /* subtle cool neutral */
+  border-bottom: 1px solid #e2e8f0;
+  padding: 40px 0 48px;
+}
+
+.shop-by-brand-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  box-sizing: border-box;
+}
+
+/* Header */
+.shop-by-brand-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.shop-by-brand-title-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.shop-by-brand-heading {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
+  color: #0f172a;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.shop-by-brand-desc {
+  font-size: 14px;
+  color: #64748b;
+  margin: 0;
+}
+
+.shop-by-brand-view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  padding-bottom: 2px;
+}
+
+.shop-by-brand-view-all:hover {
+  color: #1e40af;
+}
+
+.shop-by-brand-view-all-arrow {
+  transition: transform 0.2s ease;
+}
+
+.shop-by-brand-view-all:hover .shop-by-brand-view-all-arrow {
+  transform: translateX(4px);
+}
+
+/* Grid */
+.shop-by-brand-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .shop-by-brand-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .shop-by-brand-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 24px;
+  }
+}
+
+/* Brand Tile */
+.shop-by-brand-tile {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+  width: 100%;
+}
+
+.shop-by-brand-tile:hover {
+  transform: translateY(-4px);
+  border-color: #93c5fd;
+  box-shadow: 0 8px 16px -4px rgba(37,99,235,0.1);
+}
+
+/* Logo Container */
+.shop-by-brand-logo-container {
+  height: 48px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+  transition: transform 0.3s ease;
+}
+
+.shop-by-brand-tile:hover .shop-by-brand-logo-container {
+  transform: scale(1.04);
+}
+
+.shop-by-brand-logo {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* Fallback if no logo */
+.shop-by-brand-fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #64748b;
+}
+
+.shop-by-brand-text-logo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.05em;
+}
+
+/* Brand Name Text */
+.shop-by-brand-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: #334155;
+  transition: color 0.3s ease;
+}
+
+.shop-by-brand-tile:hover .shop-by-brand-name {
+  color: #2563eb;
+}
+
