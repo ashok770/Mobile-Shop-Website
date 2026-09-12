@@ -61,8 +61,7 @@ function Home() {
         <TrustStrip />
       </div>
 
-      {/* RENDERED SPACING (TrustStrip -> Footer) */}
-      <div className="h-4 sm:h-6 lg:h-8 w-full" aria-hidden="true" />
+      {/* RENDERED SPACING (TrustStrip -> Footer removed for natural transition) */}
     </div>
   );
 }
