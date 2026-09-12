@@ -144,7 +144,7 @@ function NavItem({ item }) {
   const linkClassName = `flex items-center gap-1.5 px-1 py-1 text-[16px] font-semibold tracking-normal transition-colors duration-[250ms] relative group ${
     isActive ? "text-blue-600" : "text-slate-700 hover:text-blue-600"
   }`;
-  const underlineClassName = `absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-blue-600 transition-all duration-[250ms] ${
+  const underlineClassName = `absolute bottom-0 left-1/2 h-[2px] -translate-x-1/2 rounded-full bg-blue-500 transition-all duration-[250ms] ${
     isActive ? "w-3/4" : "w-0 group-hover:w-full"
   }`;
 
@@ -257,20 +257,18 @@ function Header() {
     <>
       <motion.header
         className="fixed top-0 left-0 right-0 z-50 transition-all duration-[250ms]"
-        animate={{
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-        }}
         style={{
-          background: "rgba(255,255,255,0.95)",
-          borderBottom: "1px solid rgba(15,23,42,0.06)",
+          background: scrolled ? "rgba(255, 255, 255, 0.96)" : "rgba(255, 255, 255, 1)",
+          backdropFilter: scrolled ? "blur(12px)" : "none",
+          WebkitBackdropFilter: scrolled ? "blur(12px)" : "none",
+          borderBottom: scrolled ? "1px solid rgba(0,0,0,0.05)" : "1px solid rgba(0,0,0,0.08)",
           boxShadow: scrolled
-            ? "0 8px 24px rgba(15,23,42,0.08)"
-            : "0 4px 20px rgba(15,23,42,0.05)",
+            ? "0 4px 20px rgba(0,0,0,0.05)"
+            : "none",
         }}
       >
         <div className="max-w-[1320px] mx-auto px-5 lg:px-8">
-          <div className="flex items-center gap-4 lg:gap-6 h-[74px]">
+          <div className="flex items-center gap-4 lg:gap-6 h-[60px] md:h-[70px]">
             {/* ── Logo ── */}
             <Link
               to="/"
@@ -296,12 +294,9 @@ function Header() {
               </div>
               <div className="flex flex-col leading-none">
                 <span className="text-[17px] font-black tracking-tight text-slate-900 group-hover:text-blue-600 transition-colors duration-200">
-                  Om
-                  <span className="text-blue-600 group-hover:text-orange-500 transition-colors duration-200">
-                    masta
-                  </span>
+                  OMMASTA
                 </span>
-                <span className="text-[9px] font-semibold tracking-[0.18em] uppercase text-slate-400">
+                <span className="text-[9px] font-semibold tracking-[0.18em] uppercase text-slate-500">
                   Mobile Shop
                 </span>
               </div>
@@ -320,22 +315,22 @@ function Header() {
             {/* ── Search Bar ── */}
             <form
               onSubmit={handleSearch}
-              className="hidden md:flex flex-1 max-w-[420px] mx-auto lg:mx-0 relative"
+              className="hidden md:flex flex-1 max-w-[540px] mx-auto lg:mx-8 relative"
             >
               <motion.div
                 animate={{
                   boxShadow: searchFocused
                     ? "0 0 0 3px rgba(37,99,235,0.15), 0 4px 20px rgba(37,99,235,0.1)"
-                    : "0 2px 8px rgba(0,0,0,0.06)",
+                    : "0 2px 8px rgba(0,0,0,0.04)",
                   scale: 1,
                 }}
                 transition={{ duration: 0.25 }}
                 className="flex items-center w-full h-[46px] rounded-full border transition-colors duration-[250ms]"
                 style={{
-                  background: "#ffffff",
+                  background: searchFocused ? "#ffffff" : "#f1f5f9",
                   borderColor: searchFocused
                     ? "rgba(37,99,235,0.55)"
-                    : "#e2e8f0",
+                    : "transparent",
                 }}
               >
                 <Search
@@ -357,12 +352,12 @@ function Header() {
             </form>
 
             {/* ── Right Icons ── */}
-            <div className="flex items-center gap-1.5 ml-auto lg:ml-0">
+            <div className="flex items-center gap-2 lg:gap-4 ml-auto lg:ml-0">
               {/* Mobile search icon */}
               <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.94 }}
-                className="md:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
+                className="md:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors duration-[250ms]"
                 aria-label="Search"
                 onClick={() => navigate("/mobiles")}
               >
@@ -371,58 +366,64 @@ function Header() {
 
               {/* Wishlist */}
               <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.94 }}
-                className="hidden sm:flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => navigate("/profile/wishlist")}
+                className="hidden sm:flex items-center gap-2 px-2 py-2 rounded-full text-slate-600 hover:text-blue-600 transition-colors duration-[250ms]"
                 aria-label="Wishlist"
               >
                 <Heart size={20} />
+                <span className="text-[14px] font-medium hidden xl:block">Wishlist</span>
               </motion.button>
 
               {/* Cart */}
               <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.94 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate("/cart")}
-                className="relative flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="relative flex items-center gap-2 px-2 py-2 rounded-full text-slate-600 hover:text-blue-600 transition-colors duration-[250ms]"
                 aria-label={`Cart, ${cartCount} items`}
               >
-                <ShoppingCart size={20} />
-                <AnimatePresence>
-                  {cartCount > 0 && (
-                    <motion.span
-                      key={cartCount}
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 25,
-                      }}
-                      className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1"
-                      style={{
-                        background: "linear-gradient(135deg,#f97316,#ef4444)",
-                      }}
-                    >
-                      {cartCount > 99 ? "99+" : cartCount}
-                    </motion.span>
-                  )}
-                </AnimatePresence>
+                <div className="relative flex items-center justify-center">
+                  <ShoppingCart size={20} />
+                  <AnimatePresence>
+                    {cartCount > 0 && (
+                      <motion.span
+                        key={cartCount}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        exit={{ scale: 0 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 500,
+                          damping: 25,
+                        }}
+                        className="absolute -top-1.5 -right-2 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold text-white px-1"
+                        style={{
+                          background: "linear-gradient(135deg,#f97316,#ef4444)",
+                        }}
+                      >
+                        {cartCount > 99 ? "99+" : cartCount}
+                      </motion.span>
+                    )}
+                  </AnimatePresence>
+                </div>
+                <span className="text-[14px] font-medium hidden xl:block">Cart</span>
               </motion.button>
 
               {/* Account menu */}
               <div ref={accountMenuRef} className="relative hidden sm:block">
                 <motion.button
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.94 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={() => setAccountMenuOpen((open) => !open)}
                   disabled={loading}
-                  className="flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms] disabled:cursor-wait disabled:opacity-60"
+                  className="flex items-center gap-2 px-2 py-2 rounded-full text-slate-600 hover:text-blue-600 transition-colors duration-[250ms] disabled:cursor-wait disabled:opacity-60"
                   aria-label="Account menu"
                   aria-expanded={accountMenuOpen}
                 >
                   <CircleUser size={20} />
+                  <span className="text-[14px] font-medium hidden xl:block">Account</span>
                 </motion.button>
 
                 <AnimatePresence>
@@ -463,7 +464,7 @@ function Header() {
                       ) : (
                         <>
                           <div className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/70 px-3.5 py-3">
-                            <p className="text-[13px] font-bold tracking-[-0.01em] text-slate-900">Welcome to Ommasta</p>
+                            <p className="text-[13px] font-bold tracking-[-0.01em] text-slate-900">Welcome to Ommastra</p>
                             <p className="mt-0.5 text-[11px] font-medium text-slate-500">Sign in for a faster checkout.</p>
                           </div>
                           <div className="mx-1 my-2 h-px bg-slate-200/80" />
@@ -482,10 +483,10 @@ function Header() {
 
               {/* Hamburger */}
               <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.94 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => setMobileOpen((o) => !o)}
-                className="lg:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-blue-50 transition-colors duration-[250ms]"
+                className="lg:hidden flex items-center justify-center w-[42px] h-[42px] rounded-full text-slate-600 hover:text-blue-600 hover:bg-slate-100 transition-colors duration-[250ms]"
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
               >
@@ -658,7 +659,7 @@ function Header() {
       </AnimatePresence>
 
       {/* Spacer so content doesn't hide under fixed header */}
-      <div className="h-[74px]" aria-hidden="true" />
+      <div className="h-[60px] md:h-[70px]" aria-hidden="true" />
     </>
   );
 }

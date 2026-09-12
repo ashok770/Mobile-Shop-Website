@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Mobiles from "./pages/Mobiles";
 import ProductDetails from "./pages/ProductDetails";
 import Accessories from "./pages/Accessories";
+import Offers from "./pages/Offers";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import Order from "./pages/Order";
@@ -78,6 +79,10 @@ function Layout() {
         <Route path="/mobiles" element={<Mobiles />} />
         <Route path="/mobiles/:id" element={<ProductDetails />} />
         <Route path="/accessories" element={<Accessories />} />
+        <Route path="/offers/below-1000" element={<Offers offerKey="below-1000" />} />
+        <Route path="/offers/mega-flash" element={<Offers offerKey="mega-flash" />} />
+        <Route path="/offers/bogo" element={<Offers offerKey="bogo" />} />
+        <Route path="/offers/daily" element={<Offers offerKey="daily" />} />
         <Route path="/services" element={<Services />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/order" element={<Order />} />

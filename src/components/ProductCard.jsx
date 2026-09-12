@@ -1,15 +1,25 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function ProductCard({ product }) {
   const navigate = useNavigate();
 
-  const displayPrice =
-    product.finalPrice ?? product.price ?? product.originalPrice ?? "N/A";
+  const rawPrice = product.finalPrice ?? product.price ?? product.originalPrice ?? 0;
+  
+  const formatPrice = (price) => {
+    if (isNaN(price) || price === "N/A" || price === 0) return "N/A";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const displayPrice = formatPrice(rawPrice);
   const image = product.images?.[0] || product.image;
 
-  const handleViewDetails = () => navigate(`/mobiles/${product._id}`);
-
-  const handleAddToCart = () => {
+  const handleAddToCart = (e) => {
+    e.stopPropagation();
+    e.preventDefault();
     if (typeof product.stock !== "undefined" && product.stock <= 0) {
       alert("Out of stock");
       return;
@@ -18,7 +28,7 @@ function ProductCard({ product }) {
       productId: product._id,
       name: product.name,
       image,
-      price: displayPrice,
+      price: rawPrice,
       originalPrice: product.originalPrice,
       discountPercent: product.discountPercent || 0,
       stock: product.stock,
@@ -28,31 +38,35 @@ function ProductCard({ product }) {
   };
 
   return (
-    <div className="product-card">
+    <Link to={`/mobiles/${product._id}`} className="product-card group">
       {product.discountPercent > 0 && (
         <span className="discount-badge">{product.discountPercent}% OFF</span>
       )}
 
-      <img src={image} alt={product.name} onClick={handleViewDetails} />
+      <img src={image} alt={product.name} />
 
-      <h3 className="product-card__name">{product.name}</h3>
+      <h3 className="product-card__name group-hover:text-blue-600 transition-colors duration-200">{product.name}</h3>
+      
+      {product.rating && (
+        <div className="flex items-center gap-1 mb-1">
+           <span className="text-yellow-500 text-[13px]">★</span>
+           <span className="text-[12px] font-medium text-slate-600">{product.rating} {product.reviewsCount ? `(${product.reviewsCount})` : ""}</span>
+        </div>
+      )}
 
       <div className="product-card__price">
         {product.originalPrice && product.discountPercent > 0 && (
           <span className="price-meta">
-            <span className="old-price">₹{product.originalPrice}</span>
+            <span className="old-price">{formatPrice(product.originalPrice)}</span>
             <span className="discount-percent">
               {product.discountPercent}% OFF
             </span>
           </span>
         )}
-        <span className="new-price">₹{displayPrice}</span>
+        <span className="new-price">{displayPrice}</span>
       </div>
 
       <div className="card-actions">
-        <button className="btn view-details-btn" onClick={handleViewDetails}>
-          View Details
-        </button>
         <button className="btn add-to-cart-btn" onClick={handleAddToCart}>
           <svg
             className="cart-icon"
@@ -66,7 +80,7 @@ function ProductCard({ product }) {
           Add to Cart
         </button>
       </div>
-    </div>
+    </Link>
   );
 }
 

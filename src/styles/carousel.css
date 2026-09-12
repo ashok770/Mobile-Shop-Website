@@ -1,37 +1,17 @@
 /* ============================================================
-   CAROUSEL — Premium Hero Banner
+   CAROUSEL — Premium Full-Bleed Layered Hero Banner
    ============================================================ */
 
 .carousel-container {
   position: relative;
-  left: 50%;
-  right: 50%;
-  margin-left: -50vw;
-  margin-right: -50vw;
-  width: 100vw;
-  max-width: 100vw;
-  height: calc(100vh - var(--header-height));
-  min-height: 620px;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 2163 / 1050;
+  max-height: 80vh;
   overflow: hidden;
-  /* Deep near-black with subtle blue tint to blend with banner artwork */
   background: #050508;
   margin-bottom: 0;
-}
-
-@media (max-width: 1024px) {
-  .carousel-container {
-    height: 540px;
-    max-height: 560px;
-    min-height: 460px;
-  }
-}
-
-@media (max-width: 768px) {
-  .carousel-container {
-    height: 420px;
-    max-height: 460px;
-    min-height: 340px;
-  }
 }
 
 .carousel-wrapper {
@@ -42,16 +22,15 @@
 
 .carousel-slide {
   position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   display: block;
   padding: 0;
   border: 0;
-  /* Deep near-black with subtle blue tint to blend with banner artwork */
-  background: #050508;
+  background: transparent;
   cursor: pointer;
   opacity: 0;
-  /* FIX 10: 0.6s feels snappy and premium vs the sluggish 0.9s */
   transition: opacity 0.6s ease-in-out;
   pointer-events: none;
 }
@@ -67,56 +46,73 @@
   outline-offset: -6px;
 }
 
-.carousel-banner-image {
+
+
+/* Layer 2: Original sharp artwork preserved 1:1 */
+.carousel-fg-layer {
+  position: relative;
+  z-index: 3;
   width: 100%;
   height: 100%;
-  display: block;
-  object-fit: contain;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
 }
 
-/* Navigation Arrows */
+.carousel-banner-image {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+
+/* Navigation Arrows — Desktop: placed in ambient bleed zone clear of centered artwork */
 .carousel-nav {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(8px);
-  color: var(--white);
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
   font-size: 20px;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 3;
-  border-radius: var(--radius-full);
-  transition: var(--transition-fast);
+  z-index: 10;
+  border-radius: 9999px;
+  transition: all 0.2s ease;
+  user-select: none;
 }
 
 .carousel-nav:hover {
-  background: rgba(255, 255, 255, 0.25);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(15, 23, 42, 0.75);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: translateY(-50%) scale(1.06);
 }
 
 .carousel-nav.prev {
-  left: 48px;
+  left: 16px;
 }
 
 .carousel-nav.next {
-  right: 48px;
+  right: 16px;
 }
 
-/* Dot Indicators */
 .carousel-dots {
   position: absolute;
-  bottom: 28px;
-  left: max(24px, calc(50% - 640px));
-  transform: none;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   gap: 8px;
-  z-index: 3;
+  z-index: 10;
 }
 
 .dot {
@@ -124,23 +120,23 @@
   height: 8px;
   padding: 0;
   border: 0;
-  border-radius: var(--radius-full);
-  background: rgba(255, 255, 255, 0.35);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.4);
   cursor: pointer;
-  transition: var(--transition-fast);
+  transition: all 0.25s ease;
 }
 
 .dot.active {
-  background: var(--white);
-  width: 24px;
+  background: #ffffff;
+  width: 26px;
 }
 
 .dot:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.8);
 }
 
 .dot:focus-visible {
-  outline: 2px solid var(--white);
+  outline: 2px solid #ffffff;
   outline-offset: 3px;
 }
 
@@ -151,50 +147,30 @@
   left: 0;
   height: 3px;
   background: var(--primary);
-  z-index: 4;
+  z-index: 10;
   transition: width 0.1s linear;
 }
 
-/* Responsive */
+/* Responsive Breakpoints */
 
 @media (max-width: 1024px) {
-  .carousel-container {
-    height: 430px;
-    max-height: 450px;
+  .carousel-nav {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .carousel-dots {
+    bottom: 16px;
   }
 }
 
 @media (max-width: 768px) {
-  .carousel-container {
-    height: 360px;
-    max-height: 380px;
-    min-height: 280px;
-  }
-
   .carousel-nav {
     width: 36px;
     height: 36px;
     font-size: 16px;
   }
-
-  .carousel-nav.prev {
-    left: 20px;
-  }
-
-  .carousel-nav.next {
-    right: 20px;
-  }
-
-  .carousel-dots {
-    left: 20px;
-    bottom: 14px;
-  }
 }
 
-@media (max-width: 480px) {
-  .carousel-container {
-    height: 240px;
-    min-height: unset;
-    max-height: unset;
-  }
-}
+

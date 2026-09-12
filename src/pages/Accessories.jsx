@@ -1,15 +1,23 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/api";
 
 const TYPE_FILTERS = ["All", "Smartwatch", "Mobile Charger", "Mobile Cover"];
-const BRAND_FILTERS = ["All", "Samsung", "Apple", "Redmi"];
+const BRAND_FILTERS = ["All", "Samsung", "Apple", "Redmi", "Noise", "Boult"];
 
 function Accessories() {
   const [accessories, setAccessories] = useState([]);
+  const location = useLocation();
+  const urlBrand = new URLSearchParams(location.search).get("brand") || "All";
+  const [brandFilter, setBrandFilter] = useState(() => ({
+    search: location.search,
+    brand: urlBrand,
+  }));
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-  const [selectedBrand, setSelectedBrand] = useState("All");
+  const selectedBrand =
+    brandFilter.search === location.search ? brandFilter.brand : urlBrand;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +37,8 @@ function Accessories() {
     const matchesType =
       selectedType === "All" || accessory.type === selectedType;
     const matchesBrand =
-      selectedBrand === "All" || accessory.brand === selectedBrand;
+      selectedBrand === "All" ||
+      accessory.brand?.toLowerCase() === selectedBrand.toLowerCase();
 
     return matchesSearch && matchesType && matchesBrand;
   });
@@ -73,8 +82,15 @@ function Accessories() {
             {BRAND_FILTERS.map((b) => (
               <button
                 key={b}
-                className={`filter-chip ${selectedBrand === b ? "active" : ""}`}
-                onClick={() => setSelectedBrand(b)}
+                className={`filter-chip ${
+                  selectedBrand?.toLowerCase() === b.toLowerCase() ||
+                  (b === "All" && (!selectedBrand || selectedBrand === "All"))
+                    ? "active"
+                    : ""
+                }`}
+                onClick={() =>
+                  setBrandFilter({ search: location.search, brand: b })
+                }
               >
                 {b}
               </button>

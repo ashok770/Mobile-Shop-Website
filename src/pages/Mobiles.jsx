@@ -23,8 +23,18 @@ function Mobiles() {
     fetchData();
   }, []);
 
+  const isBrandMatch = (productBrand, targetBrand) => {
+    if (!targetBrand || targetBrand === "All") return true;
+    if (!productBrand) return false;
+    const pb = productBrand.toLowerCase();
+    const tb = targetBrand.toLowerCase();
+    if (pb === tb) return true;
+    if ((tb === "motorola" || tb === "moto") && (pb === "moto" || pb === "motorola")) return true;
+    return false;
+  };
+
   const filteredMobiles = mobiles.filter((mobile) => {
-    const matchesBrand = brand === "All" || mobile.brand === brand;
+    const matchesBrand = isBrandMatch(mobile.brand, brand);
     const matchesSearch = mobile.name
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
@@ -49,12 +59,12 @@ function Mobiles() {
           />
 
           <div className="filters">
-            {["All", "Samsung", "Apple", "Redmi"].map((b) => (
+            {["All", "Samsung", "Apple", "Redmi", "Motorola"].map((b) => (
               <button
                 key={b}
-                className={brand === b ? "active" : ""}
+                className={isBrandMatch(b, brand) && (b !== "All" || brand === "All") ? "active" : ""}
                 onClick={() =>
-                  setBrandFilter({ search: location.search, brand: b })
+                  setBrandFilter({ search: location.search, brand: b === "Motorola" ? "moto" : b })
                 }
               >
                 {b}

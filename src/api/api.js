@@ -4,14 +4,30 @@ const API =
   import.meta.env.VITE_API_URL ||
   "http://localhost:5000";
 
-export const getProducts = async () => {
-  const res = await fetch(`${API}/api/products`);
+const fetchProductData = async (path) => {
+  const res = await fetch(`${API}${path}`);
+
+  if (!res.ok) {
+    throw new Error("Unable to load products");
+  }
+
   return res.json();
 };
 
+export const getProducts = async () => {
+  return fetchProductData("/api/products");
+};
+
 export const getOfferProducts = async (offerType) => {
-  const res = await fetch(`${API}/api/products/offers/${offerType}`);
-  return res.json();
+  return fetchProductData(`/api/products/offers/${offerType}`);
+};
+
+export const getBelowThousandProducts = async () => {
+  const products = await getProducts();
+  return products.filter(
+    (product) =>
+      (product.finalPrice ?? product.price ?? product.originalPrice) <= 1000,
+  );
 };
 
 export const createOrder = async (orderData) => {
