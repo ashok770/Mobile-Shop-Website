@@ -31,29 +31,41 @@ function ServicesSection() {
 
   return (
     <section 
-      className="bg-gradient-to-b from-slate-50 to-white py-16 sm:py-20 lg:py-28"
+      className="w-full"
       aria-labelledby="why-ommastra-heading"
     >
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Editorial Header */}
-        <div className="text-center max-w-2xl mx-auto mb-14 sm:mb-20">
-          <span className="inline-block text-[11px] sm:text-xs font-bold text-blue-600 uppercase tracking-widest mb-3 sm:mb-4">
-            WHY OMMASTRA
-          </span>
-          <h2 
-            id="why-ommastra-heading" 
-            className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight mb-4 sm:mb-6"
-          >
-            Care beyond the purchase
-          </h2>
-          <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
-            Expert care for your devices, from certified repair to ongoing dedicated customer support.
-          </p>
+        {/* Editorial Header & CTA */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 sm:mb-12 gap-6">
+          <div className="max-w-2xl">
+            <span className="inline-block text-[11px] sm:text-xs font-bold text-blue-600 uppercase tracking-widest mb-3">
+              WHY OMMASTRA
+            </span>
+            <h2 
+              id="why-ommastra-heading" 
+              className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-slate-900 tracking-tight mb-4"
+            >
+              Care beyond the purchase
+            </h2>
+            <p className="text-base sm:text-lg text-slate-600 leading-relaxed">
+              Expert care for your devices, from certified repair to ongoing dedicated customer support.
+            </p>
+          </div>
+          
+          <div className="hidden md:block pb-1">
+            <Link
+              to="/services"
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors border border-blue-200 hover:border-blue-300 rounded-lg hover:bg-blue-50"
+            >
+              View All Services
+              <ArrowRight size={16} />
+            </Link>
+          </div>
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service) => (
             <div
               key={service.id}
@@ -85,11 +97,11 @@ function ServicesSection() {
           ))}
         </div>
 
-        {/* View All Services Link */}
-        <div className="flex justify-center mt-12 sm:mt-16">
+        {/* Mobile View All Link */}
+        <div className="mt-8 flex justify-center md:hidden">
           <Link
             to="/services"
-            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors border border-blue-200 hover:border-blue-300 rounded-lg hover:bg-blue-50"
+            className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors border border-blue-200 hover:border-blue-300 rounded-lg hover:bg-white w-full justify-center"
           >
             View All Services & Repairs
             <ArrowRight size={16} />
