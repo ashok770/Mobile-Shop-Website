@@ -86,11 +86,11 @@ function ShopByBrand() {
               <div className="shop-by-brand-logo-container">
                 <img 
                   src={brand.logoSrc} 
-                  alt={`${brand.name} logo`} 
-                  className="shop-by-brand-logo"
+                  alt="" 
+                  aria-hidden="true"
+                  className={`shop-by-brand-logo shop-by-brand-logo-${brand.id}`}
                 />
               </div>
-              <span className="shop-by-brand-name">{brand.name}</span>
             </button>
           ))}
         </div>

@@ -1073,7 +1073,7 @@
   background: #ffffff;
   border: 1px solid #e2e8f0;
   border-radius: 12px;
-  padding: 24px 16px;
+  padding: 32px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1090,14 +1090,19 @@
   box-shadow: 0 8px 16px -4px rgba(37,99,235,0.1);
 }
 
+.shop-by-brand-tile:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+  border-color: #2563eb;
+}
+
 /* Logo Container */
 .shop-by-brand-logo-container {
-  height: 48px;
+  height: 64px;
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
   transition: transform 0.3s ease;
 }
 
@@ -1106,35 +1111,23 @@
 }
 
 .shop-by-brand-logo {
-  max-width: 100%;
+  max-width: 110px;
   max-height: 100%;
   object-fit: contain;
 }
 
-/* Fallback if no logo */
-.shop-by-brand-fallback {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748b;
+/* Brand specific adjustments for perceived visual balance */
+.shop-by-brand-logo-apple {
+  max-height: 48px; /* Apple logo is tall, limit height slightly to balance */
+}
+.shop-by-brand-logo-redmi {
+  max-height: 38px; /* Redmi logo is a square/block, looks huge if it hits 64px */
+}
+.shop-by-brand-logo-motorola {
+  max-height: 44px; /* Circular logo */
+}
+.shop-by-brand-logo-noise {
+  max-height: 44px; /* Circular logo */
 }
 
-.shop-by-brand-text-logo {
-  font-size: 16px;
-  font-weight: 700;
-  color: #475569;
-  letter-spacing: 0.05em;
-}
-
-/* Brand Name Text */
-.shop-by-brand-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: #334155;
-  transition: color 0.3s ease;
-}
-
-.shop-by-brand-tile:hover .shop-by-brand-name {
-  color: #2563eb;
-}
 
