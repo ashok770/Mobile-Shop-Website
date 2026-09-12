@@ -712,3 +712,177 @@
     padding: 28px 16px;
   }
 }
+
+/* ============================================================
+   WHY OMMASTRA REBUILD
+   ============================================================ */
+.why-ommastra-section {
+  width: 100%;
+  display: block;
+}
+
+.why-ommastra-container {
+  width: 100%;
+  max-width: 1280px;
+  margin-inline: auto;
+  padding-inline: 24px;
+  box-sizing: border-box;
+}
+
+.why-ommastra-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  gap: 24px;
+}
+
+@media (min-width: 768px) {
+  .why-ommastra-header {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+}
+
+.why-ommastra-title-group {
+  max-width: 672px;
+}
+
+.why-ommastra-eyebrow {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  color: #2563eb;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+}
+
+.why-ommastra-heading {
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.025em;
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.why-ommastra-desc {
+  font-size: clamp(16px, 2vw, 18px);
+  color: #475569;
+  line-height: 1.625;
+  margin: 0;
+}
+
+.why-ommastra-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.why-ommastra-cta:hover {
+  background-color: #eff6ff;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+/* The Grid */
+.why-ommastra-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 640px) {
+  .why-ommastra-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .why-ommastra-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* The Cards */
+.why-ommastra-card {
+  width: 100%;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.why-ommastra-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-color: #93c5fd;
+}
+
+.why-ommastra-card-icon {
+  display: inline-flex;
+  color: #2563eb;
+  margin-bottom: 24px;
+  transition: transform 0.3s ease;
+}
+
+.why-ommastra-card:hover .why-ommastra-card-icon {
+  transform: translateY(-4px);
+}
+
+.why-ommastra-card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 12px;
+  line-height: 1.3;
+}
+
+.why-ommastra-card-desc {
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.625;
+  margin-bottom: 32px;
+  flex-grow: 1;
+}
+
+.why-ommastra-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  margin-top: auto;
+}
+
+.why-ommastra-card-link:hover {
+  color: #1e40af;
+}
+
+.why-ommastra-card-arrow {
+  transition: transform 0.3s ease;
+}
+
+.why-ommastra-card:hover .why-ommastra-card-arrow {
+  transform: translateX(4px);
+}
