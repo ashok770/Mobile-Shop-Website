@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import {
   ShieldCheck,
@@ -10,9 +9,9 @@ import {
   PhoneCall,
 } from "lucide-react";
 
-function InstagramIcon({ size = 15 }) {
+function InstagramIcon({ size = 20 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       <rect x="3" y="3" width="18" height="18" rx="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none" />
@@ -20,7 +19,7 @@ function InstagramIcon({ size = 15 }) {
   );
 }
 
-function FacebookIcon({ size = 15 }) {
+function FacebookIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M13.5 21v-8h2.7l.4-3h-3.1V8.1c0-.9.3-1.5 1.6-1.5h1.7V3.9c-.3 0-1.3-.1-2.4-.1-2.4 0-4 1.5-4 4.1V10H7.7v3h2.7v8h3.1Z" />
@@ -28,7 +27,7 @@ function FacebookIcon({ size = 15 }) {
   );
 }
 
-function YoutubeIcon({ size = 15 }) {
+function YoutubeIcon({ size = 20 }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
       <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
@@ -38,189 +37,158 @@ function YoutubeIcon({ size = 15 }) {
 
 function Footer() {
   return (
-    <footer className="bg-[#0a1120] text-slate-400 border-t border-slate-800/80 relative z-20">
-      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10 lg:gap-12">
-          {/* Brand & Identity Column */}
-          <div className="sm:col-span-2 lg:col-span-4 flex flex-col gap-3.5">
+    <footer className="bg-[#0b1221] text-slate-400 relative z-20 overflow-hidden flex flex-col">
+      {/* Main Content Area */}
+      <div className="max-w-[1280px] w-full mx-auto px-5 sm:px-8 pt-14 lg:pt-[72px] pb-12 lg:pb-16">
+        
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10 lg:gap-8">
+          
+          {/* 1. Brand Block */}
+          <div className="flex flex-col gap-6">
             <Link to="/" className="flex items-center gap-3 group w-fit" aria-label="Ommastra Home">
-              <div className="w-10 h-10 rounded-full overflow-hidden border border-white/30 shadow-md">
+              <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 shadow-sm">
                 <img
                   src="/images/logo.png"
-                  alt="Ommastra"
+                  alt="Ommastra Logo"
                   className="w-full h-full object-cover"
                   onError={(e) => {
                     e.target.style.display = "none";
-                    e.target.nextSibling.style.display = "flex";
                   }}
                 />
-                <div className="w-full h-full bg-gradient-to-br from-blue-600 to-blue-800 items-center justify-center hidden" aria-hidden="true">
-                  <span className="text-white font-black text-lg">O</span>
-                </div>
               </div>
-              <span className="text-xl font-black tracking-tight text-white group-hover:text-blue-400 transition-colors">
+              <span className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
                 OMMASTRA
               </span>
             </Link>
 
-            <p className="text-xs sm:text-sm text-slate-400 leading-relaxed max-w-xs mt-1">
+            <p className="text-[14px] text-slate-400/90 leading-relaxed max-w-[280px]">
               Your certified destination for authentic smartphones, premium audio gear, and factory-standard repair diagnostics.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-slate-900 border border-slate-800 text-xs text-slate-300 w-fit mt-1">
-              <ShieldCheck size={14} className="text-emerald-400 shrink-0" />
-              <span>Certified Retailer &amp; Service Partner</span>
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-[13px] text-slate-300 w-fit">
+              <ShieldCheck size={16} className="text-blue-400 shrink-0" />
+              <span className="font-medium">Certified Retailer & Service Partner</span>
             </div>
 
-            <div className="flex items-center gap-2.5 pt-3" aria-label="Social media links">
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
-                aria-label="Instagram"
-              >
+            {/* Social Icons - Redesigned & Larger */}
+            <div className="flex items-center gap-3 pt-4" aria-label="Social media links">
+              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-pink-600 hover:border-pink-600 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
                 <InstagramIcon />
               </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
-                aria-label="Facebook"
-              >
+              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-blue-600 hover:border-blue-600 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
                 <FacebookIcon />
               </a>
-              <a
-                href="https://wa.me/919876543210"
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
-                aria-label="WhatsApp"
-              >
-                <MessageCircle size={16} />
+              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
+                <MessageCircle size={20} strokeWidth={1.5} />
               </a>
-              <a
-                href="https://youtube.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-9 h-9 rounded-full bg-slate-900 border border-slate-800 text-slate-400 hover:text-white hover:bg-slate-800 flex items-center justify-center transition-colors"
-                aria-label="YouTube"
-              >
+              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all duration-300" aria-label="YouTube">
                 <YoutubeIcon />
               </a>
             </div>
           </div>
 
-          {/* Quick Links Column */}
-          <div className="lg:col-span-2">
-            <h4 className="text-sm font-semibold text-white tracking-wide mb-5">
+          {/* 2. Quick Links */}
+          <div className="lg:pl-4">
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
               Quick Links
             </h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-4">
               <li>
-                <Link to="/mobiles" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Smartphones</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/mobiles" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Smartphones</Link>
               </li>
               <li>
-                <Link to="/accessories" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Accessories</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/accessories" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Accessories</Link>
               </li>
               <li>
-                <Link to="/services" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Services</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Services</Link>
               </li>
               <li>
-                <Link to="/offers/mega-flash" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Deals &amp; Offers</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/offers/mega-flash" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Deals & Offers</Link>
               </li>
             </ul>
           </div>
 
-          {/* Customer Care Column */}
-          <div className="lg:col-span-3">
-            <h4 className="text-sm font-semibold text-white tracking-wide mb-5">
+          {/* 3. Customer Care */}
+          <div>
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
               Customer Care
             </h4>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-4">
               <li>
-                <Link to="/services" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Repair Services</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Repair Services</Link>
               </li>
               <li>
-                <Link to="/profile/orders" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Order Tracking</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/profile/orders" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Order Tracking</Link>
               </li>
               <li>
-                <Link to="/contact" className="flex items-center justify-between text-slate-400 hover:text-white transition-colors group">
-                  <span>Help Centre</span>
-                  <span className="text-slate-600 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all text-xs">→</span>
-                </Link>
+                <Link to="/contact" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Help Centre</Link>
               </li>
             </ul>
-
-            <div className="mt-5 pt-1">
-              <a href="tel:9876543210" className="inline-flex items-center gap-2 text-white font-bold text-sm hover:text-emerald-400 transition-colors group">
-                <Phone size={15} className="text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
-                <span>+91 98765 43210</span>
+            
+            <div className="mt-6">
+              <a href="tel:9876543210" className="inline-flex items-center gap-2.5 text-[14px] text-white font-medium hover:text-blue-400 transition-colors group">
+                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                  <Phone size={14} className="text-white group-hover:text-blue-400 transition-colors" />
+                </div>
+                +91 98765 43210
               </a>
             </div>
           </div>
 
-          {/* Store Information Column */}
-          <div className="lg:col-span-3">
-            <h4 className="text-sm font-semibold text-white tracking-wide mb-5">
+          {/* 4. Store Information */}
+          <div>
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
               Store Information
             </h4>
-            <ul className="space-y-4 text-sm">
-              <li className="flex items-start gap-3 text-slate-400">
-                <MapPin size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                <span>Main Market, City Center, India</span>
+            <ul className="space-y-5">
+              <li className="flex items-start gap-3.5">
+                <div className="mt-0.5 text-slate-400 shrink-0">
+                  <MapPin size={18} strokeWidth={1.5} />
+                </div>
+                <span className="text-[14px] text-slate-400 leading-relaxed">
+                  Main Market, City Center, India
+                </span>
               </li>
-              <li className="flex items-start gap-3 text-slate-400">
-                <Clock size={16} className="text-blue-400 shrink-0 mt-0.5" />
-                <div className="leading-snug">
+              <li className="flex items-start gap-3.5">
+                <div className="mt-0.5 text-slate-400 shrink-0">
+                  <Clock size={18} strokeWidth={1.5} />
+                </div>
+                <div className="text-[14px] text-slate-400 leading-relaxed">
                   <p>Mon - Sat: 10 AM – 9 PM</p>
-                  <p className="text-xs text-slate-500 mt-1">Sunday: 11 AM – 7 PM</p>
+                  <p className="text-slate-500 mt-1">Sunday: 11 AM – 7 PM</p>
                 </div>
               </li>
-              <li className="flex items-center gap-3 text-slate-400">
-                <Mail size={16} className="text-blue-400 shrink-0" />
-                <a href="mailto:hello@ommastra.com" className="hover:text-blue-400 transition-colors">
+              <li className="flex items-start gap-3.5">
+                <div className="mt-0.5 text-slate-400 shrink-0">
+                  <Mail size={18} strokeWidth={1.5} />
+                </div>
+                <a href="mailto:hello@ommastra.com" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors">
                   hello@ommastra.com
                 </a>
               </li>
             </ul>
           </div>
+          
         </div>
+      </div>
 
-        {/* Bottom Bar */}
-        <div className="border-t border-slate-800/80 mt-14 pt-6 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-500">
-          <p>© 2026 Ommastra Mobile Shop. All rights reserved.</p>
-          <div className="flex items-center gap-3 sm:gap-4 text-xs text-slate-500">
-            <Link to="/contact" className="hover:text-slate-400 transition-colors">Privacy Policy</Link>
-            <span className="text-slate-800">|</span>
-            <Link to="/contact" className="hover:text-slate-400 transition-colors">Terms &amp; Conditions</Link>
-            <span className="text-slate-800">|</span>
-            <Link to="/contact" className="hover:text-slate-400 transition-colors">Support</Link>
+      {/* Legal Bar (Subtly Darker Background) */}
+      <div className="bg-[#070c17] border-t border-white/[0.04]">
+        <div className="max-w-[1280px] w-full mx-auto px-5 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row justify-between items-center gap-4">
+          <p className="text-[13px] text-slate-500 text-center md:text-left">
+            © 2026 Ommastra Mobile Shop. All rights reserved.
+          </p>
+          <div className="flex flex-wrap justify-center items-center gap-5 md:gap-7 text-[13px]">
+            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</Link>
+            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Terms & Conditions</Link>
+            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Support</Link>
           </div>
         </div>
       </div>
 
       {/* Floating Action Buttons */}
-      <div className="fixed bottom-8 right-8 flex flex-col gap-3 z-50 group/fab" aria-label="Quick contact options">
+      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50 group/fab" aria-label="Quick contact options">
         <a
           className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
           href="https://wa.me/919876543210"
@@ -245,3 +213,4 @@ function Footer() {
 }
 
 export default Footer;
+
