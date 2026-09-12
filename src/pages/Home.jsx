@@ -49,14 +49,20 @@ function Home() {
       <NewArrivalsSection />
       
       {/* CONFIDENCE & SERVICES — Why Ommastra Section */}
-      <div className="mt-12 sm:mt-16 lg:mt-20 mb-8 lg:mb-12">
+      <div className="mt-12 sm:mt-16 lg:mt-20">
         <ServicesSection />
       </div>
 
+      {/* RENDERED SPACING (Services -> TrustStrip) */}
+      <div className="h-4 sm:h-6 lg:h-8 w-full" aria-hidden="true" />
+
       {/* ASSURANCE & TRUST STRIP */}
-      <div className="mb-6 lg:mb-8">
+      <div>
         <TrustStrip />
       </div>
+
+      {/* RENDERED SPACING (TrustStrip -> Footer) */}
+      <div className="h-4 sm:h-6 lg:h-8 w-full" aria-hidden="true" />
     </div>
   );
 }
