@@ -47,7 +47,8 @@ function AdminTopbar({ toggleMobileMenu }) {
           style={{ 
             position: "relative", 
             width: "100%", 
-            maxWidth: "400px" 
+            maxWidth: "420px",
+            minWidth: "200px"
           }}
         >
           <Search 
@@ -60,7 +61,7 @@ function AdminTopbar({ toggleMobileMenu }) {
             placeholder="Search products, orders, customers..."
             style={{
               width: "100%",
-              height: "40px",
+              height: "42px",
               padding: "0 16px 0 40px",
               borderRadius: "8px",
               border: "1px solid transparent",
@@ -74,7 +75,7 @@ function AdminTopbar({ toggleMobileMenu }) {
             onFocus={(e) => {
               e.target.style.backgroundColor = "#ffffff";
               e.target.style.border = "1px solid #d1d5db";
-              e.target.style.boxShadow = "0 1px 2px rgba(0,0,0,0.05)";
+              e.target.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
             }}
             onBlur={(e) => {
               e.target.style.backgroundColor = "#f3f4f6";

@@ -134,7 +134,7 @@ function AdminSidebar({ isMobileOpen, closeMobileMenu }) {
             <img 
               src="/images/logo.png" 
               alt="Ommastra Logo" 
-              style={{ height: "32px", width: "auto", objectFit: "contain", filter: "brightness(0) invert(1)" }} 
+              style={{ height: "32px", width: "auto", objectFit: "contain", borderRadius: "4px" }} 
             />
             <div>
               <div style={{ fontSize: "16px", fontWeight: 700, letterSpacing: "0.5px", lineHeight: 1.1 }}>OMMASTRA</div>
