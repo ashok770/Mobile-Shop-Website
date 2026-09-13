@@ -1,22 +1,18 @@
 import { useEffect, useState } from "react";
+import { adminFetch } from "../utils/adminFetch";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function AdminStats() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
-  const token = localStorage.getItem("adminToken");
 
   useEffect(() => {
     const fetchStats = async () => {
       setError("");
 
       try {
-        const res = await fetch(`${API}/api/orders/stats/admin`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await adminFetch(`${API}/api/orders/stats/admin`);
         const data = await res.json();
 
         if (!res.ok) {

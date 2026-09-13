@@ -30,10 +30,13 @@ import Settings from "./pages/account/Settings";
 
 // Admin pages
 import AdminLogin from "./admin/AdminLogin";
+import AdminForgotPassword from "./admin/AdminForgotPassword";
+import AdminResetPassword from "./admin/AdminResetPassword";
 import AdminDashboard from "./admin/AdminDashboard";
 import ManageProducts from "./admin/ManageProducts";
 import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/OrdersPage";
+import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -179,11 +182,20 @@ function Layout() {
           }
         />
 
-        {/* Admin (hidden) */}
+        {/* Admin (public auth + recovery) */}
         <Route path="/admin/login" element={<AdminLogin />} />
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/products" element={<ManageProducts />} />
-        <Route path="/admin/orders" element={<OrdersPage />} />
+        <Route path="/admin/forgot-password" element={<AdminForgotPassword />} />
+        <Route path="/admin/reset-password" element={<AdminResetPassword />} />
+
+        {/* Admin (protected) */}
+        <Route
+          path="/admin"
+          element={<AdminProtectedRoute />}
+        >
+          <Route path="dashboard" element={<AdminDashboard />} />
+          <Route path="products" element={<ManageProducts />} />
+          <Route path="orders" element={<OrdersPage />} />
+        </Route>
       </Routes>
 
       {/* Footer only for public pages */}

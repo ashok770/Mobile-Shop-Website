@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { adminFetch } from "../utils/adminFetch";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function ManageProducts() {
   const navigate = useNavigate();
@@ -20,19 +21,31 @@ function ManageProducts() {
   // Edit product state
   const [editingProduct, setEditingProduct] = useState(null);
 
-  const token = localStorage.getItem("adminToken");
-
   // ==========================
   // Fetch products
   // ==========================
   const fetchProducts = async () => {
-    const res = await fetch(`${API}/api/products`);
-    const data = await res.json();
-    setProducts(data);
+    try {
+      const res = await fetch(`${API}/api/products`);
+      const data = await res.json();
+      setProducts(data);
+    } catch {
+      // Ignore product fetch error
+    }
   };
 
   useEffect(() => {
-    fetchProducts();
+    let isMounted = true;
+    fetch(`${API}/api/products`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (isMounted) setProducts(data);
+      })
+      .catch(() => {});
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // ==========================
@@ -65,11 +78,8 @@ function ManageProducts() {
       formData.append("images", file);
     });
 
-    const res = await fetch(`${API}/api/products`, {
+    const res = await adminFetch(`${API}/api/products`, {
       method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
       body: formData,
     });
 
@@ -93,11 +103,8 @@ function ManageProducts() {
   const deleteProduct = async (id) => {
     if (!window.confirm("Delete this product?")) return;
 
-    await fetch(`${API}/api/products/${id}`, {
+    await adminFetch(`${API}/api/products/${id}`, {
       method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
     });
 
     fetchProducts();
@@ -213,9 +220,8 @@ function ManageProducts() {
                 });
               }
 
-              await fetch(`${API}/api/products/${editingProduct._id}`, {
+              await adminFetch(`${API}/api/products/${editingProduct._id}`, {
                 method: "PUT",
-                headers: { Authorization: `Bearer ${token}` },
                 body: formData,
               });
 

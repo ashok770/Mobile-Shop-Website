@@ -1,25 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { adminFetch, performAdminLogout } from "../utils/adminFetch";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function OrdersPage() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem("adminToken");
 
   const fetchOrders = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/orders`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await adminFetch(`${API}/api/orders`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -43,11 +39,10 @@ function OrdersPage() {
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/orders/${id}/status`, {
+      const res = await adminFetch(`${API}/api/orders/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ orderStatus }),
       });
@@ -63,17 +58,35 @@ function OrdersPage() {
     }
   };
 
+  const handleLogout = async () => {
+    await performAdminLogout();
+  };
+
   return (
     <div className="admin-container">
       <div className="admin-header">
         <h2>All Orders ({orders.length})</h2>
-        <button
-          className="btn"
-          onClick={() => navigate("/admin/dashboard")}
-          style={{ marginBottom: "20px" }}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: "10px",
+            marginBottom: "20px",
+          }}
         >
-          ← Back to Dashboard
-        </button>
+          <button
+            className="btn"
+            onClick={() => navigate("/admin/dashboard")}
+          >
+            ← Back to Dashboard
+          </button>
+          <button
+            className="btn danger"
+            onClick={handleLogout}
+          >
+            Logout
+          </button>
+        </div>
       </div>
 
       <div className="admin-content">

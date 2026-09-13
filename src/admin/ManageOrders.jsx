@@ -1,23 +1,19 @@
 import { useEffect, useState } from "react";
+import { adminFetch } from "../utils/adminFetch";
 
-const API = import.meta.env.VITE_API_URL;
+const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 
 function ManageOrders() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(true);
-  const token = localStorage.getItem("adminToken");
 
   const fetchOrders = async () => {
     setLoading(true);
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/orders`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const res = await adminFetch(`${API}/api/orders`);
       const data = await res.json();
 
       if (!res.ok) {
@@ -41,11 +37,10 @@ function ManageOrders() {
     setError("");
 
     try {
-      const res = await fetch(`${API}/api/orders/${id}/status`, {
+      const res = await adminFetch(`${API}/api/orders/${id}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({ orderStatus: status }),
       });
