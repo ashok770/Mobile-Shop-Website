@@ -314,7 +314,7 @@ function AdminLogin() {
             }}
           >
             <Lock size={14} />
-            <span style={{ fontSize: "13px" }}>Secure administrator access</span>
+            <span style={{ fontSize: "13px" }}>Protected administrator portal</span>
           </div>
         </form>
       </div>
