@@ -37,6 +37,7 @@ import ManageProducts from "./admin/ManageProducts";
 import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/OrdersPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
+import AdminLayout from "./admin/layout/AdminLayout";
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -192,9 +193,18 @@ function Layout() {
           path="/admin"
           element={<AdminProtectedRoute />}
         >
-          <Route path="dashboard" element={<AdminDashboard />} />
-          <Route path="products" element={<ManageProducts />} />
-          <Route path="orders" element={<OrdersPage />} />
+          <Route element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboard />} />
+            <Route path="products" element={<ManageProducts />} />
+            <Route path="orders" element={<OrdersPage />} />
+            {/* Placeholders to prevent crashes */}
+            <Route path="promotions" element={<div style={{ padding: "20px" }}>Promotions Placeholder</div>} />
+            <Route path="homepage" element={<div style={{ padding: "20px" }}>Homepage Placeholder</div>} />
+            <Route path="brands" element={<div style={{ padding: "20px" }}>Brands Placeholder</div>} />
+            <Route path="services" element={<div style={{ padding: "20px" }}>Services Placeholder</div>} />
+            <Route path="customers" element={<div style={{ padding: "20px" }}>Customers Placeholder</div>} />
+            <Route path="settings" element={<div style={{ padding: "20px" }}>Settings Placeholder</div>} />
+          </Route>
         </Route>
       </Routes>
 
