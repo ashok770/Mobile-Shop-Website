@@ -34,6 +34,7 @@ import AdminForgotPassword from "./admin/AdminForgotPassword";
 import AdminResetPassword from "./admin/AdminResetPassword";
 import AdminDashboard from "./admin/AdminDashboard";
 import AdminProductsList from "./admin/products/AdminProductsList";
+import AddProduct from "./admin/products/AddProduct";
 import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/OrdersPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
@@ -196,7 +197,7 @@ function Layout() {
           <Route element={<AdminLayout />}>
             <Route path="dashboard" element={<AdminDashboard />} />
             <Route path="products" element={<AdminProductsList />} />
-            <Route path="products/new" element={<div style={{ padding: "2rem" }}><h2>Add Product</h2><p>Add Product form will be implemented in Phase C3.</p></div>} />
+            <Route path="products/new" element={<AddProduct />} />
             <Route path="products/edit/:id" element={<div style={{ padding: "2rem" }}><h2>Edit Product</h2><p>Edit Product form will be implemented in a future phase.</p></div>} />
             <Route path="orders" element={<OrdersPage />} />
             {/* Placeholders to prevent crashes */}
