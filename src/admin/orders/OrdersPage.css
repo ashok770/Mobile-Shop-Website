@@ -677,6 +677,25 @@
   padding: 1rem 0;
   color: #64748b;
   font-size: 0.875rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.page-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.825rem;
+}
+
+.page-size-select {
+  padding: 0.35rem 0.5rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 0.825rem;
+  color: #1e293b;
+  outline: none;
+  cursor: pointer;
 }
 
 .pagination-buttons {
@@ -719,6 +738,7 @@
   display: flex;
   flex-direction: column;
   animation: slideInRight 0.25s ease-out;
+  position: relative;
 }
 
 @keyframes slideInRight {
@@ -1048,6 +1068,102 @@
   cursor: not-allowed;
 }
 
+/* Confirmation Dialog Overlay */
+.confirm-dialog-overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.confirm-dialog-box {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  padding: 1.5rem;
+  width: 100%;
+  max-width: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  animation: scaleUp 0.2s ease-out;
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.confirm-dialog-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.confirm-warning-icon {
+  color: #d97706;
+  flex-shrink: 0;
+}
+
+.confirm-dialog-header h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.confirm-dialog-body p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.confirm-dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.btn-confirm-cancel {
+  padding: 0.5rem 1rem;
+  background-color: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirm-submit {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-confirm-submit.primary {
+  background-color: #059669;
+}
+
+.btn-confirm-submit.danger {
+  background-color: #dc2626;
+}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -1085,5 +1201,8 @@
   }
   .status-action-row {
     flex-direction: column;
+  }
+  .order-modal-container {
+    max-width: 100%;
   }
 }

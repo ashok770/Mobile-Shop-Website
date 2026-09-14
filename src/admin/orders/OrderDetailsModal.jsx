@@ -5,13 +5,11 @@ import {
   Phone,
   MapPin,
   CreditCard,
-  Calendar,
-  CheckCircle2,
-  AlertTriangle,
   Package,
   ArrowRight,
   ShieldCheck,
   RefreshCcw,
+  AlertTriangle,
 } from "lucide-react";
 import OrderStatusBadge from "./OrderStatusBadge";
 import { formatCurrency } from "../../utils/formatCurrency";
@@ -36,21 +34,29 @@ export default function OrderDetailsModal({
   error,
 }) {
   const [selectedNextStatus, setSelectedNextStatus] = useState("");
+  const [confirmStatusUpdate, setConfirmStatusUpdate] = useState(null); // { targetStatus: string }
 
   useEffect(() => {
     if (order) {
       setSelectedNextStatus("");
+      setConfirmStatusUpdate(null);
     }
   }, [order]);
 
   // Handle escape key to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        if (confirmStatusUpdate) {
+          setConfirmStatusUpdate(null);
+        } else {
+          onClose();
+        }
+      }
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [onClose]);
+  }, [onClose, confirmStatusUpdate]);
 
   if (!order) return null;
 
@@ -58,13 +64,27 @@ export default function OrderDetailsModal({
   const allowedNext = ALLOWED_TRANSITIONS[currentStatus] || [];
   const isTerminal = allowedNext.length === 0;
 
+  // Use backend-provided values (with backend fallbacks)
   const subtotal = order.subtotal ?? (order.items || []).reduce((acc, item) => acc + (Number(item.price) || 0) * (Number(item.quantity) || 1), 0);
   const shippingCharge = order.shippingCharge ?? (subtotal > 0 && subtotal < 500 ? 49 : 0);
   const totalAmount = order.totalAmount ?? (subtotal + shippingCharge);
 
-  const handleUpdate = () => {
+  const handleApplyClick = () => {
     if (!selectedNextStatus || selectedNextStatus === currentStatus) return;
-    onStatusUpdate(order._id, selectedNextStatus);
+
+    // Sensitive status transitions require explicit confirmation
+    if (selectedNextStatus === "Cancelled" || selectedNextStatus === "Delivered") {
+      setConfirmStatusUpdate({ targetStatus: selectedNextStatus });
+    } else {
+      onStatusUpdate(order._id, selectedNextStatus);
+    }
+  };
+
+  const handleConfirmSubmit = () => {
+    if (!confirmStatusUpdate) return;
+    const target = confirmStatusUpdate.targetStatus;
+    setConfirmStatusUpdate(null);
+    onStatusUpdate(order._id, target);
   };
 
   return (
@@ -127,7 +147,7 @@ export default function OrderDetailsModal({
 
             <div className="info-card">
               <div className="info-card-title">
-                <MapPin size={16} /> Shipping Address
+                <MapPin size={16} /> Delivery Address
               </div>
               <div className="info-card-content">
                 <p className="info-address-text">{order.address || "N/A"}</p>
@@ -136,7 +156,7 @@ export default function OrderDetailsModal({
 
             <div className="info-card">
               <div className="info-card-title">
-                <CreditCard size={16} /> Payment Status
+                <CreditCard size={16} /> Payment Metadata
               </div>
               <div className="info-card-content">
                 <div className="payment-badge-row">
@@ -160,7 +180,7 @@ export default function OrderDetailsModal({
           {/* Items Section */}
           <div className="modal-section">
             <h4 className="section-heading">
-              <Package size={18} /> Ordered Items ({(order.items || []).length})
+              <Package size={18} /> Ordered Item Snapshots ({(order.items || []).length})
             </h4>
 
             <div className="modal-items-table-wrapper">
@@ -168,9 +188,9 @@ export default function OrderDetailsModal({
                 <thead>
                   <tr>
                     <th>Item</th>
-                    <th>Price</th>
+                    <th>Unit Price</th>
                     <th>Qty</th>
-                    <th className="text-right">Total</th>
+                    <th className="text-right">Subtotal</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -189,7 +209,7 @@ export default function OrderDetailsModal({
                               <Package size={20} className="placeholder-icon" />
                             )}
                           </div>
-                          <span className="item-name">{item.name || "Product"}</span>
+                          <span className="item-name">{item.name || "Product Item"}</span>
                         </td>
                         <td>{formatCurrency(itemPrice)}</td>
                         <td>× {itemQty}</td>
@@ -231,7 +251,7 @@ export default function OrderDetailsModal({
               <div className="terminal-state-notice">
                 <ShieldCheck size={18} />
                 <span>
-                  This order is in terminal status (<strong>{currentStatus}</strong>). No further status updates are permitted in V1.
+                  This order is in terminal status (<strong>{currentStatus}</strong>). Status updates are permanently locked for this order.
                 </span>
               </div>
             ) : (
@@ -257,7 +277,7 @@ export default function OrderDetailsModal({
                 <button
                   type="button"
                   className="btn-update-status"
-                  onClick={handleUpdate}
+                  onClick={handleApplyClick}
                   disabled={!selectedNextStatus || isUpdatingStatus}
                 >
                   {isUpdatingStatus ? (
@@ -274,6 +294,47 @@ export default function OrderDetailsModal({
             )}
           </div>
         </div>
+
+        {/* Sensitive Status Confirmation Dialog */}
+        {confirmStatusUpdate && (
+          <div className="confirm-dialog-overlay" onClick={() => setConfirmStatusUpdate(null)}>
+            <div className="confirm-dialog-box" onClick={(e) => e.stopPropagation()}>
+              <div className="confirm-dialog-header">
+                <AlertTriangle size={24} className="confirm-warning-icon" />
+                <h4>Confirm Status Transition</h4>
+              </div>
+
+              <div className="confirm-dialog-body">
+                {confirmStatusUpdate.targetStatus === "Cancelled" ? (
+                  <p>
+                    Transitioning order status to <strong>"Cancelled"</strong> will trigger automatic stock restoration for all valid product items. Are you sure you want to cancel this order?
+                  </p>
+                ) : (
+                  <p>
+                    Transitioning order status to <strong>"Delivered"</strong> will automatically mark COD payments as <strong>"Paid"</strong> and record the fulfillment timestamp. Are you sure you want to mark this order as Delivered?
+                  </p>
+                )}
+              </div>
+
+              <div className="confirm-dialog-actions">
+                <button
+                  type="button"
+                  className="btn-confirm-cancel"
+                  onClick={() => setConfirmStatusUpdate(null)}
+                >
+                  Back
+                </button>
+                <button
+                  type="button"
+                  className={`btn-confirm-submit ${confirmStatusUpdate.targetStatus === "Cancelled" ? "danger" : "primary"}`}
+                  onClick={handleConfirmSubmit}
+                >
+                  Confirm {confirmStatusUpdate.targetStatus}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

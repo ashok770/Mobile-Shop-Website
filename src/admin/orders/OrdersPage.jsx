@@ -8,12 +8,12 @@ import {
   PackageSearch,
   Eye,
   Calendar,
-  Filter,
   ShoppingBag,
   Clock,
   TrendingUp,
   Copy,
   Check,
+  AlertTriangle,
 } from "lucide-react";
 import { adminFetch } from "../../utils/adminFetch";
 import { formatDate } from "../../utils/formatDate";
@@ -21,8 +21,6 @@ import { formatCurrency } from "../../utils/formatCurrency";
 import OrderStatusBadge from "./OrderStatusBadge";
 import OrderDetailsModal from "./OrderDetailsModal";
 import "./OrdersPage.css";
-
-const PAGE_SIZE = 20;
 
 const ALLOWED_TRANSITIONS = {
   Pending: ["Confirmed", "Cancelled"],
@@ -37,9 +35,10 @@ const ALLOWED_TRANSITIONS = {
 export default function OrdersPage() {
   // Data state
   const [orders, setOrders] = useState([]);
+  const [pageSize, setPageSize] = useState(20);
   const [pagination, setPagination] = useState({
     page: 1,
-    limit: PAGE_SIZE,
+    limit: 20,
     total: 0,
     totalPages: 1,
   });
@@ -67,6 +66,7 @@ export default function OrdersPage() {
   const [modalError, setModalError] = useState(null);
   const [feedback, setFeedback] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [confirmInlineUpdate, setConfirmInlineUpdate] = useState(null); // { orderId: string, targetStatus: string }
 
   // Debounce search input
   useEffect(() => {
@@ -86,10 +86,11 @@ export default function OrdersPage() {
     return () => clearTimeout(timer);
   }, [feedback]);
 
-  // Fetch summary stats
+  // Fetch summary stats using GET /api/orders/stats/admin
   const fetchStats = useCallback(async () => {
     try {
-      const res = await adminFetch(`${import.meta.env.VITE_API_URL || "http://localhost:5000"}/api/orders/stats`);
+      const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
+      const res = await adminFetch(`${API}/api/orders/stats/admin`);
       if (res.ok) {
         const data = await res.json();
         setStats({
@@ -104,14 +105,14 @@ export default function OrdersPage() {
     }
   }, []);
 
-  // Fetch orders list
+  // Fetch orders list using GET /api/orders
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
       const query = new URLSearchParams({
         page: String(page),
-        limit: String(PAGE_SIZE),
+        limit: String(pageSize),
       });
 
       if (debouncedSearch.trim()) query.append("search", debouncedSearch.trim());
@@ -132,7 +133,7 @@ export default function OrdersPage() {
       setOrders(data.orders || []);
       setPagination({
         page: data.page || page,
-        limit: PAGE_SIZE,
+        limit: data.limit || pageSize,
         total: data.total || 0,
         totalPages: data.totalPages || 1,
       });
@@ -142,15 +143,24 @@ export default function OrdersPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, debouncedSearch, status, paymentStatus, startDate, endDate]);
+  }, [page, pageSize, debouncedSearch, status, paymentStatus, startDate, endDate]);
 
   useEffect(() => {
     fetchOrders();
     fetchStats();
   }, [fetchOrders, fetchStats]);
 
-  // Update order status
-  const handleUpdateStatus = async (orderId, newStatus) => {
+  // Request order status update (with sensitive transition confirmation)
+  const requestStatusUpdate = (orderId, newStatus) => {
+    if (newStatus === "Cancelled" || newStatus === "Delivered") {
+      setConfirmInlineUpdate({ orderId, targetStatus: newStatus });
+    } else {
+      executeStatusUpdate(orderId, newStatus);
+    }
+  };
+
+  // Execute PUT /api/orders/:id/status
+  const executeStatusUpdate = async (orderId, newStatus) => {
     setIsUpdatingStatus(true);
     setModalError(null);
     try {
@@ -172,7 +182,7 @@ export default function OrdersPage() {
         message: `Order status updated to "${newStatus}" successfully.`,
       });
 
-      // If modal is open for this order, update local selected order
+      // Update selected order modal if open
       if (selectedOrder && selectedOrder._id === orderId) {
         setSelectedOrder(data.order);
       }
@@ -184,6 +194,7 @@ export default function OrdersPage() {
       setFeedback({ type: "error", message: err.message });
     } finally {
       setIsUpdatingStatus(false);
+      setConfirmInlineUpdate(null);
     }
   };
 
@@ -257,7 +268,7 @@ export default function OrdersPage() {
         </button>
       </div>
 
-      {/* Summary Cards Grid */}
+      {/* Dynamic Summary Cards Grid (GET /api/orders/stats/admin) */}
       <div className="orders-stats-grid">
         <div className="stat-card">
           <div className="stat-icon-box stat-blue">
@@ -445,7 +456,7 @@ export default function OrdersPage() {
                 <th>Order ID</th>
                 <th>Customer</th>
                 <th>Items Snapshot</th>
-                <th>Total</th>
+                <th>Total Amount</th>
                 <th>Payment</th>
                 <th>Order Status</th>
                 <th>Date</th>
@@ -478,13 +489,13 @@ export default function OrdersPage() {
                       </div>
                     </td>
 
-                    {/* Customer */}
+                    {/* Customer (Name & Phone ONLY — no address in table) */}
                     <td className="customer-cell">
                       <span className="customer-name">{order.customerName || "N/A"}</span>
                       <span className="customer-phone">{order.phone || ""}</span>
                     </td>
 
-                    {/* Items */}
+                    {/* Items Snapshot */}
                     <td className="items-cell">
                       <span className="primary-item-name">{primaryItem.name}</span>
                       {extraItemsCount > 0 && (
@@ -492,7 +503,7 @@ export default function OrdersPage() {
                       )}
                     </td>
 
-                    {/* Total */}
+                    {/* Total Amount (Backend provided) */}
                     <td className="total-cell font-medium">
                       {formatCurrency(order.totalAmount ?? 0)}
                     </td>
@@ -522,9 +533,9 @@ export default function OrdersPage() {
                         <select
                           className="inline-status-select"
                           value={currentSt}
-                          onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                          onChange={(e) => requestStatusUpdate(order._id, e.target.value)}
                           disabled={isTerminal || isUpdatingStatus}
-                          title={isTerminal ? "Terminal State — Cannot transition" : "Quick status transition"}
+                          title={isTerminal ? "Terminal State — Locked" : "Quick status transition"}
                         >
                           <option value={currentSt}>{currentSt}</option>
                           {allowedNext.map((st) => (
@@ -556,8 +567,26 @@ export default function OrdersPage() {
       {/* Pagination Footer */}
       {!loading && !error && orders.length > 0 && (
         <div className="orders-pagination-footer">
+          <div className="page-size-selector">
+            <label htmlFor="page-size-select">Per page:</label>
+            <select
+              id="page-size-select"
+              value={pageSize}
+              onChange={(e) => {
+                setPageSize(Number(e.target.value));
+                setPage(1);
+              }}
+              className="page-size-select"
+            >
+              <option value={10}>10</option>
+              <option value={20}>20</option>
+              <option value={50}>50</option>
+              <option value={100}>100</option>
+            </select>
+          </div>
+
           <span className="pagination-info">
-            Showing Page <strong>{pagination.page}</strong> of <strong>{pagination.totalPages}</strong> ({pagination.total} total orders)
+            Page <strong>{pagination.page}</strong> of <strong>{pagination.totalPages}</strong> ({pagination.total} total orders)
           </span>
 
           <div className="pagination-buttons">
@@ -581,12 +610,53 @@ export default function OrdersPage() {
         </div>
       )}
 
+      {/* Inline Confirmation Dialog for Sensitive Transitions */}
+      {confirmInlineUpdate && (
+        <div className="confirm-dialog-overlay" onClick={() => setConfirmInlineUpdate(null)}>
+          <div className="confirm-dialog-box" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-dialog-header">
+              <AlertTriangle size={24} className="confirm-warning-icon" />
+              <h4>Confirm Status Transition</h4>
+            </div>
+
+            <div className="confirm-dialog-body">
+              {confirmInlineUpdate.targetStatus === "Cancelled" ? (
+                <p>
+                  Transitioning order status to <strong>"Cancelled"</strong> will trigger automatic stock restoration for all valid product items. Are you sure you want to cancel this order?
+                </p>
+              ) : (
+                <p>
+                  Transitioning order status to <strong>"Delivered"</strong> will automatically mark COD payments as <strong>"Paid"</strong> and record the fulfillment timestamp. Are you sure you want to mark this order as Delivered?
+                </p>
+              )}
+            </div>
+
+            <div className="confirm-dialog-actions">
+              <button
+                type="button"
+                className="btn-confirm-cancel"
+                onClick={() => setConfirmInlineUpdate(null)}
+              >
+                Back
+              </button>
+              <button
+                type="button"
+                className={`btn-confirm-submit ${confirmInlineUpdate.targetStatus === "Cancelled" ? "danger" : "primary"}`}
+                onClick={() => executeStatusUpdate(confirmInlineUpdate.orderId, confirmInlineUpdate.targetStatus)}
+              >
+                Confirm {confirmInlineUpdate.targetStatus}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Order Details Modal Drawer */}
       {selectedOrder && (
         <OrderDetailsModal
           order={selectedOrder}
           onClose={() => setSelectedOrder(null)}
-          onStatusUpdate={handleUpdateStatus}
+          onStatusUpdate={executeStatusUpdate}
           isUpdatingStatus={isUpdatingStatus}
           error={modalError}
         />
