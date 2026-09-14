@@ -39,6 +39,7 @@ import EditProduct from "./admin/products/EditProduct";
 import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/orders/OrdersPage";
 import CustomersPage from "./admin/customers/CustomersPage";
+import CustomerDetailPage from "./admin/customers/CustomerDetailPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 import AdminLayout from "./admin/layout/AdminLayout";
 
@@ -208,6 +209,7 @@ function Layout() {
             <Route path="brands" element={<div style={{ padding: "20px" }}>Brands Placeholder</div>} />
             <Route path="services" element={<div style={{ padding: "20px" }}>Services Placeholder</div>} />
             <Route path="customers" element={<CustomersPage />} />
+            <Route path="customers/:id" element={<CustomerDetailPage />} />
             <Route path="settings" element={<div style={{ padding: "20px" }}>Settings Placeholder</div>} />
           </Route>
         </Route>
