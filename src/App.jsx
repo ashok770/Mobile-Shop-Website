@@ -37,7 +37,7 @@ import AdminProductsList from "./admin/products/AdminProductsList";
 import AddProduct from "./admin/products/AddProduct";
 import EditProduct from "./admin/products/EditProduct";
 import ManageOrders from "./admin/ManageOrders";
-import OrdersPage from "./admin/OrdersPage";
+import OrdersPage from "./admin/orders/OrdersPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 import AdminLayout from "./admin/layout/AdminLayout";
 
