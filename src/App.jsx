@@ -40,6 +40,7 @@ import ManageOrders from "./admin/ManageOrders";
 import OrdersPage from "./admin/orders/OrdersPage";
 import CustomersPage from "./admin/customers/CustomersPage";
 import CustomerDetailPage from "./admin/customers/CustomerDetailPage";
+import PromotionsPage from "./admin/promotions/PromotionsPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 import AdminLayout from "./admin/layout/AdminLayout";
 
@@ -204,7 +205,7 @@ function Layout() {
             <Route path="products/edit/:id" element={<EditProduct />} />
             <Route path="orders" element={<OrdersPage />} />
             {/* Placeholders to prevent crashes */}
-            <Route path="promotions" element={<div style={{ padding: "20px" }}>Promotions Placeholder</div>} />
+            <Route path="promotions" element={<PromotionsPage />} />
             <Route path="homepage" element={<div style={{ padding: "20px" }}>Homepage Placeholder</div>} />
             <Route path="brands" element={<div style={{ padding: "20px" }}>Brands Placeholder</div>} />
             <Route path="services" element={<div style={{ padding: "20px" }}>Services Placeholder</div>} />
