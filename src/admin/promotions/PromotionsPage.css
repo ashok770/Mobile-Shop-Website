@@ -96,6 +96,14 @@
   background-color: #2563eb;
 }
 
+.promotion-tab.muted-tab {
+  color: #94a3b8;
+}
+
+.promotion-tab.muted-tab:hover {
+  color: #64748b;
+}
+
 .bulk-action-bar {
   background-color: #f0f9ff;
   border: 1px solid #bae6fd;
@@ -133,7 +141,7 @@
 
 .promotions-table th,
 .promotions-table td {
-  padding: 12px 16px;
+  padding: 8px 16px;
   text-align: left;
   border-bottom: 1px solid #e2e8f0;
   font-size: 14px;

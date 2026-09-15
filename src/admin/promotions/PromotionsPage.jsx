@@ -293,7 +293,7 @@ export default function PromotionsPage() {
           <h1>Promotion Management</h1>
           <div className="subtitle">Manage promotional offers across your product catalog.</div>
         </div>
-        <button className="btn btn-primary" onClick={() => navigate("/admin/products/new")}>
+        <button className="btn-add-product" onClick={() => navigate("/admin/products/new")}>
           <Tag size={16} style={{ marginRight: "4px" }} /> Assign Promotion
         </button>
       </div>
@@ -323,7 +323,7 @@ export default function PromotionsPage() {
         {OFFER_TABS.map((tab) => (
           <button
             key={tab.id}
-            className={`promotion-tab ${offerTypeTab === tab.id ? "active" : ""}`}
+            className={`promotion-tab ${offerTypeTab === tab.id ? "active" : ""} ${tab.id === "NONE" ? "muted-tab" : ""}`}
             onClick={() => handleTabChange(tab.id)}
           >
             {tab.label}
@@ -331,53 +331,52 @@ export default function PromotionsPage() {
         ))}
       </div>
 
-      {/* Filters (Reusing logic/styles from AdminProductsList) */}
-      <div className="admin-products-toolbar card">
-        <div className="toolbar-search">
-          <Search size={18} className="search-icon" />
+      {/* Filters */}
+      <div className="admin-filters-bar" style={{ marginBottom: "24px" }}>
+        <div className="admin-search-wrapper">
+          <Search size={18} className="admin-search-icon" />
           <input
             type="text"
+            className="admin-search-input"
             placeholder="Search products by name or brand..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
 
-        <div className="toolbar-filters">
-          <select value={brand} onChange={(e) => handleFilterChange(setBrand, e.target.value)}>
-            <option value="">All Brands</option>
-            <option value="Samsung">Samsung</option>
-            <option value="Apple">Apple</option>
-            <option value="OnePlus">OnePlus</option>
-            <option value="Xiaomi">Xiaomi</option>
-            <option value="Realme">Realme</option>
-          </select>
+        <select className="admin-filter-select" value={brand} onChange={(e) => handleFilterChange(setBrand, e.target.value)}>
+          <option value="">All Brands</option>
+          <option value="Samsung">Samsung</option>
+          <option value="Apple">Apple</option>
+          <option value="OnePlus">OnePlus</option>
+          <option value="Xiaomi">Xiaomi</option>
+          <option value="Realme">Realme</option>
+        </select>
 
-          <select value={category} onChange={(e) => handleFilterChange(setCategory, e.target.value)}>
-            <option value="">All Categories</option>
-            <option value="mobile">Mobiles</option>
-            <option value="accessory">Accessories</option>
-          </select>
+        <select className="admin-filter-select" value={category} onChange={(e) => handleFilterChange(setCategory, e.target.value)}>
+          <option value="">All Categories</option>
+          <option value="mobile">Mobiles</option>
+          <option value="accessory">Accessories</option>
+        </select>
 
-          <select value={status} onChange={(e) => handleFilterChange(setStatus, e.target.value)}>
-            <option value="">All Statuses</option>
-            <option value="ACTIVE">Active</option>
-            <option value="DRAFT">Draft</option>
-          </select>
+        <select className="admin-filter-select" value={status} onChange={(e) => handleFilterChange(setStatus, e.target.value)}>
+          <option value="">All Statuses</option>
+          <option value="ACTIVE">Active</option>
+          <option value="DRAFT">Draft</option>
+        </select>
 
-          <select value={stock} onChange={(e) => handleFilterChange(setStock, e.target.value)}>
-            <option value="">All Stock</option>
-            <option value="in_stock">In Stock</option>
-            <option value="low_stock">Low Stock</option>
-            <option value="out_of_stock">Out of Stock</option>
-          </select>
+        <select className="admin-filter-select" value={stock} onChange={(e) => handleFilterChange(setStock, e.target.value)}>
+          <option value="">All Stock</option>
+          <option value="in_stock">In Stock</option>
+          <option value="low_stock">Low Stock</option>
+          <option value="out_of_stock">Out of Stock</option>
+        </select>
 
-          {isFilterActive && (
-            <button className="btn btn-secondary btn-clear" onClick={resetFilters}>
-              Clear Filters
-            </button>
-          )}
-        </div>
+        {isFilterActive && (
+          <button className="admin-reset-btn" onClick={resetFilters}>
+            Clear Filters
+          </button>
+        )}
       </div>
 
       {/* Bulk Action Toolbar */}
