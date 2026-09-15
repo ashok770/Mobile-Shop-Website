@@ -1,0 +1,90 @@
+.admin-homepage {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.homepage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.homepage-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 24px;
+}
+
+@media (max-width: 900px) {
+  .homepage-content-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  cursor: pointer;
+}
+
+.section-toggles {
+  margin-top: 16px;
+}
+
+.slides-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.slide-editor-card {
+  display: flex;
+  gap: 16px;
+  padding: 16px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  background: #f8fafc;
+  align-items: flex-start;
+}
+
+.slide-editor-card.new-slide {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.slide-preview {
+  width: 160px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid #cbd5e1;
+}
+
+.slide-upload-area {
+  width: 160px;
+  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  padding: 8px;
+  text-align: center;
+}
+
+.slide-upload-area input {
+  font-size: 12px;
+  width: 100%;
+}
+
+.slide-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

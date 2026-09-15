@@ -63,7 +63,7 @@ const selectFeaturedProduct = (catalog) => {
   })[0];
 };
 
-function FeaturedDealSection() {
+function FeaturedDealSection({ featuredDealProductId }) {
   const [featuredProduct, setFeaturedProduct] = useState(null);
   const [status, setStatus] = useState("loading");
 
@@ -75,7 +75,24 @@ function FeaturedDealSection() {
         const catalog = await getProducts();
 
         if (isCurrent) {
-          setFeaturedProduct(selectFeaturedProduct(catalog));
+          let selected = null;
+          
+          if (featuredDealProductId) {
+            const manualProduct = catalog.find(p => p._id === featuredDealProductId);
+            // Validate manual product
+            if (manualProduct && manualProduct.stock > 0 && manualProduct.status === "ACTIVE") {
+              const price = Number(getPrice(manualProduct));
+              if (Number.isFinite(price) && price > 0) {
+                selected = manualProduct;
+              }
+            }
+          }
+
+          if (!selected) {
+            selected = selectFeaturedProduct(catalog);
+          }
+
+          setFeaturedProduct(selected);
           setStatus("ready");
         }
       } catch {

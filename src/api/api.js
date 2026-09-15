@@ -22,6 +22,14 @@ export const getOfferProducts = async (offerType) => {
   return fetchProductData(`/api/products/offers/${offerType}`);
 };
 
+export const getHomepageConfig = async () => {
+  const res = await fetch(`${API}/api/homepage`);
+  if (!res.ok) {
+    throw new Error("Unable to load homepage configuration");
+  }
+  return res.json();
+};
+
 export const getBelowThousandProducts = async () => {
   const products = await getProducts();
   return products.filter(

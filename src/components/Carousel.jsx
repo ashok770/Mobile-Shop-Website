@@ -37,23 +37,30 @@ const BANNERS = [
   },
 ];
 
-function Carousel() {
+function Carousel({ slides }) {
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(0);
 
+  const activeSlides = slides && slides.length > 0 
+    ? slides.filter(s => s.isActive !== false) 
+    : BANNERS;
+
+  // Add a safe fallback in case all dynamic slides are inactive
+  const displaySlides = activeSlides.length > 0 ? activeSlides : BANNERS;
+
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % BANNERS.length);
+      setCurrentSlide((prev) => (prev + 1) % displaySlides.length);
     }, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [displaySlides.length]);
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % BANNERS.length);
+    setCurrentSlide((prev) => (prev + 1) % displaySlides.length);
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + BANNERS.length) % BANNERS.length);
+    setCurrentSlide((prev) => (prev - 1 + displaySlides.length) % displaySlides.length);
   };
 
   const goToSlide = (index) => {
@@ -63,9 +70,9 @@ function Carousel() {
   return (
     <div className="carousel-container" role="region" aria-label="Featured Promotions">
       <div className="carousel-wrapper">
-        {BANNERS.map((banner, index) => (
+        {displaySlides.map((banner, index) => (
           <button
-            key={banner.id}
+            key={banner.id || banner._id || index}
             type="button"
             className={`carousel-slide ${index === currentSlide ? "active" : ""}`}
             style={{ backgroundColor: banner.bgColor || "#000000" }}
@@ -94,9 +101,9 @@ function Carousel() {
       </button>
 
       <div className="carousel-dots" role="tablist" aria-label="Slide indicators">
-        {BANNERS.map((banner, index) => (
+        {displaySlides.map((banner, index) => (
           <button
-            key={banner.id}
+            key={banner.id || banner._id || index}
             type="button"
             role="tab"
             aria-selected={index === currentSlide}
