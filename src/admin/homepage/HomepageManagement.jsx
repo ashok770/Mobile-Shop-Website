@@ -300,11 +300,15 @@ export default function HomepageManagement() {
                   <div className="fd-preview-info">
                     <h3 className="fd-preview-title">{previewProduct.name}</h3>
                     <p className="fd-preview-price">{formatPrice(previewProduct.finalPrice || previewProduct.price)}</p>
-                    {previewProduct.offerType && previewProduct.offerType !== "NONE" && (
+                    {previewProduct.offerType && previewProduct.offerType !== "NONE" ? (
                       <span className="fd-badge" style={{ background: "#fef3c7", color: "#d97706", marginRight: "8px" }}>
                         {previewProduct.offerType.replace(/_/g, " ")}
                       </span>
-                    )}
+                    ) : Number(previewProduct.discountPercent) > 0 ? (
+                      <span className="fd-badge" style={{ background: "#fce7f3", color: "#be185d", marginRight: "8px" }}>
+                        {previewProduct.discountPercent}% OFF
+                      </span>
+                    ) : null}
                     <span className={`fd-badge ${isManualPreview ? "manual" : "automatic"}`}>
                       {isManualPreview ? "Manual Override" : "Automatic"}
                     </span>
@@ -416,19 +420,41 @@ export default function HomepageManagement() {
                 {/* New Slides */}
                 {newSlides.map((slide, index) => (
                   <div key={`new-${index}`} className="slide-editor-card new-slide">
-                    <div className="slide-upload-area">
-                      {slide.preview ? (
-                        <img src={slide.preview} alt="Preview" className="slide-preview" />
-                      ) : (
-                        <input 
-                          type="file" 
-                          accept="image/*" 
-                          onChange={(e) => handleFileChange(index, e)} 
-                          className="form-control"
-                          style={{ padding: "4px" }}
-                        />
-                      )}
-                    </div>
+                    
+                    {!slide.preview ? (
+                      <div className="slide-upload-area" style={{ flexDirection: 'column', gap: '8px' }}>
+                        <div style={{ position: "relative", display: "flex", flexDirection: "column", alignItems: "center", cursor: "pointer", width: "100%", height: "100%", justifyContent: "center" }}>
+                          <input 
+                            type="file" 
+                            accept="image/jpeg, image/png, image/webp" 
+                            onChange={(e) => handleFileChange(index, e)} 
+                            style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
+                            aria-label="Upload banner image"
+                          />
+                          <ImageIcon size={24} style={{ color: "#94a3b8" }} />
+                          <span style={{ fontSize: "12px", color: "#475569", fontWeight: "500", marginTop: "4px" }}>Click or Drag Image</span>
+                          <span style={{ fontSize: "10px", color: "#94a3b8" }}>JPG / PNG / WEBP</span>
+                        </div>
+                      </div>
+                    ) : (
+                      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                        <img src={slide.preview} alt="Banner Preview" className="slide-preview" />
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", fontSize: "12px" }}>
+                          <span style={{ color: "#16a34a", display: "flex", alignItems: "center", gap: "4px" }}><CheckCircle2 size={12} /> Ready</span>
+                          <div style={{ position: "relative", cursor: "pointer", color: "#2563eb", fontWeight: "500" }}>
+                            Replace
+                            <input 
+                              type="file" 
+                              accept="image/jpeg, image/png, image/webp" 
+                              onChange={(e) => handleFileChange(index, e)} 
+                              style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", opacity: 0, cursor: "pointer" }}
+                              aria-label="Replace banner image"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
                     <div className="slide-form">
                       <div className="form-group" style={{ marginBottom: "8px" }}>
                         <label>Destination URL</label>
@@ -451,7 +477,7 @@ export default function HomepageManagement() {
                         />
                       </div>
                       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                        <button className="btn-icon text-danger" onClick={() => removeNewSlide(index)} style={{ border: "none", background: "none", cursor: "pointer" }}>
+                        <button className="btn-icon text-danger" onClick={() => removeNewSlide(index)} style={{ border: "none", background: "none", cursor: "pointer", display: "flex", alignItems: "center" }}>
                           <Trash2 size={16} /> <span style={{ fontSize: "14px", marginLeft: "4px" }}>Remove</span>
                         </button>
                       </div>
