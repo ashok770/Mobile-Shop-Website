@@ -127,6 +127,8 @@
 .promotions-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 980px;
+  table-layout: fixed;
 }
 
 .promotions-table th,
@@ -135,7 +137,13 @@
   text-align: left;
   border-bottom: 1px solid #e2e8f0;
   font-size: 14px;
+  vertical-align: middle;
 }
+
+/* Set column widths to prevent jumping */
+.promotions-table th:nth-child(1) { width: 40px; }
+.promotions-table th:nth-child(2) { width: 280px; } /* Product */
+.promotions-table th:nth-child(9) { width: 140px; text-align: right; } /* Actions */
 
 .promotions-table th {
   background-color: #f8fafc;
@@ -145,6 +153,41 @@
 
 .promotions-table tr:last-child td {
   border-bottom: none;
+}
+
+/* Product Cell Styles */
+.admin-product-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 260px;
+}
+
+.admin-product-thumb {
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 8px;
+  object-fit: contain;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  box-sizing: border-box;
+  padding: 2px;
+}
+
+.admin-product-info {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.admin-product-name {
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
 }
 
 .modal-actions {
