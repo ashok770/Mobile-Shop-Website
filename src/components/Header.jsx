@@ -1,5 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import useAuth from "../hooks/useAuth";
+import { useBrands } from "../context/BrandContext";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -47,53 +48,6 @@ function useCartCount() {
   return count;
 }
 
-/* ─── Dropdown data ─── */
-const NAV_ITEMS = [
-  {
-    label: "Categories",
-    icon: <Smartphone size={14} />,
-    dropdown: [
-      {
-        label: "Smartphones",
-        icon: <Smartphone size={15} />,
-        path: "/mobiles",
-      },
-      {
-        label: "Accessories",
-        icon: <Headphones size={15} />,
-        path: "/accessories",
-      },
-      { label: "Services", icon: <Wrench size={15} />, path: "/services" },
-      { label: "Contact", icon: <Phone size={15} />, path: "/contact" },
-    ],
-  },
-  {
-    label: "Brands",
-    icon: <Star size={14} />,
-    dropdown: [
-      { label: "Apple", path: "/mobiles?brand=Apple" },
-      { label: "Samsung", path: "/mobiles?brand=Samsung" },
-      { label: "Redmi", path: "/mobiles?brand=Redmi" },
-      { label: "OnePlus", path: "/mobiles?brand=OnePlus" },
-    ],
-  },
-  {
-    label: "Deals",
-    icon: <Tag size={14} />,
-    dropdown: [
-      { label: "Flash Sale", path: "/offers/mega-flash" },
-      { label: "Buy 1 Get 1", path: "/offers/bogo" },
-      { label: "Under ₹1,000", path: "/offers/below-1000" },
-      { label: "Daily Special", path: "/offers/daily" },
-    ],
-  },
-  {
-    label: "New Arrivals",
-    icon: <Zap size={14} />,
-    path: "/mobiles",
-  },
-];
-
 /* ─── Dropdown Menu ─── */
 function DropdownMenu({ items }) {
   return (
@@ -111,7 +65,7 @@ function DropdownMenu({ items }) {
         boxShadow: "0 20px 60px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)",
       }}
     >
-      <div className="p-1.5">
+      <div className="p-1.5 max-h-[300px] overflow-y-auto">
         {items.map((item) => (
           <Link
             key={item.label}
@@ -204,7 +158,60 @@ function Header() {
   const accountMenuRef = useRef(null);
   const cartCount = useCartCount();
   const navigate = useNavigate();
-  const { user, logout, loading } = useAuth();
+  const { user, logout, loading: authLoading } = useAuth();
+  const { brands, loading: brandsLoading, error: brandsError } = useBrands();
+
+  const navItems = useMemo(() => {
+    const brandDropdown = brandsLoading
+      ? [{ label: "Loading...", path: "#" }]
+      : brandsError
+      ? [{ label: "Error loading brands", path: "#" }]
+      : brands && brands.length > 0
+      ? brands.map((b) => ({ label: b.name, path: `/mobiles?brand=${b.name}` }))
+      : [{ label: "No brands found", path: "#" }];
+
+    return [
+      {
+        label: "Categories",
+        icon: <Smartphone size={14} />,
+        dropdown: [
+          {
+            label: "Smartphones",
+            icon: <Smartphone size={15} />,
+            path: "/mobiles",
+          },
+          {
+            label: "Accessories",
+            icon: <Headphones size={15} />,
+            path: "/accessories",
+          },
+          { label: "Services", icon: <Wrench size={15} />, path: "/services" },
+          { label: "Contact", icon: <Phone size={15} />, path: "/contact" },
+        ],
+      },
+      {
+        label: "Brands",
+        icon: <Star size={14} />,
+        dropdown: brandDropdown,
+      },
+      {
+        label: "Deals",
+        icon: <Tag size={14} />,
+        dropdown: [
+          { label: "Flash Sale", path: "/offers/mega-flash" },
+          { label: "Buy 1 Get 1", path: "/offers/bogo" },
+          { label: "Under ₹1,000", path: "/offers/below-1000" },
+          { label: "Daily Special", path: "/offers/daily" },
+        ],
+      },
+      {
+        label: "New Arrivals",
+        icon: <Zap size={14} />,
+        path: "/mobiles",
+      },
+    ];
+  }, [brands, brandsLoading, brandsError]);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -307,7 +314,7 @@ function Header() {
               className="hidden lg:flex items-center gap-6 ml-2"
               aria-label="Main navigation"
             >
-              {NAV_ITEMS.map((item) => (
+              {navItems.map((item) => (
                 <NavItem key={item.label} item={item} />
               ))}
             </nav>
@@ -417,7 +424,7 @@ function Header() {
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setAccountMenuOpen((open) => !open)}
-                  disabled={loading}
+                  disabled={authLoading}
                   className="flex items-center gap-2 px-2 py-2 rounded-full text-slate-600 hover:text-blue-600 transition-colors duration-[250ms] disabled:cursor-wait disabled:opacity-60"
                   aria-label="Account menu"
                   aria-expanded={accountMenuOpen}
@@ -587,7 +594,7 @@ function Header() {
                 className="flex-1 overflow-y-auto px-3 py-3"
                 aria-label="Mobile navigation"
               >
-                {NAV_ITEMS.map((item, i) => (
+                {navItems.map((item, i) => (
                   <motion.div
                     key={item.label}
                     initial={{ opacity: 0, x: 20 }}

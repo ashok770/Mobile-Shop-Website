@@ -1,55 +1,10 @@
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import { useBrands } from "../context/BrandContext";
 import "../styles/main.css";
 
-// Use real logo assets (renamed to .png since they are binary PNG files disguised as SVGs)
-import appleLogo from "../assets/images/brands/apple.png";
-import samsungLogo from "../assets/images/brands/samsung.png";
-import redmiLogo from "../assets/images/brands/redmi.png";
-import motorolaLogo from "../assets/images/brands/motorola.png";
-import noiseLogo from "../assets/images/brands/noise.png";
-import boatLogo from "../assets/images/brands/boat.png";
-
-const CATALOG_BRANDS = [
-  {
-    id: "apple",
-    name: "Apple",
-    path: "/mobiles?brand=Apple",
-    logoSrc: appleLogo,
-  },
-  {
-    id: "samsung",
-    name: "Samsung",
-    path: "/mobiles?brand=Samsung",
-    logoSrc: samsungLogo,
-  },
-  {
-    id: "redmi",
-    name: "Redmi",
-    path: "/mobiles?brand=Redmi",
-    logoSrc: redmiLogo,
-  },
-  {
-    id: "motorola",
-    name: "Motorola",
-    path: "/mobiles?brand=moto",
-    logoSrc: motorolaLogo,
-  },
-  {
-    id: "noise",
-    name: "Noise",
-    path: "/accessories?brand=Noise",
-    logoSrc: noiseLogo,
-  },
-  {
-    id: "boat",
-    name: "boAt",
-    path: "/accessories?brand=boAt",
-    logoSrc: boatLogo,
-  },
-];
-
 function ShopByBrand() {
+  const { brands, loading, error } = useBrands();
   const navigate = useNavigate();
 
   return (
@@ -75,24 +30,43 @@ function ShopByBrand() {
 
         {/* Brand Grid */}
         <div className="shop-by-brand-grid">
-          {CATALOG_BRANDS.map((brand) => (
-            <button
-              key={brand.id}
-              type="button"
-              onClick={() => navigate(brand.path)}
-              aria-label={`Shop products from ${brand.name}`}
-              className="shop-by-brand-tile"
-            >
-              <div className="shop-by-brand-logo-container">
-                <img 
-                  src={brand.logoSrc} 
-                  alt="" 
-                  aria-hidden="true"
-                  className={`shop-by-brand-logo shop-by-brand-logo-${brand.id}`}
-                />
+          {loading ? (
+            Array.from({ length: 6 }).map((_, idx) => (
+              <div key={idx} className="shop-by-brand-tile" style={{ opacity: 0.6 }}>
+                <div className="shop-by-brand-logo-container" style={{ background: '#f1f5f9', width: '100%', height: '100%', borderRadius: '8px' }}></div>
               </div>
-            </button>
-          ))}
+            ))
+          ) : error ? (
+            <div style={{ gridColumn: '1 / -1', padding: '2rem', textAlign: 'center', color: '#64748b' }}>
+              Unable to load brands at this time.
+            </div>
+          ) : (
+            brands.map((brand) => (
+              <button
+                key={brand._id}
+                type="button"
+                onClick={() => navigate(`/mobiles?brand=${brand.name}`)}
+                aria-label={`Shop products from ${brand.name}`}
+                className="shop-by-brand-tile"
+              >
+                <div className="shop-by-brand-logo-container">
+                  {brand.logo ? (
+                    <img 
+                      src={brand.logo} 
+                      alt="" 
+                      aria-hidden="true"
+                      className="shop-by-brand-logo"
+                      style={{ objectFit: 'contain', width: '100%', height: '100%' }}
+                    />
+                  ) : (
+                    <div style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#475569', display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
+                      {brand.name}
+                    </div>
+                  )}
+                </div>
+              </button>
+            ))
+          )}
         </div>
 
       </div>
