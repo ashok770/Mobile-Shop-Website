@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import { getProducts } from "../api/api";
+import { useBrands } from "../context/BrandContext";
 
 const TYPE_FILTERS = ["All", "Smartwatch", "Mobile Charger", "Mobile Cover"];
-const BRAND_FILTERS = ["All", "Samsung", "Apple", "Redmi", "Noise", "Boult"];
 
 function Accessories() {
   const [accessories, setAccessories] = useState([]);
   const location = useLocation();
-  const urlBrand = new URLSearchParams(location.search).get("brand") || "All";
-  const [brandFilter, setBrandFilter] = useState(() => ({
-    search: location.search,
-    brand: urlBrand,
-  }));
+  const navigate = useNavigate();
+  const { brands, loading, error } = useBrands();
+
+  const selectedBrand = new URLSearchParams(location.search).get("brand") || "All";
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedType, setSelectedType] = useState("All");
-  const selectedBrand =
-    brandFilter.search === location.search ? brandFilter.brand : urlBrand;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -42,6 +39,18 @@ function Accessories() {
 
     return matchesSearch && matchesType && matchesBrand;
   });
+
+  const handleBrandClick = (b) => {
+    const params = new URLSearchParams(location.search);
+    if (b === "All") {
+      params.delete("brand");
+    } else {
+      params.set("brand", b);
+    }
+    navigate({ search: params.toString() });
+  };
+
+  const dynamicBrandFilters = ["All", ...(brands ? brands.map(b => b.name) : [])];
 
   return (
     <div className="page-wrapper">
@@ -79,22 +88,26 @@ function Accessories() {
         <div style={{ marginBottom: "24px" }}>
           <p className="filter-group-label">Brand</p>
           <div className="filter-group">
-            {BRAND_FILTERS.map((b) => (
-              <button
-                key={b}
-                className={`filter-chip ${
-                  selectedBrand?.toLowerCase() === b.toLowerCase() ||
-                  (b === "All" && (!selectedBrand || selectedBrand === "All"))
-                    ? "active"
-                    : ""
-                }`}
-                onClick={() =>
-                  setBrandFilter({ search: location.search, brand: b })
-                }
-              >
-                {b}
-              </button>
-            ))}
+            {loading ? (
+              <span style={{ color: "#64748b", fontSize: "14px", padding: "8px" }}>Loading brands...</span>
+            ) : error ? (
+              <span style={{ color: "#ef4444", fontSize: "14px", padding: "8px" }}>Brands unavailable</span>
+            ) : (
+              dynamicBrandFilters.map((b) => (
+                <button
+                  key={b}
+                  className={`filter-chip ${
+                    selectedBrand?.toLowerCase() === b.toLowerCase() ||
+                    (b === "All" && (!selectedBrand || selectedBrand === "All"))
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={() => handleBrandClick(b)}
+                >
+                  {b}
+                </button>
+              ))
+            )}
           </div>
         </div>
 

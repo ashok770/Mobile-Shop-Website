@@ -11,6 +11,7 @@ import Home from "./pages/Home";
 import Mobiles from "./pages/Mobiles";
 import ProductDetails from "./pages/ProductDetails";
 import Accessories from "./pages/Accessories";
+import Products from "./pages/Products";
 import Offers from "./pages/Offers";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
@@ -87,6 +88,7 @@ function Layout() {
       <Routes>
         {/* Public */}
         <Route path="/" element={<Home />} />
+        <Route path="/products" element={<Products />} />
         <Route path="/mobiles" element={<Mobiles />} />
         <Route path="/mobiles/:id" element={<ProductDetails />} />
         <Route path="/accessories" element={<Accessories />} />

@@ -167,7 +167,7 @@ function Header() {
       : brandsError
       ? [{ label: "Error loading brands", path: "#" }]
       : brands && brands.length > 0
-      ? brands.map((b) => ({ label: b.name, path: `/mobiles?brand=${b.name}` }))
+      ? brands.map((b) => ({ label: b.name, path: `/products?brand=${b.name}` }))
       : [{ label: "No brands found", path: "#" }];
 
     return [

@@ -22,7 +22,7 @@ function ShopByBrand() {
             </p>
           </div>
 
-          <Link to="/mobiles" className="shop-by-brand-view-all">
+          <Link to="/products" className="shop-by-brand-view-all">
             View all
             <ArrowRight size={16} className="shop-by-brand-view-all-arrow" />
           </Link>
@@ -45,7 +45,7 @@ function ShopByBrand() {
               <button
                 key={brand._id}
                 type="button"
-                onClick={() => navigate(`/mobiles?brand=${brand.name}`)}
+                onClick={() => navigate(`/products?brand=${brand.name}`)}
                 aria-label={`Shop products from ${brand.name}`}
                 className="shop-by-brand-tile"
               >
