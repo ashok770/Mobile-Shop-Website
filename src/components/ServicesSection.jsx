@@ -1,34 +1,25 @@
-import { Wrench, Smartphone, RefreshCw, ShieldCheck, ArrowRight } from "lucide-react";
+import React from "react";
+import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useServices } from "../context/ServiceContext";
+import { ServiceIcon } from "../utils/serviceIcons";
 import "../styles/main.css";
 
 function ServicesSection() {
-  const services = [
-    {
-      id: 1,
-      title: "Expert Repair",
-      desc: "All brand mobile repair by certified technicians using genuine parts.",
-      Icon: Wrench,
-    },
-    {
-      id: 2,
-      title: "Screen Replacement",
-      desc: "Original quality screen replacement for all major mobile models.",
-      Icon: Smartphone,
-    },
-    {
-      id: 3,
-      title: "OS & Software Updates",
-      desc: "Official OS updates, bug fixes, and speed optimization for your device.",
-      Icon: RefreshCw,
-    },
-    {
-      id: 4,
-      title: "Warranty & Support",
-      desc: "Genuine warranty coverage and dedicated after-sales support.",
-      Icon: ShieldCheck,
-    },
-  ];
+  const { services, loading, error } = useServices();
+
+  // If there's an error, fail silently on the homepage
+  if (error && !loading) {
+    return null;
+  }
+
+  // Get up to 4 active services sorted by displayOrder (already sorted by API)
+  const displayServices = services.slice(0, 4);
+
+  // If no services and not loading, hide section
+  if (!loading && displayServices.length === 0) {
+    return null;
+  }
 
   return (
     <section className="why-ommastra-section" aria-labelledby="why-ommastra-heading">
@@ -56,19 +47,46 @@ function ServicesSection() {
 
         {/* Services Grid */}
         <div className="why-ommastra-grid">
-          {services.map((service) => (
-            <div key={service.id} className="why-ommastra-card">
-              <div className="why-ommastra-card-icon" aria-hidden="true">
-                <service.Icon size={36} strokeWidth={1.5} />
+          {loading ? (
+            // Skeleton loaders for 4 cards
+            Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="why-ommastra-card" style={{ minHeight: "220px", display: "flex", flexDirection: "column", animation: "shimmer 1.5s infinite" }}>
+                <div style={{ width: "36px", height: "36px", background: "#f1f5f9", borderRadius: "8px", marginBottom: "24px" }} />
+                <div style={{ height: "20px", background: "#f1f5f9", borderRadius: "4px", marginBottom: "12px", width: "70%" }} />
+                <div style={{ height: "16px", background: "#f1f5f9", borderRadius: "4px", marginBottom: "8px", width: "90%" }} />
+                <div style={{ height: "16px", background: "#f1f5f9", borderRadius: "4px", marginBottom: "24px", width: "80%" }} />
+                <div style={{ height: "20px", background: "#f1f5f9", borderRadius: "4px", width: "40%", marginTop: "auto" }} />
               </div>
-              <h3 className="why-ommastra-card-title">{service.title}</h3>
-              <p className="why-ommastra-card-desc">{service.desc}</p>
-              <Link to="/services" className="why-ommastra-card-link">
-                Explore service
-                <ArrowRight size={16} className="why-ommastra-card-arrow" />
-              </Link>
-            </div>
-          ))}
+            ))
+          ) : (
+            displayServices.map((service) => {
+              const ctaLabel = service.ctaLabel || "Explore service";
+              const ctaTarget = service.ctaTarget || "/services";
+              const isExternal = ctaTarget.startsWith("http");
+
+              return (
+                <div key={service._id} className="why-ommastra-card">
+                  <div className="why-ommastra-card-icon" aria-hidden="true">
+                    <ServiceIcon name={service.icon} size={36} />
+                  </div>
+                  <h3 className="why-ommastra-card-title">{service.name}</h3>
+                  <p className="why-ommastra-card-desc">{service.shortDescription}</p>
+                  
+                  {isExternal ? (
+                    <a href={ctaTarget} target="_blank" rel="noreferrer" className="why-ommastra-card-link">
+                      {ctaLabel}
+                      <ArrowRight size={16} className="why-ommastra-card-arrow" />
+                    </a>
+                  ) : (
+                    <Link to={ctaTarget} className="why-ommastra-card-link">
+                      {ctaLabel}
+                      <ArrowRight size={16} className="why-ommastra-card-arrow" />
+                    </Link>
+                  )}
+                </div>
+              );
+            })
+          )}
         </div>
 
       </div>

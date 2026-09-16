@@ -7,14 +7,17 @@ import "./index.css";
 import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext";
 import { BrandProvider } from "./context/BrandContext";
+import { ServiceProvider } from "./context/ServiceContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <BrandProvider>
-          <App />
-          <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+          <ServiceProvider>
+            <App />
+            <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+          </ServiceProvider>
         </BrandProvider>
       </AuthProvider>
     </BrowserRouter>
