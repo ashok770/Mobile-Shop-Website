@@ -1,11 +1,55 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Search, Plus, Edit2, Trash2, AlertTriangle, CheckCircle2, X, Image as ImageIcon } from "lucide-react";
+import {
+  Search, Plus, Edit2, Trash2, AlertTriangle, CheckCircle2, X,
+  Wrench, Smartphone, ShieldCheck, Wifi, Headphones, Package,
+  Monitor, Battery, Cpu, HardDrive, Settings, Zap, RefreshCcw,
+  BatteryCharging, Cable, Bluetooth, Signal, Shield, LifeBuoy,
+  PhoneCall, Mail, MapPin, Clock, Star, Heart, Layers, Grid3X3,
+  Plug, Aperture, CircuitBoard, Hammer, ScanLine, Flashlight,
+  Image as ImageIcon
+} from "lucide-react";
 import { adminFetch } from "../../utils/adminFetch";
 import ServiceModal from "./ServiceModal";
 import "./ServicesPage.css";
 
 const API = import.meta.env.VITE_API_URL || "http://localhost:5000";
 const PAGE_SIZE = 20;
+
+// ── Human-readable category labels ──────────────────────────────────
+export const CATEGORY_LABELS = {
+  DEVICE_SALES:     "Device Sales & Upgrades",
+  REPAIRS:          "Repairs & Maintenance",
+  ACCESSORIES:      "Accessories & Add-Ons",
+  NETWORK_DATA:     "Network & Data Services",
+  WARRANTY_SUPPORT: "Warranty & Support",
+};
+
+export const getCategoryLabel = (raw) => CATEGORY_LABELS[raw] || raw;
+
+// ── Safe Lucide icon map ────────────────────────────────────────────
+const ICON_MAP = {
+  Wrench, Smartphone, ShieldCheck, Wifi, Headphones, Package,
+  Monitor, Battery, Cpu, HardDrive, Settings, Zap, RefreshCcw,
+  BatteryCharging, Cable, Bluetooth, Signal, Shield, LifeBuoy,
+  PhoneCall, Mail, MapPin, Clock, Star, Heart, Layers, Grid3X3,
+  Plug, Aperture, CircuitBoard, Hammer, ScanLine, Flashlight,
+};
+
+const ServiceIcon = ({ name, size = 18 }) => {
+  const IconComponent = ICON_MAP[name];
+  if (IconComponent) return <IconComponent size={size} />;
+  return <Package size={size} />;
+};
+
+// ── Category filter options ─────────────────────────────────────────
+const CATEGORY_FILTER_OPTIONS = [
+  { value: "",                label: "All Categories" },
+  { value: "DEVICE_SALES",   label: CATEGORY_LABELS.DEVICE_SALES },
+  { value: "REPAIRS",        label: CATEGORY_LABELS.REPAIRS },
+  { value: "ACCESSORIES",    label: CATEGORY_LABELS.ACCESSORIES },
+  { value: "NETWORK_DATA",   label: CATEGORY_LABELS.NETWORK_DATA },
+  { value: "WARRANTY_SUPPORT", label: CATEGORY_LABELS.WARRANTY_SUPPORT },
+];
 
 export default function ServicesPage() {
   const [services, setServices] = useState([]);
@@ -166,8 +210,8 @@ export default function ServicesPage() {
       </div>
 
       {/* Filters Toolbar */}
-      <div className="admin-filters-bar" style={{ marginBottom: "24px", display: "flex", gap: "16px" }}>
-        <div className="admin-search-wrapper" style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+      <div className="admin-filters-bar" style={{ marginBottom: "24px", display: "flex", gap: "16px", flexWrap: "wrap" }}>
+        <div className="admin-search-wrapper" style={{ flex: 1, minWidth: "200px", position: "relative", display: "flex", alignItems: "center" }}>
           <Search size={18} className="admin-search-icon" style={{ position: "absolute", left: "12px", color: "#94a3b8" }} />
           <input
             type="text"
@@ -185,13 +229,10 @@ export default function ServicesPage() {
           <option value="DISABLED">Disabled</option>
         </select>
 
-        <select className="admin-filter-select" value={categoryFilter} onChange={(e) => handleFilterChange(setCategoryFilter, e.target.value)} style={{ padding: "10px", borderRadius: "6px", border: "1px solid #cbd5e1", minWidth: "150px" }}>
-          <option value="">All Categories</option>
-          <option value="DEVICE_SALES">Device Sales</option>
-          <option value="REPAIRS">Repairs</option>
-          <option value="ACCESSORIES">Accessories</option>
-          <option value="NETWORK_DATA">Network Data</option>
-          <option value="WARRANTY_SUPPORT">Warranty Support</option>
+        <select className="admin-filter-select" value={categoryFilter} onChange={(e) => handleFilterChange(setCategoryFilter, e.target.value)} style={{ padding: "10px", borderRadius: "6px", border: "1px solid #cbd5e1", minWidth: "200px" }}>
+          {CATEGORY_FILTER_OPTIONS.map((opt) => (
+            <option key={opt.value} value={opt.value}>{opt.label}</option>
+          ))}
         </select>
 
         {isFilterActive && (
@@ -229,30 +270,45 @@ export default function ServicesPage() {
           <table className="services-table">
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Category</th>
-                <th>Display Order</th>
-                <th>Status</th>
-                <th style={{ textAlign: "right" }}>Actions</th>
+                <th className="col-icon">Icon</th>
+                <th className="col-service">Service</th>
+                <th className="col-category">Category</th>
+                <th className="col-order">Order</th>
+                <th className="col-status">Status</th>
+                <th className="col-actions">Actions</th>
               </tr>
             </thead>
             <tbody>
               {services.map((svc) => (
                 <tr key={svc._id}>
-                  <td>{svc.name}</td>
-                  <td>{svc.category.replace(/_/g, " ")}</td>
-                  <td>{svc.displayOrder}</td>
+                  {/* Icon */}
                   <td>
-                    <span style={{
-                      display: "inline-block",
-                      padding: "4px 8px",
-                      backgroundColor: svc.status === "ACTIVE" ? "#dcfce7" : "#f1f5f9",
-                      color: svc.status === "ACTIVE" ? "#166534" : "#475569",
-                      borderRadius: "4px",
-                      fontSize: "12px",
-                      fontWeight: "500",
-                    }}>{svc.status}</span>
+                    <div className="svc-icon-cell">
+                      <ServiceIcon name={svc.icon} size={18} />
+                    </div>
                   </td>
+                  {/* Service Name + Short Description */}
+                  <td>
+                    <div className="svc-name-cell">
+                      <span className="svc-name">{svc.name}</span>
+                      {svc.shortDescription && (
+                        <span className="svc-short-desc">{svc.shortDescription}</span>
+                      )}
+                    </div>
+                  </td>
+                  {/* Category */}
+                  <td>
+                    <span className="svc-category-label">{getCategoryLabel(svc.category)}</span>
+                  </td>
+                  {/* Display Order */}
+                  <td>{svc.displayOrder}</td>
+                  {/* Status */}
+                  <td>
+                    <span className={`admin-status-badge status-${svc.status.toLowerCase()}`}>
+                      {svc.status === "ACTIVE" ? "Active" : "Disabled"}
+                    </span>
+                  </td>
+                  {/* Actions */}
                   <td style={{ textAlign: "right" }}>
                     <div className="flex-row" style={{ justifyContent: "flex-end" }}>
                       <button className="btn-secondary" style={{ padding: "6px", display: "flex" }} onClick={() => handleEditService(svc)} title="Edit Service"><Edit2 size={16} /></button>
@@ -301,7 +357,7 @@ export default function ServicesPage() {
             {deleteError && (
               <div style={{ backgroundColor: "#fef2f2", border: "1px solid #fecaca", padding: "12px", borderRadius: "6px", color: "#991b1b", fontSize: "14px", marginBottom: "16px" }}>{deleteError}</div>
             )}
-            <p style={{ margin: "0 0 24px", color: "#475569" }}>
+            <p style={{ margin: "0 0 24px", color: "#475569", lineHeight: "1.5" }}>
               Are you sure you want to delete <strong>{deletingService.name}</strong>? This action cannot be undone.
             </p>
             <div className="modal-actions">
@@ -316,4 +372,3 @@ export default function ServicesPage() {
     </div>
   );
 }
-

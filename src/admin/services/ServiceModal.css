@@ -1,34 +1,241 @@
-/* ServiceModal styles — inherits admin-modal-overlay, admin-modal, form-group,
-   modal-actions, admin-alert-banner, etc. from BrandModal.css.
-   Only service-specific additions are here. */
+/* ============================================================
+   Service Modal — ServiceModal.css
+   Extends the shared admin modal design system
+   ============================================================ */
 
-.service-modal-form .form-group textarea {
+/* ── Modal sizing override ─────────────────────────────────── */
+.service-modal {
+  max-width: 620px !important;
+}
+
+/* ── Modal header ──────────────────────────────────────────── */
+.svc-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.svc-modal-header h2 {
+  margin: 0;
+}
+
+.svc-modal-close {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #64748b;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.svc-modal-close:hover {
+  color: #0f172a;
+  background: #f1f5f9;
+}
+
+/* ── Inline error ──────────────────────────────────────────── */
+.svc-modal-error {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  color: #991b1b;
+  font-size: 14px;
+}
+
+/* ── Form sections ─────────────────────────────────────────── */
+.svc-form-section {
+  border: 1px solid #f1f5f9;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  background: #fafbfc;
+}
+
+.svc-form-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  margin-bottom: 14px;
+}
+
+/* ── Form groups ───────────────────────────────────────────── */
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-group label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #475569;
+  margin-bottom: 6px;
+}
+
+.form-group label .required {
+  color: #ef4444;
+  margin-left: 2px;
+}
+
+.form-group label .optional {
+  font-weight: 400;
+  color: #94a3b8;
+  font-size: 12px;
+  margin-left: 4px;
+}
+
+/* ── Field hint ────────────────────────────────────────────── */
+.field-hint {
+  display: block;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+/* ── Inputs / selects / textareas ──────────────────────────── */
+.service-modal-form input[type="text"],
+.service-modal-form input[type="number"],
+.service-modal-form select,
+.service-modal-form textarea {
   width: 100%;
-  padding: 10px;
+  padding: 9px 12px;
   border-radius: 6px;
   border: 1px solid #cbd5e1;
   font-size: 14px;
   color: #0f172a;
   box-sizing: border-box;
+  background: white;
+  transition: border-color 0.15s, box-shadow 0.15s;
   font-family: inherit;
-  resize: vertical;
-  min-height: 60px;
 }
 
-.service-modal-form .form-group textarea:focus {
+.service-modal-form input:focus,
+.service-modal-form select:focus,
+.service-modal-form textarea:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.service-modal-form .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+.service-modal-form textarea {
+  resize: vertical;
+  min-height: 60px;
+  line-height: 1.5;
 }
 
-@media (max-width: 480px) {
-  .service-modal-form .form-row {
+/* ── Two-column row ────────────────────────────────────────── */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ── Icon select with inline preview ──────────────────────── */
+.icon-select-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.icon-preview-badge {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #475569;
+  flex-shrink: 0;
+}
+
+.icon-select {
+  flex: 1;
+}
+
+/* ── Image preview ─────────────────────────────────────────── */
+.svc-image-preview {
+  margin-top: 10px;
+  display: flex;
+  align-items: flex-start;
+}
+
+.svc-image-preview img {
+  max-width: 160px;
+  max-height: 120px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  display: block;
+}
+
+.svc-image-error {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #ef4444;
+}
+
+/* ── Modal actions ─────────────────────────────────────────── */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid #e2e8f0;
+}
+
+/* ── Buttons (scoped to modal) ─────────────────────────────── */
+.service-modal-form + .modal-actions .btn-primary,
+.modal-actions .btn-primary {
+  background: #2563eb;
+  border: 1px solid #2563eb;
+  color: white;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.15s;
+}
+.modal-actions .btn-primary:hover { background: #1d4ed8; }
+.modal-actions .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.modal-actions .btn-secondary {
+  background: white;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 8px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+.modal-actions .btn-secondary:hover { background: #f8fafc; }
+.modal-actions .btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 560px) {
+  .form-row {
     grid-template-columns: 1fr;
+  }
+  .icon-select-wrapper {
+    flex-wrap: wrap;
   }
 }
