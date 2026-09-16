@@ -45,6 +45,7 @@ import PromotionsPage from "./admin/promotions/PromotionsPage";
 import HomepageManagement from "./admin/homepage/HomepageManagement";
 import BrandsPage from "./admin/brands/BrandsPage";
 import ServicesPage from "./admin/services/ServicesPage";
+import SettingsPage from "./admin/settings/SettingsPage";
 import AdminProtectedRoute from "./admin/AdminProtectedRoute";
 import AdminLayout from "./admin/layout/AdminLayout";
 
@@ -216,7 +217,7 @@ function Layout() {
             <Route path="services" element={<ServicesPage />} />
             <Route path="customers" element={<CustomersPage />} />
             <Route path="customers/:id" element={<CustomerDetailPage />} />
-            <Route path="settings" element={<div style={{ padding: "20px" }}>Settings Placeholder</div>} />
+            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Route>
       </Routes>
