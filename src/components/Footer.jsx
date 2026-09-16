@@ -37,134 +37,99 @@ function YoutubeIcon({ size = 20 }) {
 }
 
 function Footer() {
+  const { settings } = useSettings();
+
   return (
     <footer className="bg-[#0b1221] text-slate-400 relative z-20 overflow-hidden flex flex-col">
       {/* Main Content Area */}
       <div className="max-w-[1280px] w-full mx-auto px-5 sm:px-8 pt-14 lg:pt-[72px] pb-12 lg:pb-16">
-        
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1.2fr] gap-10 lg:gap-8">
-          
           {/* 1. Brand Block */}
           <div className="flex flex-col gap-6">
             <Link to="/" className="flex items-center gap-3 group w-fit" aria-label="Ommastra Home">
               <div className="w-10 h-10 rounded-full overflow-hidden border border-white/20 shadow-sm">
-                <img
-                  src="/images/logo.png"
-                  alt="Ommastra Logo"
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    e.target.style.display = "none";
-                  }}
-                />
+                <img src="/images/logo.png" alt="Ommastra Logo" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = "none"; }} />
               </div>
-              <span className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">
-                OMMASTRA
-              </span>
+              <span className="text-xl font-bold tracking-tight text-white group-hover:text-blue-400 transition-colors">OMMASTRA</span>
             </Link>
-
             <p className="text-[14px] text-slate-400/90 leading-relaxed max-w-[280px]">
               Your certified destination for authentic smartphones, premium audio gear, and factory-standard repair diagnostics.
             </p>
-
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/10 text-[13px] text-slate-300 w-fit">
               <ShieldCheck size={16} className="text-blue-400 shrink-0" />
               <span className="font-medium">Certified Retailer & Service Partner</span>
             </div>
-
             {/* Social Icons - Redesigned & Larger */}
             <div className="flex items-center gap-3 pt-4" aria-label="Social media links">
-              {/* Social links from settings */
-                {settings?.instagramUrl && (
-                  <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-pink-600 hover:border-pink-600 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
-                    <InstagramIcon />
-                  </a>
-                )}
-                {settings?.facebookUrl && (
-                  <a href={settings.facebookUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-blue-600 hover:border-blue-600 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
-                    <FacebookIcon />
-                  </a>
-                )}
-                {settings?.whatsappNumber && (
-                  <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
-                    <MessageCircle size={20} strokeWidth={1.5} />
-                  </a>
-                )}
-                {settings?.youtubeUrl && (
-                  <a href={settings.youtubeUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all duration-300" aria-label="YouTube">
-                    <YoutubeIcon />
-                  </a>
-                )}
-                }
+              {settings?.instagramUrl && (
+                <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-pink-600 hover:border-pink-600 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
+                  <InstagramIcon />
+                </a>
+              )}
+              {settings?.facebookUrl && (
+                <a href={settings.facebookUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-blue-600 hover:border-blue-600 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
+                  <FacebookIcon />
+                </a>
+              )}
+              {settings?.whatsappNumber && (
+                <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
+                  <MessageCircle size={20} strokeWidth={1.5} />
+                </a>
+              )}
+              {settings?.youtubeUrl && (
+                <a href={settings.youtubeUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all duration-300" aria-label="YouTube">
+                  <YoutubeIcon />
+                </a>
+              )}
             </div>
           </div>
 
           {/* 2. Quick Links */}
           <div className="lg:pl-4">
-            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
-              Quick Links
-            </h4>
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              <li>
-                <Link to="/mobiles" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Smartphones</Link>
-              </li>
-              <li>
-                <Link to="/accessories" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Accessories</Link>
-              </li>
-              <li>
-                <Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Services</Link>
-              </li>
-              <li>
-                <Link to="/offers/mega-flash" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Deals & Offers</Link>
-              </li>
+              <li><Link to="/mobiles" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Smartphones</Link></li>
+              <li><Link to="/accessories" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Accessories</Link></li>
+              <li><Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Services</Link></li>
+              <li><Link to="/offers/mega-flash" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Deals & Offers</Link></li>
             </ul>
           </div>
 
           {/* 3. Customer Care */}
           <div>
-            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
-              Customer Care
-            </h4>
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">Customer Care</h4>
             <ul className="space-y-4">
-              <li>
-                <Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Repair Services</Link>
-              </li>
-              <li>
-                <Link to="/profile/orders" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Order Tracking</Link>
-              </li>
-              <li>
-                <Link to="/contact" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Help Centre</Link>
-              </li>
+              <li><Link to="/services" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Repair Services</Link></li>
+              <li><Link to="/profile/orders" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Order Tracking</Link></li>
+              <li><Link to="/contact" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Help Centre</Link></li>
             </ul>
-            
             <div className="mt-6">
-              <a href="tel:9876543210" className="inline-flex items-center gap-2.5 text-[14px] text-white font-medium hover:text-blue-400 transition-colors group">
-                <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-                  <Phone size={14} className="text-white group-hover:text-blue-400 transition-colors" />
-                </div>
-                +91 98765 43210
-              </a>
+              {settings?.contactPhone ? (
+                <a href={`tel:${settings.contactPhone}`} className="inline-flex items-center gap-2.5 text-[14px] text-white font-medium hover:text-blue-400 transition-colors group">
+                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                    <Phone size={14} className="text-white group-hover:text-blue-400 transition-colors" />
+                  </div>
+                  {settings.contactPhone}
+                </a>
+              ) : (
+                <span className="inline-flex items-center gap-2.5 text-[14px] text-slate-400 font-medium">Phone unavailable</span>
+              )}
             </div>
           </div>
 
           {/* 4. Store Information */}
           <div>
-            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">
-              Store Information
-            </h4>
+            <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">Store Information</h4>
             <ul className="space-y-5">
               <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0">
-                  <MapPin size={18} strokeWidth={1.5} />
-                </div>
+                <div className="mt-0.5 text-slate-400 shrink-0"><MapPin size={18} strokeWidth={1.5} /></div>
                 <span className="text-[14px] text-slate-400 leading-relaxed">
-                  Main Market, City Center, India
+                  {settings?.address ? `${settings.address}, ${settings.city}, ${settings.state}, ${settings.country}, ${settings.postalCode}` : "Address not configured"}
                 </span>
               </li>
               <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0">
-                  <Clock size={18} strokeWidth={1.5} />
-                </div>
+                <div className="mt-0.5 text-slate-400 shrink-0"><Clock size={18} strokeWidth={1.5} /></div>
                 <div className="text-[14px] text-slate-400 leading-relaxed">
                   {settings?.weekdayHours || settings?.weekendHours ? (
                     <p>{settings.weekdayHours ? `Weekdays: ${settings.weekdayHours}` : ""}{settings.weekendHours ? ` | Weekends: ${settings.weekendHours}` : ""}</p>
@@ -174,29 +139,26 @@ function Footer() {
                 </div>
               </li>
               <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0">
-                  <Mail size={18} strokeWidth={1.5} />
-                </div>
-                <a href="mailto:hello@ommastra.com" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors">
-                  hello@ommastra.com
-                </a>
+                <div className="mt-0.5 text-slate-400 shrink-0"><Mail size={18} strokeWidth={1.5} /></div>
+                {settings?.contactEmail ? (
+                  <a href={`mailto:${settings.contactEmail}`} className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors">{settings.contactEmail}</a>
+                ) : (
+                  <span className="text-[14px] text-slate-400">Email not configured</span>
+                )}
               </li>
             </ul>
           </div>
-          
         </div>
       </div>
 
-      {/* Legal Bar (Subtly Darker Background) */}
+      {/* Legal Bar */}
       <div className="bg-[#070c17] border-t border-white/[0.04]">
         <div className="max-w-[1280px] w-full mx-auto px-5 sm:px-8 py-5 sm:py-6 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[13px] text-slate-500 text-center md:text-left">
-            © 2026 Ommastra Mobile Shop. All rights reserved.
-          </p>
+          <p className="text-[13px] text-slate-500 text-center md:text-left">© 2026 Ommastra Mobile Shop. All rights reserved.</p>
           <div className="flex flex-wrap justify-center items-center gap-5 md:gap-7 text-[13px]">
-            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</Link>
-            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Terms & Conditions</Link>
-            <Link to="/contact" className="text-slate-500 hover:text-slate-300 transition-colors">Support</Link>
+            <Link to="/privacy" className="text-slate-500 hover:text-slate-300 transition-colors">Privacy Policy</Link>
+            <Link to="/terms" className="text-slate-500 hover:text-slate-300 transition-colors">Terms & Conditions</Link>
+            <Link to="/support" className="text-slate-500 hover:text-slate-300 transition-colors">Support</Link>
           </div>
         </div>
       </div>
@@ -205,7 +167,7 @@ function Footer() {
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50 group/fab" aria-label="Quick contact options">
         <a
           className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-          href="https://wa.me/919876543210"
+          href={settings?.whatsappNumber ? `https://wa.me/${settings.whatsappNumber}` : "#"}
           target="_blank"
           rel="noreferrer"
           aria-label="Chat on WhatsApp"
@@ -215,7 +177,7 @@ function Footer() {
         </a>
         <a
           className="w-12 h-12 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-          href="tel:9876543210"
+          href={settings?.contactPhone ? `tel:${settings.contactPhone}` : "#"}
           aria-label="Call us"
           title="Call Customer Support"
         >
@@ -227,4 +189,3 @@ function Footer() {
 }
 
 export default Footer;
-

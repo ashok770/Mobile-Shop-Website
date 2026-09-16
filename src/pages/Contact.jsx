@@ -92,12 +92,20 @@ function Contact() {
           From product questions and order support to repairs, trade-ins, and after-sales care, we're here to help.
         </p>
         <div className="c1-hero-actions">
-          <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer" className="c1-btn-primary">
-            <MessageCircle size={20} /> WhatsApp Us
-          </a>
-          <a href={`tel:${PHONE_NUMBER}`} className="c1-btn-secondary">
-            <Phone size={20} /> Call Us
-          </a>
+          {settings?.whatsappNumber ? (
+            <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="c1-btn-primary">
+              <MessageCircle size={20} /> WhatsApp Us
+            </a>
+          ) : (
+            <span className="c1-btn-primary disabled">WhatsApp unavailable</span>
+          )}
+          {settings?.contactPhone ? (
+            <a href={`tel:${settings.contactPhone}`} className="c1-btn-secondary">
+              <Phone size={20} /> Call Us
+            </a>
+          ) : (
+            <span className="c1-btn-secondary disabled">Phone unavailable</span>
+          )}
         </div>
       </section>
 
