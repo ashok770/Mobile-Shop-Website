@@ -8,6 +8,7 @@ import {
   MessageCircle,
   PhoneCall,
 } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 
 function InstagramIcon({ size = 20 }) {
   return (
@@ -73,18 +74,28 @@ function Footer() {
 
             {/* Social Icons - Redesigned & Larger */}
             <div className="flex items-center gap-3 pt-4" aria-label="Social media links">
-              <a href="https://instagram.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-pink-600 hover:border-pink-600 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
-                <InstagramIcon />
-              </a>
-              <a href="https://facebook.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-blue-600 hover:border-blue-600 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
-                <FacebookIcon />
-              </a>
-              <a href="https://wa.me/919876543210" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
-                <MessageCircle size={20} strokeWidth={1.5} />
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all duration-300" aria-label="YouTube">
-                <YoutubeIcon />
-              </a>
+              {/* Social links from settings */
+                {settings?.instagramUrl && (
+                  <a href={settings.instagramUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-pink-600 hover:border-pink-600 flex items-center justify-center transition-all duration-300" aria-label="Instagram">
+                    <InstagramIcon />
+                  </a>
+                )}
+                {settings?.facebookUrl && (
+                  <a href={settings.facebookUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-blue-600 hover:border-blue-600 flex items-center justify-center transition-all duration-300" aria-label="Facebook">
+                    <FacebookIcon />
+                  </a>
+                )}
+                {settings?.whatsappNumber && (
+                  <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
+                    <MessageCircle size={20} strokeWidth={1.5} />
+                  </a>
+                )}
+                {settings?.youtubeUrl && (
+                  <a href={settings.youtubeUrl} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-red-600 hover:border-red-600 flex items-center justify-center transition-all duration-300" aria-label="YouTube">
+                    <YoutubeIcon />
+                  </a>
+                )}
+                }
             </div>
           </div>
 
@@ -155,8 +166,11 @@ function Footer() {
                   <Clock size={18} strokeWidth={1.5} />
                 </div>
                 <div className="text-[14px] text-slate-400 leading-relaxed">
-                  <p>Mon - Sat: 10 AM – 9 PM</p>
-                  <p className="text-slate-500 mt-1">Sunday: 11 AM – 7 PM</p>
+                  {settings?.weekdayHours || settings?.weekendHours ? (
+                    <p>{settings.weekdayHours ? `Weekdays: ${settings.weekdayHours}` : ""}{settings.weekendHours ? ` | Weekends: ${settings.weekendHours}` : ""}</p>
+                  ) : (
+                    <p>Hours not configured</p>
+                  )}
                 </div>
               </li>
               <li className="flex items-start gap-3.5">

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import { MessageCircle, Phone, Mail, MapPin, Clock, ArrowRight, ChevronDown, Wrench, AlertCircle } from "lucide-react";
+import { useSettings } from "../context/SettingsContext";
 import "./Contact.css";
 
 const FAQS = [
@@ -78,8 +79,8 @@ function Contact() {
     setOpenFaq(openFaq === index ? null : index);
   };
 
-  const WHATSAPP_NUMBER = "919876543210";
-  const PHONE_NUMBER = "9876543210";
+  // Settings will provide these values. Fallbacks handled in rendering.
+  const { settings, loading, error } = useSettings();
 
   return (
     <div className="c1-page">
@@ -125,9 +126,13 @@ function Contact() {
               <div className="c1-option-content">
                 <h3 className="c1-option-title">WhatsApp</h3>
                 <p className="c1-option-desc">Fastest support channel</p>
-                <a href={`https://wa.me/${WHATSAPP_NUMBER}`} target="_blank" rel="noreferrer" className="c1-option-link">
-                  Chat Now <ArrowRight size={14} />
-                </a>
+                {settings?.whatsappNumber ? (
+                  <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="c1-option-link">
+                    Chat Now <ArrowRight size={14} />
+                  </a>
+                ) : (
+                  <span className="c1-option-link text-slate-500">WhatsApp unavailable</span>
+                )}
               </div>
             </div>
 
@@ -136,9 +141,13 @@ function Contact() {
               <div className="c1-option-content">
                 <h3 className="c1-option-title">Phone</h3>
                 <p className="c1-option-desc">Speak with our team</p>
-                <a href={`tel:${PHONE_NUMBER}`} className="c1-option-link">
-                  Call Now <ArrowRight size={14} />
-                </a>
+                {settings?.contactPhone ? (
+                  <a href={`tel:${settings.contactPhone}`} className="c1-option-link">
+                    Call Now <ArrowRight size={14} />
+                  </a>
+                ) : (
+                  <span className="c1-option-link text-slate-500">Phone unavailable</span>
+                )}
               </div>
             </div>
 
@@ -147,9 +156,13 @@ function Contact() {
               <div className="c1-option-content">
                 <h3 className="c1-option-title">Email</h3>
                 <p className="c1-option-desc">For detailed questions</p>
-                <a href="mailto:support@ommastra.com" className="c1-option-link">
-                  Send Email <ArrowRight size={14} />
-                </a>
+                {settings?.contactEmail ? (
+                  <a href={`mailto:${settings.contactEmail}`} className="c1-option-link">
+                    Send Email <ArrowRight size={14} />
+                  </a>
+                ) : (
+                  <span className="c1-option-link text-slate-500">Email unavailable</span>
+                )}
               </div>
             </div>
 
@@ -249,7 +262,7 @@ function Contact() {
                 <MapPin className="c1-store-item-icon" />
                 <div className="c1-store-item-text">
                   <strong>Address</strong>
-                  <span>Main Market, Your City</span>
+                  <span>{settings?.address ? `${settings.address}, ${settings.city}, ${settings.state}, ${settings.country}, ${settings.postalCode}` : "Not configured"}</span>
                 </div>
               </div>
               <div className="c1-store-item">

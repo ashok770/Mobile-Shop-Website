@@ -8,6 +8,7 @@ import App from "./App.jsx";
 import { AuthProvider } from "./context/AuthContext";
 import { BrandProvider } from "./context/BrandContext";
 import { ServiceProvider } from "./context/ServiceContext";
+import { SettingsProvider } from "./context/SettingsContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
