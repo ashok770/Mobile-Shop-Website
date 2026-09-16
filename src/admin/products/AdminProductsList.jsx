@@ -40,6 +40,34 @@ export default function AdminProductsList() {
   const [sortBy, setSortBy] = useState("newest");
   const [page, setPage] = useState(1);
 
+  // Admin Brands state
+  const [adminBrands, setAdminBrands] = useState([]);
+  const [adminBrandLoading, setAdminBrandLoading] = useState(true);
+  const [adminBrandError, setAdminBrandError] = useState(null);
+  const brandLoading = adminBrandLoading;
+  const brandError = adminBrandError;
+
+  // Fetch admin brands on mount
+  useEffect(() => {
+    const fetchAdminBrands = async () => {
+      setAdminBrandLoading(true);
+      setAdminBrandError(null);
+      try {
+        const res = await adminFetch(`${API}/api/admin/brands`);
+        if (!res.ok) {
+          throw new Error("Failed to load brands");
+        }
+        const data = await res.json();
+        setAdminBrands(data.brands || data || []);
+      } catch (err) {
+        setAdminBrandError(err.message || "Failed to load brands");
+      } finally {
+        setAdminBrandLoading(false);
+      }
+    };
+    fetchAdminBrands();
+  }, []);
+
   // Modal & Notification state
   const [productToDelete, setProductToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -251,12 +279,16 @@ export default function AdminProductsList() {
           aria-label="Filter by brand"
         >
           <option value="">All Brands</option>
-          <option value="Apple">Apple</option>
-          <option value="Samsung">Samsung</option>
-          <option value="Redmi">Redmi</option>
-          <option value="Motorola">Motorola</option>
-          <option value="Noise">Noise</option>
-          <option value="boAt">boAt</option>
+          {brandLoading && <option disabled>Loading brands...</option>}
+          {brandError && <option disabled>Brands unavailable</option>}
+          {!brandLoading && !brandError && adminBrands
+            .slice()
+            .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name))
+            .map((b) => (
+              <option key={b.name} value={b.name}>
+                {b.status === "DISABLED" ? `${b.name} — Disabled` : b.name}
+              </option>
+            ))}
         </select>
 
         {/* Category */}

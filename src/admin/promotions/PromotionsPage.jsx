@@ -52,6 +52,11 @@ export default function PromotionsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(PAGE_SIZE);
 
+  // Admin brands state
+  const [adminBrands, setAdminBrands] = useState([]);
+  const [brandLoading, setBrandLoading] = useState(true);
+  const [brandError, setBrandError] = useState(null);
+
   // Selection state
   const [selectedIds, setSelectedIds] = useState(new Set());
 
@@ -79,6 +84,25 @@ export default function PromotionsPage() {
     setPage(1);
     setSelectedIds(new Set());
   };
+
+    // Fetch admin brands on mount
+  useEffect(() => {
+    const fetchAdminBrands = async () => {
+      setBrandLoading(true);
+      setBrandError(null);
+      try {
+        const res = await adminFetch(`${API}/api/admin/brands`);
+        if (!res.ok) throw new Error('Failed to load brands');
+        const data = await res.json();
+        setAdminBrands(data.brands || data || []);
+      } catch (err) {
+        setBrandError(err.message || 'Failed to load brands');
+      } finally {
+        setBrandLoading(false);
+      }
+    };
+    fetchAdminBrands();
+  }, []);
 
   const handleTabChange = (tabId) => {
     setOfferTypeTab(tabId);
@@ -344,13 +368,22 @@ export default function PromotionsPage() {
           />
         </div>
 
-        <select className="admin-filter-select" value={brand} onChange={(e) => handleFilterChange(setBrand, e.target.value)}>
+        <select className="admin-filter-select" value={brand} onChange={(e) => handleFilterChange(setBrand, e.target.value)} aria-label="Filter by brand">
           <option value="">All Brands</option>
-          <option value="Samsung">Samsung</option>
-          <option value="Apple">Apple</option>
-          <option value="OnePlus">OnePlus</option>
-          <option value="Xiaomi">Xiaomi</option>
-          <option value="Realme">Realme</option>
+          {brandLoading && <option disabled>Loading brands...</option>}
+          {brandError && <option disabled>{brandError}</option>}
+          {!brandLoading && !brandError && adminBrands
+            .slice()
+            .sort((a, b) => a.displayOrder - b.displayOrder || a.name.localeCompare(b.name))
+            .map((b) => {
+              const name = b.name || b;
+              const status = b.status || "ACTIVE";
+              return (
+                <option key={name} value={name}>
+                  {status === "DISABLED" ? `${name} — Disabled` : name}
+                </option>
+              );
+            })}
         </select>
 
         <select className="admin-filter-select" value={category} onChange={(e) => handleFilterChange(setCategory, e.target.value)}>

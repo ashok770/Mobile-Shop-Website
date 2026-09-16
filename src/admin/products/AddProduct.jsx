@@ -2,8 +2,9 @@ import React, { useState, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { adminFetch } from "../../utils/adminFetch";
 import "./AddProduct.css";
+import { useBrands } from "../../context/BrandContext";
 
-const BRAND_OPTIONS = ["Apple", "Samsung", "Redmi", "Motorola", "Noise", "boAt"];
+// Brand options are sourced from BrandContext
 const CATEGORY_OPTIONS = ["Mobile", "Accessory"];
 const STATUS_OPTIONS = ["ACTIVE", "DRAFT"];
 const OFFER_OPTIONS = [
@@ -15,6 +16,7 @@ const OFFER_OPTIONS = [
 
 export default function AddProduct() {
   const navigate = useNavigate();
+  const { brands, loading, error } = useBrands();
   const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
@@ -232,13 +234,19 @@ export default function AddProduct() {
             <div className="form-row-2col">
               <div className="form-group">
                 <label htmlFor="brand">Brand *</label>
-                <select id="brand" name="brand" value={form.brand} onChange={handleChange} className={errors.brand ? "error" : ""}>
+                <select id="brand" name="brand" value={form.brand} onChange={handleChange} className={errors.brand ? "error" : ""} disabled={loading || !!error}>
                   <option value="">Select brand</option>
-                  {BRAND_OPTIONS.map((b) => (
-                    <option key={b} value={b}>
-                      {b}
-                    </option>
-                  ))}
+                  {loading ? (
+                    <option disabled>Loading brands...</option>
+                  ) : error ? (
+                    <option disabled>Brands unavailable</option>
+                  ) : (
+                    brands.map((b) => (
+                      <option key={b.name} value={b.name}>
+                        {b.name}
+                      </option>
+                    ))
+                  )}
                 </select>
                 {errors.brand && <div className="error-msg">{errors.brand}</div>}
               </div>

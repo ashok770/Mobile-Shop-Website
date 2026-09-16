@@ -2,8 +2,9 @@ import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { adminFetch } from "../../utils/adminFetch";
 import "./EditProduct.css";
+import { useBrands } from "../../context/BrandContext";
 
-const BRAND_OPTIONS = ["Apple", "Samsung", "Redmi", "Motorola", "Noise", "boAt"];
+// Brand options will be generated from BrandContext with legacy handling
 const CATEGORY_OPTIONS = ["Mobile", "Accessory"];
 const STATUS_OPTIONS = ["ACTIVE", "DRAFT"];
 const OFFER_OPTIONS = [
@@ -16,6 +17,7 @@ const OFFER_OPTIONS = [
 export default function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { brands, loading: brandLoading, error: brandError } = useBrands();
   const fileInputRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
@@ -394,14 +396,22 @@ export default function EditProduct() {
             <div className="form-row-2col">
               <div className="form-group">
                 <label htmlFor="brand">Brand *</label>
-                <select id="brand" name="brand" value={form.brand} onChange={handleChange} className={errors.brand ? "error" : ""}>
-                  <option value="">Select brand</option>
-                  {BRAND_OPTIONS.map((b) => (
-                    <option key={b} value={b}>
-                      {b}
-                    </option>
-                  ))}
-                </select>
+                <select id="brand" name="brand" value={form.brand} onChange={handleChange} className={errors.brand ? "error" : ""} disabled={brandLoading || !!brandError}>
+  <option value="">Select brand</option>
+  {brandLoading && <option disabled>Loading brands...</option>}
+  {brandError && <option disabled>Brands unavailable</option>}
+  {!brandLoading && !brandError && (
+    <>
+      {brands.map(b => (
+        <option key={b.name} value={b.name}>{b.name}</option>
+      ))}
+      {form.brand && !brands.some(b => b.name === form.brand) && (
+        <option key={form.brand} value={form.brand}>{form.brand} — Legacy</option>
+      )}
+    </>
+  )}
+</select>
+
                 {errors.brand && <div className="error-msg">{errors.brand}</div>}
               </div>
               <div className="form-group">
