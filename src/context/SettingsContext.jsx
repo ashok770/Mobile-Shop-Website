@@ -23,7 +23,7 @@ export const SettingsProvider = ({ children }) => {
         throw new Error("Failed to fetch settings");
       }
       const data = await res.json();
-      setSettings(data);
+      setSettings(data.settings || data);
     } catch (err) {
       setError(err);
     } finally {

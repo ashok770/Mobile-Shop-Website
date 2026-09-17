@@ -4,6 +4,8 @@ import { Check, ChevronRight, MapPin, Minus, Plus, ShieldCheck, ShoppingBag, Tra
 import CheckoutStepper from "../components/CheckoutStepper";
 import "./Cart.css";
 
+import { useSettings } from "../context/SettingsContext";
+
 const CART_KEY = "mobile_shop_cart";
 
 const readCart = () => {
@@ -19,6 +21,7 @@ const formatPrice = (value) => Number(value || 0).toLocaleString("en-IN");
 function Cart() {
   const [cart, setCart] = useState(readCart);
   const navigate = useNavigate();
+  const { settings } = useSettings();
 
   useEffect(() => {
     const syncCart = () => setCart(readCart());
@@ -42,6 +45,11 @@ function Cart() {
   const removeItem = (productId) => updateCart(cart.filter((item) => item.productId !== productId));
   const subtotal = cart.reduce((total, item) => total + Number(item.price || 0) * item.quantity, 0);
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
+
+  const threshold = settings?.freeShippingThreshold ?? 500;
+  const charge = settings?.baseShippingCharge ?? 49;
+  const shipping = subtotal > 0 && subtotal < threshold ? charge : 0;
+  const grandTotal = subtotal + shipping;
 
   return (
     <main className="cart-page-shell">
@@ -96,15 +104,15 @@ function Cart() {
             <aside className="cart-order-summary" aria-label="Order summary">
               <h2>Order Summary</h2>
               <div className="cart-summary-row"><span>Subtotal</span><strong>₹{formatPrice(subtotal)}</strong></div>
-              <div className="cart-summary-row"><span>Shipping</span><strong>Free</strong></div>
+              <div className="cart-summary-row"><span>Shipping</span><strong>{shipping > 0 ? `₹${formatPrice(shipping)}` : "Free"}</strong></div>
               <div className="cart-summary-row"><span>Tax</span><strong>₹0</strong></div>
               <div className="cart-summary-divider" />
-              <div className="cart-grand-total"><span>Grand Total</span><strong>₹{formatPrice(subtotal)}</strong></div>
+              <div className="cart-grand-total"><span>Grand Total</span><strong>₹{formatPrice(grandTotal)}</strong></div>
               <button className="cart-checkout-button" type="button" onClick={() => navigate("/checkout")}>Proceed to Checkout</button>
               <button className="cart-continue-button" type="button" onClick={() => navigate("/mobiles")}>Continue Shopping</button>
               <div className="cart-trust-list">
                 <div><Check size={16} /><span>Genuine Products</span></div>
-                <div><Check size={16} /><span>Cash on Delivery Available</span></div>
+                {settings?.codEnabled !== false && <div><Check size={16} /><span>Cash on Delivery Available</span></div>}
                 <div><ShieldCheck size={16} /><span>Secure Checkout</span></div>
               </div>
             </aside>

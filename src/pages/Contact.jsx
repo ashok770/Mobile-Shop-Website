@@ -179,9 +179,15 @@ function Contact() {
               <div className="c1-option-content">
                 <h3 className="c1-option-title">Visit Store</h3>
                 <p className="c1-option-desc">Physical support & repairs</p>
-                <a href="#store-location" className="c1-option-link">
-                  View Location <ArrowRight size={14} />
-                </a>
+                {settings?.directionsUrl ? (
+                  <a href={settings.directionsUrl} target="_blank" rel="noreferrer" className="c1-option-link">
+                    Get Directions <ArrowRight size={14} />
+                  </a>
+                ) : (
+                  <a href="#store-location" className="c1-option-link">
+                    View Location <ArrowRight size={14} />
+                  </a>
+                )}
               </div>
             </div>
           </div>
@@ -277,24 +283,36 @@ function Contact() {
                 <Clock className="c1-store-item-icon" />
                 <div className="c1-store-item-text">
                   <strong>Working Hours</strong>
-                  <span>10:00 AM – 9:00 PM (Mon–Sat)</span>
+                  <span>
+                    {settings?.weekdayHours || settings?.weekendHours ? (
+                      <>{settings.weekdayHours ? `Weekdays: ${settings.weekdayHours}` : ""}{settings.weekendHours ? ` | Weekends: ${settings.weekendHours}` : ""}</>
+                    ) : (
+                      "Hours not configured"
+                    )}
+                  </span>
                 </div>
               </div>
               <div className="c1-store-item">
                 <Phone className="c1-store-item-icon" />
                 <div className="c1-store-item-text">
                   <strong>Phone</strong>
-                  <span>{PHONE_NUMBER}</span>
+                  <span>{settings?.contactPhone || "Phone not configured"}</span>
                 </div>
               </div>
             </div>
           </div>
           <div className="c1-map-container">
-            <iframe
-              title="shop-location"
-              src="https://www.google.com/maps?q=New%20Delhi&output=embed"
-              loading="lazy"
-            ></iframe>
+            {settings?.mapEmbedUrl ? (
+              <iframe
+                title="shop-location"
+                src={settings.mapEmbedUrl}
+                loading="lazy"
+              ></iframe>
+            ) : (
+              <div className="flex items-center justify-center w-full h-full bg-slate-100 text-slate-500 min-h-[300px]">
+                Map not configured
+              </div>
+            )}
           </div>
         </section>
 

@@ -1,4 +1,4 @@
-import { createElement, useMemo, useState } from "react";
+import { createElement, useMemo, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   Check,
@@ -12,6 +12,7 @@ import {
 import CheckoutStepper from "../components/CheckoutStepper";
 import useAuth from "../hooks/useAuth";
 import axiosInstance from "../utils/axiosInstance";
+import { useSettings } from "../context/SettingsContext";
 import "./Checkout.css";
 import "./CheckoutFlow.css";
 
@@ -33,6 +34,7 @@ const formatPrice = (value) => Number(value || 0).toLocaleString("en-IN");
 function Payment() {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { settings } = useSettings();
   const cart = useMemo(() => read(CART_KEY, []), []);
   const delivery = useMemo(() => read(DELIVERY_KEY, {}), []);
   const [payment, setPayment] = useState("cod");
@@ -41,6 +43,11 @@ function Payment() {
     (total, item) => total + Number(item.price || 0) * item.quantity,
     0,
   );
+
+  const threshold = settings?.freeShippingThreshold ?? 500;
+  const charge = settings?.baseShippingCharge ?? 49;
+  const shipping = subtotal > 0 && subtotal < threshold ? charge : 0;
+  const grandTotal = subtotal + shipping;
 
   const submitOrder = async () => {
     if (
@@ -92,7 +99,7 @@ function Payment() {
         items: cart,
         delivery,
         orderId: data.order?._id || Date.now(),
-        total: subtotal,
+        total: grandTotal,
         orderedAt: data.order?.createdAt || new Date().toISOString(),
       };
 
@@ -127,11 +134,18 @@ function Payment() {
     );
 
   const options = [
-    { id: "cod", label: "Cash on Delivery", icon: WalletCards },
+    ...(settings?.codEnabled !== false ? [{ id: "cod", label: "Cash on Delivery", icon: WalletCards }] : []),
     { id: "upi", label: "UPI", icon: CreditCard },
     { id: "card", label: "Credit / Debit Card", icon: CreditCard },
     { id: "bank", label: "Net Banking", icon: Landmark },
   ];
+
+  // Auto-select a valid payment method if cod is disabled and currently selected
+  useEffect(() => {
+    if (settings?.codEnabled === false && payment === "cod") {
+      setPayment("upi");
+    }
+  }, [settings, payment]);
 
   return (
     <main className="checkout-page-shell">
@@ -212,14 +226,14 @@ function Payment() {
 
             <div className="checkout-summary-row">
               <span>Shipping</span>
-              <strong>Free</strong>
+              <strong>{shipping > 0 ? `₹${formatPrice(shipping)}` : "Free"}</strong>
             </div>
 
             <div className="checkout-divider" />
 
             <div className="checkout-total">
               <span>Grand Total</span>
-              <strong>₹{formatPrice(subtotal)}</strong>
+              <strong>₹{formatPrice(grandTotal)}</strong>
             </div>
 
             <div className="checkout-trust">
