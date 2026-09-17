@@ -44,8 +44,8 @@ function Payment() {
     0,
   );
 
-  const threshold = settings?.freeShippingThreshold ?? 500;
-  const charge = settings?.baseShippingCharge ?? 49;
+  const threshold = settings?.freeShippingThreshold;
+  const charge = settings?.baseShippingCharge;
   const shipping = subtotal > 0 && subtotal < threshold ? charge : 0;
   const grandTotal = subtotal + shipping;
 

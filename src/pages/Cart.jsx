@@ -46,8 +46,8 @@ function Cart() {
   const subtotal = cart.reduce((total, item) => total + Number(item.price || 0) * item.quantity, 0);
   const itemCount = cart.reduce((total, item) => total + item.quantity, 0);
 
-  const threshold = settings?.freeShippingThreshold ?? 500;
-  const charge = settings?.baseShippingCharge ?? 49;
+  const threshold = settings?.freeShippingThreshold;
+  const charge = settings?.baseShippingCharge;
   const shipping = subtotal > 0 && subtotal < threshold ? charge : 0;
   const grandTotal = subtotal + shipping;
 

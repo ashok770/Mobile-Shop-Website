@@ -9,8 +9,14 @@ const SettingsContext = createContext({
   refreshSettings: () => {}
 });
 
+const DEFAULT_SETTINGS = {
+  freeShippingThreshold: 500,
+  baseShippingCharge: 49,
+  codEnabled: true,
+};
+
 export const SettingsProvider = ({ children }) => {
-  const [settings, setSettings] = useState(null);
+  const [settings, setSettings] = useState(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -23,7 +29,11 @@ export const SettingsProvider = ({ children }) => {
         throw new Error("Failed to fetch settings");
       }
       const data = await res.json();
-      setSettings(data.settings || data);
+      const fetchedSettings = data.settings || data;
+      setSettings({
+        ...DEFAULT_SETTINGS,
+        ...fetchedSettings,
+      });
     } catch (err) {
       setError(err);
     } finally {
