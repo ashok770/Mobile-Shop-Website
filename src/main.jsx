@@ -16,8 +16,10 @@ createRoot(document.getElementById("root")).render(
       <AuthProvider>
         <BrandProvider>
           <ServiceProvider>
-            <App />
-            <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+            <SettingsProvider>
+              <App />
+              <Toaster position="top-right" toastOptions={{ duration: 3500 }} />
+            </SettingsProvider>
           </ServiceProvider>
         </BrandProvider>
       </AuthProvider>

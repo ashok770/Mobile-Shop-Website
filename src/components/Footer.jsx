@@ -105,16 +105,14 @@ function Footer() {
               <li><Link to="/contact" className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors inline-block">Help Centre</Link></li>
             </ul>
             <div className="mt-6">
-              {settings?.contactPhone ? (
-                <a href={`tel:${settings.contactPhone}`} className="inline-flex items-center gap-2.5 text-[14px] text-white font-medium hover:text-blue-400 transition-colors group">
-                  <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
-                    <Phone size={14} className="text-white group-hover:text-blue-400 transition-colors" />
-                  </div>
-                  {settings.contactPhone}
-                </a>
-              ) : (
-                <span className="inline-flex items-center gap-2.5 text-[14px] text-slate-400 font-medium">Phone unavailable</span>
-              )}
+              {settings?.contactPhone && (
+                  <a href={`tel:${settings.contactPhone}`} className="inline-flex items-center gap-2.5 text-[14px] text-white font-medium hover:text-blue-400 transition-colors group">
+                    <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center group-hover:bg-blue-500/20 transition-colors">
+                      <Phone size={14} className="text-white group-hover:text-blue-400 transition-colors" />
+                    </div>
+                    {settings.contactPhone}
+                  </a>
+                )}
             </div>
           </div>
 
@@ -122,30 +120,28 @@ function Footer() {
           <div>
             <h4 className="text-[13px] font-semibold text-slate-100 uppercase tracking-widest mb-6">Store Information</h4>
             <ul className="space-y-5">
-              <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0"><MapPin size={18} strokeWidth={1.5} /></div>
-                <span className="text-[14px] text-slate-400 leading-relaxed">
-                  {settings?.address ? `${settings.address}, ${settings.city}, ${settings.state}, ${settings.country}, ${settings.postalCode}` : "Address not configured"}
-                </span>
-              </li>
-              <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0"><Clock size={18} strokeWidth={1.5} /></div>
-                <div className="text-[14px] text-slate-400 leading-relaxed">
-                  {settings?.weekdayHours || settings?.weekendHours ? (
+              {settings?.address && (
+                <li className="flex items-start gap-3.5">
+                  <div className="mt-0.5 text-slate-400 shrink-0"><MapPin size={18} strokeWidth={1.5} /></div>
+                  <span className="text-[14px] text-slate-400 leading-relaxed">
+                    {`${settings.address}, ${settings.city}, ${settings.state}, ${settings.country}, ${settings.postalCode}`}
+                  </span>
+                </li>
+              )}
+              {(settings?.weekdayHours || settings?.weekendHours) && (
+                <li className="flex items-start gap-3.5">
+                  <div className="mt-0.5 text-slate-400 shrink-0"><Clock size={18} strokeWidth={1.5} /></div>
+                  <div className="text-[14px] text-slate-400 leading-relaxed">
                     <p>{settings.weekdayHours ? `Weekdays: ${settings.weekdayHours}` : ""}{settings.weekendHours ? ` | Weekends: ${settings.weekendHours}` : ""}</p>
-                  ) : (
-                    <p>Hours not configured</p>
-                  )}
-                </div>
-              </li>
-              <li className="flex items-start gap-3.5">
-                <div className="mt-0.5 text-slate-400 shrink-0"><Mail size={18} strokeWidth={1.5} /></div>
-                {settings?.contactEmail ? (
+                  </div>
+                </li>
+              )}
+              {settings?.contactEmail && (
+                <li className="flex items-start gap-3.5">
+                  <div className="mt-0.5 text-slate-400 shrink-0"><Mail size={18} strokeWidth={1.5} /></div>
                   <a href={`mailto:${settings.contactEmail}`} className="text-[14px] text-slate-400 hover:text-blue-400 transition-colors">{settings.contactEmail}</a>
-                ) : (
-                  <span className="text-[14px] text-slate-400">Email not configured</span>
-                )}
-              </li>
+                </li>
+              )}
             </ul>
           </div>
         </div>
