@@ -38,6 +38,7 @@ function YoutubeIcon({ size = 20 }) {
 
 function Footer() {
   const { settings } = useSettings();
+  const whatsappDigits = settings?.whatsappNumber ? settings.whatsappNumber.replace(/\D/g, "") : "";
 
   return (
     <footer className="bg-[#0b1221] text-slate-400 relative z-20 overflow-hidden flex flex-col">
@@ -72,8 +73,8 @@ function Footer() {
                   <FacebookIcon />
                 </a>
               )}
-              {settings?.whatsappNumber && (
-                <a href={`https://wa.me/${settings.whatsappNumber}`} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
+              {whatsappDigits && (
+                <a href={`https://wa.me/${whatsappDigits}`} target="_blank" rel="noreferrer" className="w-[40px] h-[40px] rounded-full bg-white/5 border border-white/10 text-slate-300 hover:text-white hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center transition-all duration-300" aria-label="WhatsApp">
                   <MessageCircle size={20} strokeWidth={1.5} />
                 </a>
               )}
@@ -163,7 +164,7 @@ function Footer() {
       <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50 group/fab" aria-label="Quick contact options">
         <a
           className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all"
-          href={settings?.whatsappNumber ? `https://wa.me/${settings.whatsappNumber}` : "#"}
+          href={whatsappDigits ? `https://wa.me/${whatsappDigits}` : "#"}
           target="_blank"
           rel="noreferrer"
           aria-label="Chat on WhatsApp"
