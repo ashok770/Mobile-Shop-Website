@@ -87,7 +87,11 @@ export default function HomepageManagement() {
 
       setConfig(newConfig);
       setInitialConfig(JSON.parse(JSON.stringify(newConfig)));
-      setProducts(prodData.products || []);
+      const productList = Array.isArray(prodData)
+        ? prodData
+        : (prodData.products || []);
+
+      setProducts(productList);
       setNewSlides([]);
       setIsDirty(false);
     } catch (error) {
