@@ -23,6 +23,11 @@ import {
   Zap,
   Star,
   Tag,
+  LayoutDashboard,
+  Settings,
+  ShieldCheck,
+  ChevronRight,
+  HelpCircle,
 } from "lucide-react";
 
 /* ─── Cart count helper ─── */
@@ -425,62 +430,265 @@ function Header() {
                   whileTap={{ scale: 0.98 }}
                   onClick={() => setAccountMenuOpen((open) => !open)}
                   disabled={authLoading}
-                  className="flex items-center gap-2 px-2 py-2 rounded-full text-slate-600 hover:text-blue-600 transition-colors duration-[250ms] disabled:cursor-wait disabled:opacity-60"
+                  className={`flex items-center gap-2.5 px-3 py-1.5 rounded-full transition-all duration-200 border ${
+                    accountMenuOpen
+                      ? "bg-blue-50/80 border-blue-200 text-blue-700"
+                      : "border-transparent text-slate-700 hover:text-blue-600 hover:bg-slate-100/80"
+                  }`}
                   aria-label="Account menu"
                   aria-expanded={accountMenuOpen}
                 >
-                  <CircleUser size={20} />
-                  <span className="text-[14px] font-medium hidden xl:block">Account</span>
+                  {user ? (
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-600 to-indigo-600 text-white flex items-center justify-center text-xs font-bold shadow-sm shadow-blue-500/25 shrink-0">
+                      {user.name ? user.name.trim().charAt(0).toUpperCase() : "A"}
+                    </div>
+                  ) : (
+                    <CircleUser size={20} className="text-slate-600" />
+                  )}
+                  <div className="hidden xl:flex flex-col text-left leading-tight">
+                    <span className="text-[11px] font-medium text-slate-400">
+                      {user ? "Hello," : "Welcome"}
+                    </span>
+                    <span className="text-[13px] font-bold text-slate-800 max-w-[100px] truncate">
+                      {user ? (user.name?.split(" ")[0] || "Account") : "Sign In"}
+                    </span>
+                  </div>
+                  <ChevronDown
+                    size={14}
+                    className={`text-slate-400 transition-transform duration-200 ${
+                      accountMenuOpen ? "rotate-180 text-blue-600" : ""
+                    }`}
+                  />
                 </motion.button>
 
                 <AnimatePresence>
                   {accountMenuOpen && (
                     <motion.div
-                      initial={{ opacity: 0, y: 10, scale: 0.96 }}
+                      initial={{ opacity: 0, y: 12, scale: 0.96 }}
                       animate={{ opacity: 1, y: 0, scale: 1 }}
-                      exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                      exit={{ opacity: 0, y: 8, scale: 0.98 }}
                       transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-                      className="absolute right-0 top-full mt-3 w-[272px] overflow-hidden rounded-2xl border border-slate-200/80 bg-white/95 p-2.5 shadow-[0_22px_56px_rgba(15,23,42,0.16)] ring-1 ring-black/[0.025] backdrop-blur-2xl"
+                      className="absolute right-0 top-full mt-3 w-[330px] overflow-hidden rounded-2xl border border-slate-200/90 bg-white p-3 shadow-[0_24px_60px_rgba(15,23,42,0.18)] ring-1 ring-black/[0.04] backdrop-blur-2xl z-50"
                     >
                       {user ? (
                         <>
-                          <div className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/70 px-3.5 py-3">
-                            <p className="truncate text-[13px] font-bold tracking-[-0.01em] text-slate-900">
-                              {user.name || "My Account"}
-                            </p>
-                            <p className="mt-0.5 truncate text-[11px] font-medium text-slate-500">{user.email}</p>
+                          {/* User Profile Card */}
+                          <div className="rounded-xl bg-gradient-to-br from-slate-50 via-blue-50/40 to-slate-50 p-3.5 border border-slate-200/70">
+                            <div className="flex items-center gap-3">
+                              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 text-white font-extrabold text-base flex items-center justify-center shadow-md shadow-blue-500/25 shrink-0">
+                                {user.name ? user.name.trim().charAt(0).toUpperCase() : "A"}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-bold text-slate-900 leading-tight">
+                                  {user.name || "Customer Account"}
+                                </p>
+                                <p className="truncate text-xs text-slate-500 mt-0.5">
+                                  {user.email}
+                                </p>
+                                <span className="inline-flex items-center gap-1 text-[11px] font-bold text-blue-700 bg-blue-100/70 px-2 py-0.5 rounded-full mt-1.5 border border-blue-200/60">
+                                  <ShieldCheck size={12} className="text-blue-600" />
+                                  Verified Customer
+                                </span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
-                          <button onClick={() => navigateFromAccountMenu("/profile")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <CircleUser size={17} strokeWidth={1.9} /> My Profile
-                          </button>
-                          <button onClick={() => navigateFromAccountMenu("/profile/orders")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <Package size={17} strokeWidth={1.9} /> My Orders
-                          </button>
-                          <button onClick={() => navigateFromAccountMenu("/profile/addresses")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <MapPin size={17} strokeWidth={1.9} /> Saved Addresses
-                          </button>
-                          <button onClick={() => navigateFromAccountMenu("/profile/wishlist")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <Heart size={17} strokeWidth={1.9} /> Wishlist
-                          </button>
-                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
-                          <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-rose-600 transition-all duration-200 hover:bg-rose-50 hover:shadow-sm">
-                            <LogOut size={17} strokeWidth={1.9} /> Logout
+
+                          {/* Navigation Hub */}
+                          <div className="mt-2.5 space-y-1">
+                            {/* Dashboard */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <LayoutDashboard size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-blue-700 transition-colors">
+                                  Account Dashboard
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Overview, stats & quick actions
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+
+                            {/* My Orders */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile/orders")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition-colors">
+                                <Package size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-indigo-700 transition-colors">
+                                  My Orders & Tracking
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Track shipments, invoices & returns
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-indigo-600 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+
+                            {/* Saved Addresses */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile/addresses")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                <MapPin size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-amber-700 transition-colors">
+                                  Saved Addresses
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Manage delivery destinations
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-amber-600 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+
+                            {/* Wishlist */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile/wishlist")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                                <Heart size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-rose-700 transition-colors">
+                                  My Wishlist
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Saved smartphones & price drops
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-rose-600 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+
+                            {/* Settings */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile/settings")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 group-hover:bg-slate-700 group-hover:text-white transition-colors">
+                                <Settings size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-slate-900 transition-colors">
+                                  Account Settings
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  Profile info & security
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-slate-700 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+
+                            {/* Customer Support */}
+                            <button
+                              onClick={() => navigateFromAccountMenu("/contact")}
+                              className="group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-all duration-200 hover:bg-slate-50 hover:shadow-sm"
+                            >
+                              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <Headphones size={16} />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-[13px] font-bold text-slate-800 group-hover:text-emerald-700 transition-colors">
+                                  Customer Support
+                                </div>
+                                <div className="text-[11px] text-slate-400">
+                                  24/7 helpdesk & order assistance
+                                </div>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:text-emerald-600 group-hover:translate-x-0.5 transition-all" />
+                            </button>
+                          </div>
+
+                          <div className="my-2 h-px bg-slate-200/80" />
+
+                          {/* Logout Button */}
+                          <button
+                            onClick={handleLogout}
+                            className="group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left transition-all duration-200 hover:bg-rose-50"
+                          >
+                            <div className="w-8 h-8 rounded-lg bg-rose-50 text-rose-600 flex items-center justify-center shrink-0 group-hover:bg-rose-600 group-hover:text-white transition-colors">
+                              <LogOut size={16} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-[13px] font-bold text-rose-600 group-hover:text-rose-700">
+                                Sign Out
+                              </span>
+                              <div className="text-[11px] text-rose-400">
+                                Securely end your active session
+                              </div>
+                            </div>
                           </button>
                         </>
                       ) : (
                         <>
-                          <div className="rounded-xl bg-gradient-to-br from-slate-50 to-blue-50/70 px-3.5 py-3">
-                            <p className="text-[13px] font-bold tracking-[-0.01em] text-slate-900">Welcome to Ommastra</p>
-                            <p className="mt-0.5 text-[11px] font-medium text-slate-500">Sign in for a faster checkout.</p>
+                          {/* Guest Welcome Banner */}
+                          <div className="rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 p-4 text-white shadow-md shadow-blue-500/20">
+                            <div className="flex items-center gap-2.5">
+                              <div className="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                                <Smartphone size={18} />
+                              </div>
+                              <div>
+                                <p className="text-sm font-extrabold tracking-tight">
+                                  Welcome to OMMASTA
+                                </p>
+                                <p className="text-[11px] text-blue-100 mt-0.5">
+                                  Premium Mobile Electronics
+                                </p>
+                              </div>
+                            </div>
+                            <p className="mt-3 text-xs text-blue-50 leading-relaxed">
+                              Sign in to view your orders, track shipments, and experience accelerated checkout.
+                            </p>
                           </div>
-                          <div className="mx-1 my-2 h-px bg-slate-200/80" />
-                          <button onClick={() => navigateFromAccountMenu("/login")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <LogIn size={17} strokeWidth={1.9} /> Login
-                          </button>
-                          <button onClick={() => navigateFromAccountMenu("/register")} className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left text-[13px] font-semibold text-slate-600 transition-all duration-200 hover:bg-blue-50 hover:text-blue-700 hover:shadow-sm">
-                            <UserPlus size={17} strokeWidth={1.9} /> Create Account
-                          </button>
+
+                          <div className="mt-3 space-y-2">
+                            <button
+                              onClick={() => navigateFromAccountMenu("/login")}
+                              className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 hover:bg-blue-700 px-4 py-2.5 text-[13px] font-bold text-white shadow-sm shadow-blue-500/25 transition-all"
+                            >
+                              <LogIn size={16} />
+                              Sign In to Account
+                            </button>
+
+                            <button
+                              onClick={() => navigateFromAccountMenu("/register")}
+                              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-[13px] font-bold text-slate-700 transition-all"
+                            >
+                              <UserPlus size={16} />
+                              Create New Account
+                            </button>
+                          </div>
+
+                          <div className="my-2.5 h-px bg-slate-200/80" />
+
+                          <div className="space-y-1">
+                            <button
+                              onClick={() => navigateFromAccountMenu("/profile/orders")}
+                              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-slate-600 hover:bg-slate-100/70 hover:text-blue-600 transition-colors"
+                            >
+                              <Package size={15} className="text-slate-400" />
+                              Track an Order
+                            </button>
+
+                            <button
+                              onClick={() => navigateFromAccountMenu("/contact")}
+                              className="flex w-full items-center gap-2.5 rounded-lg px-2.5 py-2 text-[12px] font-medium text-slate-600 hover:bg-slate-100/70 hover:text-blue-600 transition-colors"
+                            >
+                              <Headphones size={15} className="text-slate-400" />
+                              Help & 24/7 Support
+                            </button>
+                          </div>
                         </>
                       )}
                     </motion.div>
@@ -636,26 +844,47 @@ function Header() {
               </nav>
 
               {/* Panel footer */}
-              <div className="px-4 py-4 border-t border-slate-100 space-y-1">
+              <div className="px-4 py-4 border-t border-slate-100 space-y-1.5">
                 {user ? (
                   <>
-                    <button onClick={() => { navigate("/profile"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                      <CircleUser size={18} /> My Account
+                    <div className="px-3 py-2.5 mb-2 rounded-xl bg-slate-50 border border-slate-200/70 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white font-bold flex items-center justify-center text-sm shadow-sm shrink-0">
+                        {user.name ? user.name.trim().charAt(0).toUpperCase() : "A"}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 truncate">{user.name}</p>
+                        <p className="text-[11px] text-slate-500 truncate">{user.email}</p>
+                      </div>
+                    </div>
+                    <button onClick={() => { navigate("/profile"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <LayoutDashboard size={18} className="text-blue-600" /> Account Dashboard
                     </button>
-                    <button onClick={() => { navigate("/profile/orders"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                      <Package size={18} /> Orders
+                    <button onClick={() => { navigate("/profile/orders"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <Package size={18} className="text-indigo-600" /> My Orders & Tracking
                     </button>
-                    <button onClick={handleLogout} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-rose-600 hover:bg-rose-50 transition-colors duration-200">
-                      <LogOut size={18} /> Logout
+                    <button onClick={() => { navigate("/profile/addresses"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <MapPin size={18} className="text-amber-600" /> Saved Addresses
+                    </button>
+                    <button onClick={() => { navigate("/profile/wishlist"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <Heart size={18} className="text-rose-600" /> My Wishlist
+                    </button>
+                    <button onClick={() => { navigate("/profile/settings"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <Settings size={18} className="text-slate-600" /> Account Settings
+                    </button>
+                    <button onClick={() => { navigate("/contact"); setMobileOpen(false); }} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <Headphones size={18} className="text-emerald-600" /> Customer Support
+                    </button>
+                    <button onClick={handleLogout} className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-[14px] font-semibold text-rose-600 hover:bg-rose-50 transition-colors mt-2">
+                      <LogOut size={18} /> Sign Out
                     </button>
                   </>
                 ) : (
                   <>
-                    <button onClick={() => { navigate("/login"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                      <LogIn size={18} /> Login
+                    <button onClick={() => { navigate("/login"); setMobileOpen(false); }} className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-600 py-2.5 text-[14px] font-bold text-white shadow-sm transition-colors">
+                      <LogIn size={18} /> Sign In
                     </button>
-                    <button onClick={() => { navigate("/register"); setMobileOpen(false); }} className="flex w-full items-center gap-2 rounded-lg px-2 py-2 text-[14px] font-medium text-slate-600 hover:bg-blue-50 hover:text-blue-600 transition-colors duration-200">
-                      <UserPlus size={18} /> Register
+                    <button onClick={() => { navigate("/register"); setMobileOpen(false); }} className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 py-2.5 text-[14px] font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                      <UserPlus size={18} /> Create Account
                     </button>
                   </>
                 )}
